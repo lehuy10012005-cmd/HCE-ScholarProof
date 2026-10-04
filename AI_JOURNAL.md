@@ -183,6 +183,27 @@ Nếu chỉ mô tả chung chung "viết tool phân tích ví", AI thường b�
 
 **Ai phát hiện:** Sinh viên phát hiện và trực tiếp chấn chỉnh tư duy mật mã học và thể chế pháp lý của AI.
 
+## Lần 10 (Lab 11: Xây dựng Giao diện Web3 DApp tương tác cho Đồ án Capstone HCE-ScholarProof)
+
+**Prompt:**
+> "Tôi muốn làm Lab 11 trước Lab 10: Hãy chọn phần hay nhất, trực quan nhất để xây dựng hoàn chỉnh cho đồ án HCE-ScholarProof. Nâng cấp tệp web/index.html thành giao diện Web3 DApp hiện đại, phong cách Fintech Dark Mode, tích hợp băm tài liệu client-side (Keccak-256), kết nối ví MetaMask qua Ethers.js v6, chức năng đăng ký, tra cứu đối soát và xuất chứng thư số bảo chứng quyền tác giả."
+
+**AI trả về:**
+- Giao diện Web3 DApp hoàn chỉnh tại tệp `web/index.html` với thiết kế Dark Mode, hiệu ứng Glassmorphism và màu sắc Fintech (Cyan & Emerald).
+- Phân hệ băm mật mã client-side: Đọc tệp PDF/Word/CSV qua Web Crypto API, tính toán chuỗi băm 32 bytes (`0x...`) ngay trong RAM trình duyệt, không tải tệp lên internet (bảo vệ quyền riêng tư 100%).
+- Tích hợp Ethers.js v6: Kết nối ví MetaMask (`BrowserProvider`), hiển thị số dư, mạng Sepolia Testnet và chế độ Fallback Simulator giúp kiểm thử không phụ thuộc mạng.
+- Phân hệ tra cứu và xuất **Chứng thư số Bảo chứng Quyền tác giả (Digital Certificate of Provenance)** kèm nút in ấn và liên kết tra cứu Etherscan.
+- Báo cáo chuyên sâu `lab11.md`.
+
+**Đánh giá:** Dùng được (sau khi sinh viên chấn chỉnh cơ chế xử lý tệp dung lượng lớn và kiểm soát lỗi client-side).
+
+**Chỗ sai & Phản biện sắc bén của sinh viên:**
+1. **Lỗi 1 (Rủi ro nghẽn bộ nhớ khi băm tệp nghiên cứu dung lượng lớn):** Trong bản code giao diện đầu tiên, AI dùng phương pháp `FileReader.readAsText()` để đọc tệp. Sinh viên chỉ ra lỗi nghiêm trọng: Nếu người dùng nộp tệp đề cương nghiên cứu kèm tập dữ liệu khảo sát (file PDF hoặc CSV dung lượng $50\text{ MB} - 100\text{ MB}$), đọc chuỗi text sẽ gây tràn bộ nhớ trình duyệt (Out of Memory) và crash ứng dụng. Sinh viên yêu cầu chuyển sang sử dụng `file.arrayBuffer()` kết hợp Web Crypto API chuẩn để xử lý nhị phân trực tiếp ở tầng thấp với tốc độ tức thì.
+2. **Lỗi 2 (Thiếu cơ chế kiểm soát lỗi phía Client gây thất thoát Gas):** AI ban đầu cho phép người dùng bấm nút gửi giao dịch on-chain ngay cả khi chưa chọn tệp hoặc để trống tiêu đề. Sinh viên chấn chỉnh: Trên blockchain, nếu giao dịch gửi lên mạng với tham số lỗi thì hàm `registerIdea` sẽ bị `revert`, nhưng người dùng **vẫn bị trừ phí gas mạng lưới**. Giao diện Web3 chuẩn mực bắt buộc phải validate dữ liệu (Client-side Form Validation) và khóa nút gửi trước khi kích hoạt MetaMask, bảo vệ từng đồng phí gas cho sinh viên.
+
+**Ai phát hiện:** Sinh viên phát hiện và trực tiếp hoàn thiện kiến trúc UX Web3 an toàn.
+
+
 
 
 

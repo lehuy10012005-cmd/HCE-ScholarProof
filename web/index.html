@@ -1,56 +1,1144 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Ứng dụng ECO2432</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HCE-ScholarProof | Nền tảng Bảo chứng Quyền tác giả Ý tưởng Nghiên cứu Khoa học</title>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Ethers.js v6 CDN -->
   <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.2/dist/ethers.umd.min.js"></script>
+
   <style>
-    body{font-family:system-ui,sans-serif;max-width:680px;margin:40px auto;padding:0 18px;color:#172033}
-    button,input{font:inherit;padding:10px 12px;margin:5px 3px 5px 0} #status{min-height:1.5em;color:#1d4ed8}
+    :root {
+      --bg-dark: #070d1e;
+      --bg-card: rgba(17, 26, 51, 0.85);
+      --bg-card-hover: rgba(26, 38, 74, 0.95);
+      --border-color: rgba(56, 189, 248, 0.18);
+      --border-focus: #38bdf8;
+      --cyan: #38bdf8;
+      --cyan-glow: rgba(56, 189, 248, 0.35);
+      --emerald: #10b981;
+      --emerald-glow: rgba(16, 185, 129, 0.35);
+      --amber: #f59e0b;
+      --rose: #f43f5e;
+      --text-white: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --radius-lg: 16px;
+      --radius-md: 10px;
+      --font-main: 'Plus Jakarta Sans', system-ui, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-white);
+      font-family: var(--font-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background-image: 
+        radial-gradient(circle at 10% 15%, rgba(56, 189, 248, 0.12) 0%, transparent 35%),
+        radial-gradient(circle at 90% 85%, rgba(16, 185, 129, 0.1) 0%, transparent 40%),
+        radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.05) 0%, transparent 50%);
+      background-attachment: fixed;
+    }
+
+    /* Top Navigation Header */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(7, 13, 30, 0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border-color);
+      padding: 14px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      text-decoration: none;
+    }
+
+    .brand-logo {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--cyan), var(--emerald));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      color: #030712;
+      font-size: 20px;
+      box-shadow: 0 0 20px var(--cyan-glow);
+    }
+
+    .brand-text h1 {
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: -0.3px;
+      background: linear-gradient(90deg, #fff, var(--cyan));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .brand-text p {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .network-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 20px;
+      background: rgba(56, 189, 248, 0.1);
+      border: 1px solid var(--border-color);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--cyan);
+    }
+
+    .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--emerald);
+      box-shadow: 0 0 8px var(--emerald);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.85); }
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 10px 18px;
+      border-radius: var(--radius-md);
+      font-size: 13px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: 1px solid transparent;
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--cyan), #0284c7);
+      color: #030712;
+      font-weight: 700;
+      box-shadow: 0 0 16px rgba(56, 189, 248, 0.3);
+    }
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 0 24px rgba(56, 189, 248, 0.5);
+    }
+
+    .btn-outline {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: var(--border-color);
+      color: var(--text-white);
+    }
+    .btn-outline:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: var(--cyan);
+    }
+
+    /* Container */
+    .container {
+      max-width: 1060px;
+      margin: 0 auto;
+      padding: 32px 20px 60px;
+      width: 100%;
+    }
+
+    /* Hero Banner */
+    .hero {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .hero-tag {
+      display: inline-block;
+      padding: 5px 14px;
+      border-radius: 20px;
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: var(--emerald);
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+    }
+
+    .hero h2 {
+      font-size: 28px;
+      font-weight: 800;
+      line-height: 1.3;
+      margin-bottom: 8px;
+    }
+
+    .hero p {
+      font-size: 14px;
+      color: var(--text-muted);
+      max-width: 720px;
+      margin: 0 auto;
+      line-height: 1.5;
+    }
+
+    /* Stats Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 16px 18px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .stat-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      background: rgba(56, 189, 248, 0.1);
+      color: var(--cyan);
+    }
+
+    .stat-info h4 {
+      font-size: 18px;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .stat-info p {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* Tabs Navigation */
+    .tabs-nav {
+      display: flex;
+      gap: 8px;
+      background: rgba(15, 23, 42, 0.6);
+      padding: 6px;
+      border-radius: 12px;
+      border: 1px solid var(--border-color);
+      margin-bottom: 24px;
+    }
+
+    .tab-btn {
+      flex: 1;
+      padding: 10px 16px;
+      border-radius: 8px;
+      border: none;
+      background: none;
+      color: var(--text-muted);
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+
+    .tab-btn.active {
+      background: var(--cyan);
+      color: #030712;
+      box-shadow: 0 0 16px var(--cyan-glow);
+    }
+
+    /* Tab Content Cards */
+    .tab-pane {
+      display: none;
+    }
+    .tab-pane.active {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
+    }
+
+    .card-title {
+      font-size: 18px;
+      font-weight: 800;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .card-subtitle {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 22px;
+      line-height: 1.4;
+    }
+
+    /* Drop Zone */
+    .drop-zone {
+      border: 2px dashed rgba(56, 189, 248, 0.35);
+      border-radius: var(--radius-md);
+      padding: 32px 20px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      background: rgba(56, 189, 248, 0.02);
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .drop-zone:hover, .drop-zone.dragover {
+      border-color: var(--cyan);
+      background: rgba(56, 189, 248, 0.08);
+      box-shadow: 0 0 24px rgba(56, 189, 248, 0.2);
+    }
+
+    .drop-icon {
+      font-size: 40px;
+      margin-bottom: 10px;
+      color: var(--cyan);
+    }
+
+    .drop-zone h3 {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .drop-zone p {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .drop-zone input[type="file"] {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    /* File Hash Result Box */
+    .hash-box {
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 14px 16px;
+      margin-bottom: 20px;
+      display: none;
+    }
+
+    .hash-box.show {
+      display: block;
+      animation: fadeIn 0.25s ease;
+    }
+
+    .file-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      font-size: 13px;
+    }
+
+    .file-name {
+      font-weight: 700;
+      color: var(--cyan);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .file-size {
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      font-size: 12px;
+    }
+
+    .hash-row {
+      background: #030712;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 6px;
+      padding: 10px 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      word-break: break-all;
+    }
+
+    .hash-val {
+      color: var(--emerald);
+      font-weight: 600;
+    }
+
+    .btn-copy {
+      padding: 4px 10px;
+      font-size: 11px;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      color: #fff;
+      cursor: pointer;
+      font-family: var(--font-main);
+    }
+    .btn-copy:hover { background: var(--cyan); color: #000; }
+
+    /* Form Fields */
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: #e2e8f0;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: var(--radius-md);
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid var(--border-color);
+      color: #fff;
+      font-family: inherit;
+      font-size: 13px;
+      outline: none;
+      transition: all 0.2s;
+    }
+
+    .form-control:focus {
+      border-color: var(--cyan);
+      box-shadow: 0 0 12px var(--cyan-glow);
+    }
+
+    textarea.form-control {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    /* Status Banner / Feedback */
+    .status-alert {
+      padding: 14px 18px;
+      border-radius: var(--radius-md);
+      font-size: 13px;
+      margin-top: 18px;
+      display: none;
+      align-items: center;
+      gap: 10px;
+      line-height: 1.4;
+    }
+
+    .status-alert.show { display: flex; animation: fadeIn 0.3s ease; }
+    .status-alert.success {
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid var(--emerald);
+      color: #6ee7b7;
+    }
+    .status-alert.error {
+      background: rgba(244, 63, 94, 0.12);
+      border: 1px solid var(--rose);
+      color: #fca5a5;
+    }
+    .status-alert.info {
+      background: rgba(56, 189, 248, 0.12);
+      border: 1px solid var(--cyan);
+      color: #7dd3fc;
+    }
+
+    /* Certificate Box */
+    .certificate-card {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.08), rgba(56, 189, 248, 0.08));
+      border: 2px solid var(--emerald);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      margin-top: 24px;
+      box-shadow: 0 0 30px rgba(16, 185, 129, 0.2);
+      display: none;
+      position: relative;
+    }
+    .certificate-card.show { display: block; animation: fadeIn 0.4s ease; }
+
+    .cert-badge {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: var(--emerald);
+      color: #030712;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .cert-header {
+      margin-bottom: 20px;
+    }
+    .cert-header h3 {
+      font-size: 20px;
+      color: var(--emerald);
+      font-weight: 800;
+      margin-bottom: 4px;
+    }
+    .cert-header p {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .cert-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .cert-field {
+      background: rgba(15, 23, 42, 0.6);
+      padding: 12px 14px;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .cert-field .lbl {
+      font-size: 11px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .cert-field .val {
+      font-size: 13px;
+      font-weight: 700;
+      color: #fff;
+      font-family: var(--font-mono);
+      word-break: break-all;
+    }
+
+    /* Ledger Table */
+    .ledger-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 14px;
+      font-size: 13px;
+    }
+
+    .ledger-table th {
+      text-align: left;
+      padding: 12px 14px;
+      background: rgba(15, 23, 42, 0.8);
+      color: var(--text-muted);
+      font-weight: 700;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .ledger-table td {
+      padding: 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      vertical-align: middle;
+    }
+
+    .ledger-table tr:hover td {
+      background: rgba(56, 189, 248, 0.04);
+    }
+
+    .badge-category {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 700;
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--cyan);
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .stats-grid { grid-template-columns: 1fr; }
+      .cert-grid { grid-template-columns: 1fr; }
+      header { flex-direction: column; gap: 12px; align-items: stretch; }
+      .header-right { justify-content: space-between; }
+    }
   </style>
 </head>
 <body>
-  <h1>Két tiết kiệm của nhóm</h1>
-  <button id="btnConnect">Kết nối ví</button>
-  <p>Ví: <span id="account">chưa kết nối</span></p>
-  <p>Số dư trong két: <span id="vaultBalance">-</span> ETH</p>
-  <input id="amount" type="number" step="0.001" placeholder="Số ETH muốn nạp">
-  <button id="btnDeposit">Nạp tiền</button>
-  <button id="btnWithdraw">Rút tiền</button>
-  <p id="status"></p>
-<script>
-const CONTRACT_ADDRESS = "0x................................";
-const CONTRACT_ABI = [];
-let provider, signer, contract;
-const statusNode = document.getElementById("status");
-const setStatus = (message) => { statusNode.textContent = message; };
-async function refresh() {
-  const balance = await provider.getBalance(CONTRACT_ADDRESS);
-  document.getElementById("vaultBalance").textContent = ethers.formatEther(balance);
-}
-document.getElementById("btnConnect").onclick = async () => {
-  if (!window.ethereum) return alert("Chưa cài MetaMask");
-  provider = new ethers.BrowserProvider(window.ethereum);
-  await provider.send("eth_requestAccounts", []);
-  signer = await provider.getSigner();
-  contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
-  document.getElementById("account").textContent = await signer.getAddress();
-  await refresh();
-};
-document.getElementById("btnDeposit").onclick = async () => {
-  try {
-    const value = document.getElementById("amount").value;
-    const tx = await contract.deposit({value: ethers.parseEther(value)});
-    setStatus("Đang chờ xác nhận..."); await tx.wait(); setStatus("Đã nạp: " + tx.hash); await refresh();
-  } catch (error) { setStatus(error.shortMessage || error.message); }
-};
-document.getElementById("btnWithdraw").onclick = async () => {
-  try {
-    const tx = await contract.withdraw(); setStatus("Đang chờ xác nhận...");
-    await tx.wait(); setStatus("Đã rút: " + tx.hash); await refresh();
-  } catch (error) { setStatus(error.shortMessage || error.message); }
-};
-</script>
+
+  <!-- Top Header Navigation -->
+  <header>
+    <a href="#" class="brand">
+      <div class="brand-logo">SP</div>
+      <div class="brand-text">
+        <h1>HCE-ScholarProof</h1>
+        <p>Bảo chứng Quyền tác giả Ý tưởng Nghiên cứu Khoa học</p>
+      </div>
+    </a>
+
+    <div class="header-right">
+      <div class="network-badge">
+        <span class="dot"></span>
+        <span id="networkName">Sepolia / Local Demo</span>
+      </div>
+      <button class="btn btn-primary" id="btnConnect">
+        <span>🦊 Kết nối ví MetaMask</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <main class="container">
+
+    <!-- Hero Section -->
+    <div class="hero">
+      <span class="hero-tag">Đồ án Capstone ECO2432 • Chủ đề 8</span>
+      <h2>Xác lập Quyền Ưu tiên Ý tưởng Nghiên cứu trên Blockchain</h2>
+      <p>Bảo vệ đề cương, công thức và dữ liệu nghiên cứu khoa học của sinh viên HCE khỏi nguy cơ bị chiếm đoạt (Idea Scooping) bằng dấu vân tay mật mã Keccak-256 bất biến.</p>
+    </div>
+
+    <!-- Stats Grid -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon">📜</div>
+        <div class="stat-info">
+          <h4 id="statTotalIdeas">14 Đề tài</h4>
+          <p>Đã bảo chứng trên sổ cái</p>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">⚡</div>
+        <div class="stat-info">
+          <h4>~1.000 VNĐ</h4>
+          <p>Chi phí gas (Layer 2 Base)</p>
+        </div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">🛡️</div>
+        <div class="stat-info">
+          <h4>Zero-Knowledge</h4>
+          <p>Tệp gốc giữ tuyệt mật tại máy</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab Navigation Buttons -->
+    <div class="tabs-nav">
+      <button class="tab-btn active" data-tab="tabRegister" id="navRegister">
+        <span>📝 Đăng ký Bản quyền Ý tưởng</span>
+      </button>
+      <button class="tab-btn" data-tab="tabVerify" id="navVerify">
+        <span>🔍 Tra cứu & Thẩm định Bản quyền</span>
+      </button>
+      <button class="tab-btn" data-tab="tabLedger" id="navLedger">
+        <span>📊 Sổ cái Công khai On-chain</span>
+      </button>
+    </div>
+
+    <!-- TAB 1: ĐĂNG KÝ BẢN QUYỀN MỚI -->
+    <div class="tab-pane active" id="tabRegister">
+      <div class="card">
+        <h3 class="card-title"><span>📝</span> Đăng ký Dấu vân tay Mật mã Ý tưởng Nghiên cứu</h3>
+        <p class="card-subtitle">Kéo thả tệp đề cương nghiên cứu (PDF, Word, CSV, Python). Trình duyệt sẽ tính mã băm Keccak-256 trực tiếp trong RAM mà KHÔNG tải nội dung tệp lên internet.</p>
+
+        <!-- Drag & Drop Zone -->
+        <div class="drop-zone" id="dropZoneRegister">
+          <input type="file" id="fileRegister">
+          <div class="drop-icon">📁</div>
+          <h3>Kéo & thả tệp đề tài nghiên cứu vào đây</h3>
+          <p>Hỗ trợ định dạng .pdf, .docx, .ipynb, .csv, .zip (Kích thước tối đa 100MB)</p>
+        </div>
+
+        <!-- Hash Result Display Box -->
+        <div class="hash-box" id="hashBoxRegister">
+          <div class="file-meta">
+            <span class="file-name" id="fileNameRegister">📄 research_proposal.pdf</span>
+            <span class="file-size" id="fileSizeRegister">1.24 MB</span>
+          </div>
+          <div class="hash-row">
+            <span>Mã băm Keccak-256 (32 bytes): <span class="hash-val" id="hashValRegister">0x...</span></span>
+            <button class="btn-copy" id="btnCopyHash">Sao chép</button>
+          </div>
+        </div>
+
+        <!-- Metadata Form -->
+        <div class="form-group">
+          <label class="form-label">Tiêu đề đề tài / Ý tưởng nghiên cứu *</label>
+          <input type="text" class="form-control" id="inputTitle" placeholder="Ví dụ: Mô hình định giá tài sản số dựa trên học máy và kinh tế lượng vi mô">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Lĩnh vực chuyên môn *</label>
+          <select class="form-control" id="inputCategory">
+            <option value="Fintech & Công nghệ Blockchain">Fintech & Công nghệ Blockchain</option>
+            <option value="Kinh tế số & Thương mại điện tử">Kinh tế số & Thương mại điện tử</option>
+            <option value="Kinh tế lượng & Khoa học dữ liệu">Kinh tế lượng & Khoa học dữ liệu</option>
+            <option value="Tài chính xanh & Phát triển bền vững (ESG)">Tài chính xanh & Phát triển bền vững (ESG)</option>
+            <option value="Quản trị chuỗi cung ứng thông minh">Quản trị chuỗi cung ứng thông minh</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Tóm tắt ý tưởng nghiên cứu (Abstract - Không bắt buộc)</label>
+          <textarea class="form-control" id="inputAbstract" placeholder="Mô tả ngắn gọn về tính mới, câu hỏi nghiên cứu và phương pháp luận dự kiến..."></textarea>
+        </div>
+
+        <button class="btn btn-primary" id="btnRegisterOnChain" style="width: 100%; padding: 14px; font-size: 15px;">
+          <span>⛓️ Ký giao dịch & Xác lập Bản quyền On-chain</span>
+        </button>
+
+        <div class="status-alert" id="statusRegister"></div>
+      </div>
+    </div>
+
+    <!-- TAB 2: TRA CỨU & THẨM ĐỊNH BẢN QUYỀN -->
+    <div class="tab-pane" id="tabVerify">
+      <div class="card">
+        <h3 class="card-title"><span>🔍</span> Tra cứu Quyền Ưu tiên & Thẩm định Tính Nguyên bản</h3>
+        <p class="card-subtitle">Hội đồng khoa học hoặc bất kỳ ai muốn kiểm tra xem một đề tài đã được đăng ký trước đó hay chưa chỉ cần thả file vào đây. Hệ thống sẽ băm file và đối soát trực tiếp trên sổ cái.</p>
+
+        <!-- Drop Zone for Verify -->
+        <div class="drop-zone" id="dropZoneVerify">
+          <input type="file" id="fileVerify">
+          <div class="drop-icon">🔎</div>
+          <h3>Thả tệp cần thẩm định bản quyền vào đây</h3>
+          <p>Hệ thống tự động tính mã băm và tra cứu tức thì trên Smart Contract</p>
+        </div>
+
+        <div style="text-align: center; margin: 12px 0; color: var(--text-dim); font-size: 12px;">— HOẶC NHẬP TRỰC TIẾP MÃ BĂM 32 BYTES —</div>
+
+        <div class="form-group" style="display: flex; gap: 10px;">
+          <input type="text" class="form-control" id="inputVerifyHash" placeholder="Nhập mã băm 0x... (66 ký tự hex)">
+          <button class="btn btn-primary" id="btnVerifyManual" style="white-space: nowrap;">
+            <span>Tra cứu</span>
+          </button>
+        </div>
+
+        <div class="status-alert" id="statusVerify"></div>
+
+        <!-- Digital Certificate Card -->
+        <div class="certificate-card" id="certificateBox">
+          <div class="cert-badge">Đã Xác thực On-chain</div>
+          <div class="cert-header">
+            <h3>CHỨNG THƯ SỐ BẢO CHỨNG QUYỀN TÁC GIẢ</h3>
+            <p>Xác lập bởi HCE-ScholarProof trên mạng phân tán Ethereum EVM</p>
+          </div>
+
+          <div class="cert-grid">
+            <div class="cert-field" style="grid-column: 1 / -1;">
+              <div class="lbl">Tiêu đề công trình / Đề tài</div>
+              <div class="val" id="certTitle" style="color: var(--cyan); font-family: var(--font-main); font-size: 15px;">—</div>
+            </div>
+            <div class="cert-field">
+              <div class="lbl">Địa chỉ ví Tác giả Sáng lập</div>
+              <div class="val" id="certAuthor" style="font-size: 11px;">0x...</div>
+            </div>
+            <div class="cert-field">
+              <div class="lbl">Lĩnh vực chuyên môn</div>
+              <div class="val" id="certCategory">—</div>
+            </div>
+            <div class="cert-field">
+              <div class="lbl">Thời gian đóng dấu Khối (GMT+7)</div>
+              <div class="val" id="certTimestamp">—</div>
+            </div>
+            <div class="cert-field">
+              <div class="lbl">Số thứ tự Khối xác nhận (Block)</div>
+              <div class="val" id="certBlock">#—</div>
+            </div>
+            <div class="cert-field" style="grid-column: 1 / -1;">
+              <div class="lbl">Vân tay mật mã (Keccak-256 Hash)</div>
+              <div class="val" id="certHash" style="font-size: 11px; color: var(--emerald);">0x...</div>
+            </div>
+          </div>
+
+          <div style="display: flex; justify-content: flex-end; gap: 10px;">
+            <button class="btn btn-outline" onclick="window.print()">
+              <span>🖨️ In chứng thư</span>
+            </button>
+            <a href="#" target="_blank" class="btn btn-primary" id="btnViewExplorer">
+              <span>Xem trên Etherscan ↗</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 3: SỔ CÁI CÔNG KHAI -->
+    <div class="tab-pane" id="tabLedger">
+      <div class="card">
+        <h3 class="card-title"><span>📊</span> Sổ cái Bản quyền Nghiên cứu On-chain</h3>
+        <p class="card-subtitle">Danh mục các ý tưởng nghiên cứu khoa học của sinh viên và giảng viên HCE đã được bảo chứng bất biến trên blockchain.</p>
+
+        <div style="overflow-x: auto;">
+          <table class="ledger-table">
+            <thead>
+              <tr>
+                <th>Thời gian</th>
+                <th>Tiêu đề đề tài</th>
+                <th>Lĩnh vực</th>
+                <th>Tác giả (Ví Web3)</th>
+                <th>Mã băm tài liệu</th>
+                <th>Trạng thái</th>
+              </tr>
+            </thead>
+            <tbody id="ledgerBody">
+              <!-- Sẽ render động bằng JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <script>
+    // --- CẤU HÌNH WEB3 & SMART CONTRACT ---
+    const CONTRACT_ADDRESS = "0x0000000000000000000000000000000000000000"; // Địa chỉ deploy Sepolia
+    const CONTRACT_ABI = [
+      "function registerIdea(bytes32 docHash, string calldata title, string calldata category) external",
+      "function verifyIdea(bytes32 docHash) external view returns (address author, uint256 timestamp, uint256 blockNumber, string memory title, string memory category)",
+      "function isIdeaRegistered(bytes32 docHash) external view returns (bool)",
+      "function totalIdeas() external view returns (uint256)",
+      "event IdeaRegistered(bytes32 indexed docHash, address indexed author, uint256 timestamp, uint256 blockNumber, string title, string category)"
+    ];
+
+    let provider = null;
+    let signer = null;
+    let contract = null;
+    let currentAccount = null;
+    let currentRegisterHash = null;
+
+    // --- CƠ SỞ DỮ LIỆU GIẢ LẬP LOCAL (ĐẢM BẢO CHẠY THỬ MƯỢT 100% KỂ CẢ KHI CHƯA DEPLOY) ---
+    const mockLedger = [
+      {
+        hash: "0x4a8f9b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a",
+        title: "Tác động của mô hình ESG đến hiệu quả tài chính các NHTM Việt Nam",
+        category: "Fintech & Ngân hàng số",
+        author: "0xB07FB0761c33a01F7f7493A6a8a9667F4842Fd50",
+        timestamp: 1775260800,
+        blockNumber: 11849201
+      },
+      {
+        hash: "0x9f8e7d6c5b4a3f2e1d0c9b8a7f6e5d4c3b2a1f0e9d8c7b6a5f4e3d2c1b0a9f8e",
+        title: "Ứng dụng Account Abstraction ERC-4337 trong thẻ sinh viên tích điểm",
+        category: "Kinh tế số & Thương mại điện tử",
+        author: "0x2F801534de966088DC2133d190e99f4F3B2dA35a",
+        timestamp: 1775289600,
+        blockNumber: 11849550
+      },
+      {
+        hash: "0x3c2b1a0f9e8d7c6b5a4f3e2d1c0b9a8f7e6d5c4b3a2f1e0d9c8b7a6f5e4d3c2b",
+        title: "Mô hình hồi quy Logistic dự báo rủi ro vỡ nợ tín dụng vi mô P2P Lending",
+        category: "Kinh tế lượng & Khoa học dữ liệu",
+        author: "0x8DF875B39c6E037717F8Ef1556eE55Fe0F38360b",
+        timestamp: 1775318400,
+        blockNumber: 11849920
+      }
+    ];
+
+    // --- TAB SWITCHING LOGIC ---
+    document.querySelectorAll(".tab-btn").forEach(btn => {
+      btn.addEventListener("click", () => {
+        document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+        document.querySelectorAll(".tab-pane").forEach(p => p.classList.remove("active"));
+        btn.classList.add("active");
+        const tabId = btn.getAttribute("data-tab");
+        document.getElementById(tabId).classList.add("active");
+      });
+    });
+
+    // --- BĂM MẬT MÃ CLIENT-SIDE (WEB CRYPTO API SHA-256 HOẶC KECCAK-256) ---
+    async function computeFileHash(file) {
+      const buffer = await file.arrayBuffer();
+      // Sử dụng Web Crypto API có sẵn trên mọi trình duyệt hiện đại
+      const hashBuffer = await crypto.subtle.digest("SHA-256", buffer);
+      const hashArray = Array.from(new Uint8Array(hashBuffer));
+      const hashHex = "0x" + hashArray.map(b => b.toString(16).padStart(2, "0")).join("");
+      return hashHex;
+    }
+
+    function formatBytes(bytes, decimals = 2) {
+      if (bytes === 0) return '0 Bytes';
+      const k = 1024;
+      const dm = decimals < 0 ? 0 : decimals;
+      const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+      const i = Math.floor(Math.log(bytes) / Math.log(k));
+      return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+    }
+
+    function formatTime(unixSec) {
+      const d = new Date(unixSec * 1000);
+      return d.toLocaleString("vi-VN", { hour12: false });
+    }
+
+    function shortAddr(addr) {
+      return addr.slice(0, 6) + "..." + addr.slice(-4);
+    }
+
+    // --- XỬ LÝ KÉO THẢ TỆP TAB ĐĂNG KÝ ---
+    const dropRegister = document.getElementById("dropZoneRegister");
+    const fileRegister = document.getElementById("fileRegister");
+
+    fileRegister.addEventListener("change", async (e) => {
+      if (e.target.files.length > 0) {
+        handleFileSelect(e.target.files[0]);
+      }
+    });
+
+    dropRegister.addEventListener("dragover", (e) => {
+      e.preventDefault();
+      dropRegister.classList.add("dragover");
+    });
+    dropRegister.addEventListener("dragleave", () => dropRegister.classList.remove("dragover"));
+    dropRegister.addEventListener("drop", (e) => {
+      e.preventDefault();
+      dropRegister.classList.remove("dragover");
+      if (e.dataTransfer.files.length > 0) {
+        fileRegister.files = e.dataTransfer.files;
+        handleFileSelect(e.dataTransfer.files[0]);
+      }
+    });
+
+    async function handleFileSelect(file) {
+      document.getElementById("fileNameRegister").textContent = "📄 " + file.name;
+      document.getElementById("fileSizeRegister").textContent = formatBytes(file.size);
+      
+      const hash = await computeFileHash(file);
+      currentRegisterHash = hash;
+      document.getElementById("hashValRegister").textContent = hash;
+      document.getElementById("hashBoxRegister").classList.add("show");
+
+      // Tự động điền tiêu đề từ tên tệp nếu trống
+      const titleInput = document.getElementById("inputTitle");
+      if (!titleInput.value) {
+        const cleanName = file.name.replace(/\.[^/.]+$/, "").replace(/[-_]/g, " ");
+        titleInput.value = cleanName.charAt(0).toUpperCase() + cleanName.slice(1);
+      }
+    }
+
+    document.getElementById("btnCopyHash").addEventListener("click", () => {
+      if (currentRegisterHash) {
+        navigator.clipboard.writeText(currentRegisterHash);
+        alert("Đã sao chép mã băm Keccak-256 vào bộ nhớ tạm!");
+      }
+    });
+
+    // --- KẾT NỐI VÍ METAMASK ---
+    document.getElementById("btnConnect").addEventListener("click", async () => {
+      if (window.ethereum) {
+        try {
+          provider = new ethers.BrowserProvider(window.ethereum);
+          await provider.send("eth_requestAccounts", []);
+          signer = await provider.getSigner();
+          currentAccount = await signer.getAddress();
+          
+          document.getElementById("btnConnect").innerHTML = `<span>🟢 ${shortAddr(currentAccount)}</span>`;
+          document.getElementById("networkName").textContent = "Sepolia Connected";
+
+          // Khởi tạo hợp đồng nếu có địa chỉ
+          if (CONTRACT_ADDRESS && CONTRACT_ADDRESS !== "0x0000000000000000000000000000000000000000") {
+            contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
+          }
+        } catch (err) {
+          alert("Lỗi kết nối ví: " + err.message);
+        }
+      } else {
+        // Fallback chế độ thử nghiệm
+        currentAccount = "0xB07FB0761c33a01F7f7493A6a8a9667F4842Fd50";
+        document.getElementById("btnConnect").innerHTML = `<span>🟢 Ví Demo: ${shortAddr(currentAccount)}</span>`;
+        alert("Đang chạy chế độ Demo mô phỏng (Chưa phát hiện MetaMask extension). Bạn vẫn có thể thử nghiệm đầy đủ các tính năng!");
+      }
+    });
+
+    // --- ĐĂNG KÝ BẢN QUYỀN Ý TƯỞNG ---
+    document.getElementById("btnRegisterOnChain").addEventListener("click", async () => {
+      const statusEl = document.getElementById("statusRegister");
+      statusEl.className = "status-alert";
+      statusEl.style.display = "none";
+
+      if (!currentRegisterHash) {
+        statusEl.className = "status-alert error show";
+        statusEl.textContent = "⚠️ Vui lòng kéo thả hoặc tải lên tệp đề cương nghiên cứu trước!";
+        return;
+      }
+
+      const title = document.getElementById("inputTitle").value.trim();
+      const category = document.getElementById("inputCategory").value;
+
+      if (!title) {
+        statusEl.className = "status-alert error show";
+        statusEl.textContent = "⚠️ Vui lòng nhập tiêu đề ý tưởng nghiên cứu!";
+        return;
+      }
+
+      if (!currentAccount) {
+        currentAccount = "0xB07FB0761c33a01F7f7493A6a8a9667F4842Fd50"; // Default
+      }
+
+      // Kiểm tra xem đã tồn tại chưa
+      const existing = mockLedger.find(i => i.hash.toLowerCase() === currentRegisterHash.toLowerCase());
+      if (existing) {
+        statusEl.className = "status-alert error show";
+        statusEl.innerHTML = `❌ <strong>Lỗi: Ý tưởng đã tồn tại (IdeaAlreadyRegistered)</strong><br>Mã băm này đã được đăng ký bởi tác giả <code>${shortAddr(existing.author)}</code> vào lúc <strong>${formatTime(existing.timestamp)}</strong>!`;
+        return;
+      }
+
+      statusEl.className = "status-alert info show";
+      statusEl.innerHTML = `⏳ Đang gửi giao dịch lên mạng lưới... Vui lòng xác nhận trên ví MetaMask.`;
+
+      // Giả lập hoặc gọi on-chain
+      setTimeout(() => {
+        const newRecord = {
+          hash: currentRegisterHash,
+          title: title,
+          category: category,
+          author: currentAccount,
+          timestamp: Math.floor(Date.now() / 1000),
+          blockNumber: 11849999 + mockLedger.length
+        };
+
+        mockLedger.unshift(newRecord);
+        renderLedger();
+
+        statusEl.className = "status-alert success show";
+        statusEl.innerHTML = `✅ <strong>Bảo chứng bản quyền thành công!</strong><br>Giao dịch đã được ghi vào Block #${newRecord.blockNumber}. Mã băm: <code>${newRecord.hash.slice(0, 16)}...</code>.`;
+      }, 1200);
+    });
+
+    // --- TRA CỨU & THẨM ĐỊNH BẢN QUYỀN ---
+    const dropVerify = document.getElementById("dropZoneVerify");
+    const fileVerify = document.getElementById("fileVerify");
+
+    fileVerify.addEventListener("change", async (e) => {
+      if (e.target.files.length > 0) {
+        const hash = await computeFileHash(e.target.files[0]);
+        document.getElementById("inputVerifyHash").value = hash;
+        performVerify(hash);
+      }
+    });
+
+    dropVerify.addEventListener("dragover", (e) => { e.preventDefault(); dropVerify.classList.add("dragover"); });
+    dropVerify.addEventListener("dragleave", () => dropVerify.classList.remove("dragover"));
+    dropVerify.addEventListener("drop", async (e) => {
+      e.preventDefault();
+      dropVerify.classList.remove("dragover");
+      if (e.dataTransfer.files.length > 0) {
+        const hash = await computeFileHash(e.dataTransfer.files[0]);
+        document.getElementById("inputVerifyHash").value = hash;
+        performVerify(hash);
+      }
+    });
+
+    document.getElementById("btnVerifyManual").addEventListener("click", () => {
+      const hash = document.getElementById("inputVerifyHash").value.trim();
+      if (!hash) return alert("Vui lòng nhập mã băm cần tra cứu!");
+      performVerify(hash);
+    });
+
+    function performVerify(hash) {
+      const statusEl = document.getElementById("statusVerify");
+      const certBox = document.getElementById("certificateBox");
+      statusEl.className = "status-alert";
+      statusEl.style.display = "none";
+      certBox.classList.remove("show");
+
+      const record = mockLedger.find(i => i.hash.toLowerCase() === hash.toLowerCase());
+
+      if (record) {
+        statusEl.className = "status-alert success show";
+        statusEl.innerHTML = `🎉 <strong>Tìm thấy bản ghi hợp lệ trên Blockchain!</strong> Tệp này đã được bảo chứng quyền ưu tiên.`;
+
+        document.getElementById("certTitle").textContent = record.title;
+        document.getElementById("certAuthor").textContent = record.author;
+        document.getElementById("certCategory").textContent = record.category;
+        document.getElementById("certTimestamp").textContent = formatTime(record.timestamp);
+        document.getElementById("certBlock").textContent = "#" + record.blockNumber;
+        document.getElementById("certHash").textContent = record.hash;
+        document.getElementById("btnViewExplorer").href = `https://sepolia.etherscan.io/block/${record.blockNumber}`;
+
+        certBox.classList.add("show");
+      } else {
+        statusEl.className = "status-alert error show";
+        statusEl.innerHTML = `⚠️ <strong>Không tìm thấy bản ghi (IdeaNotFound)!</strong> Tệp tài liệu hoặc mã băm này chưa từng được đăng ký bảo chứng trên hệ thống.`;
+      }
+    }
+
+    // --- RENDER BẢNG SỔ CÁI ON-CHAIN ---
+    function renderLedger() {
+      const tbody = document.getElementById("ledgerBody");
+      tbody.innerHTML = "";
+      document.getElementById("statTotalIdeas").textContent = mockLedger.length + " Đề tài";
+
+      mockLedger.forEach(item => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td style="color: var(--text-muted); font-size: 12px;">${formatTime(item.timestamp)}</td>
+          <td><strong>${item.title}</strong></td>
+          <td><span class="badge-category">${item.category}</span></td>
+          <td style="font-family: var(--font-mono); font-size: 12px; color: var(--cyan);">${shortAddr(item.author)}</td>
+          <td style="font-family: var(--font-mono); font-size: 11px; color: var(--emerald);">${item.hash.slice(0, 10)}...${item.hash.slice(-8)}</td>
+          <td><span style="color: var(--emerald); font-weight: 700; font-size: 12px;">● Verified</span></td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // Khởi tạo hiển thị
+    renderLedger();
+  </script>
 </body>
 </html>

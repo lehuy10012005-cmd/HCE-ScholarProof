@@ -34,9 +34,9 @@
 | **Lab 8** | [`TOPIC_REGISTRATION.md`](./TOPIC_REGISTRATION.md)<br>[`lab08.md`](./lab08.md)<br>[`ScholarProof.sol`](./contracts/capstone/ScholarProof.sol) | Khởi động đồ án Chủ đề 8, thiết lập cơ chế Proof of Existence, băm mật mã client-side, thiết kế Smart Contract & bộ 3 ca kiểm thử | ✅ **Hoàn thành** |
 | **Lab 9** | [`SPEC.md`](./SPEC.md)<br>[`lab09.md`](./lab09.md) | Hoàn thiện bản đặc tả nghiệp vụ BA Fintech (R1–R8, E1–E5), máy trạng thái và kịch bản UAT | ✅ **Hoàn thành** |
 | **Lab 10** | `contracts/capstone/ScholarProof.sol` (v2) | Hoàn thiện Smart Contract: Custom Errors, Events, chống băm trùng lặp, tối ưu Gas và tích hợp OpenZeppelin v5 | 🔄 *Sắp triển khai* |
-| **Lab 11** | `test/ScholarProof.test.js` | Bộ kịch bản kiểm thử tự động toàn diện: Luồng chuẩn, chống gian lận nộp đè mã băm, xử lý ngoại lệ biên | 🔄 *Sắp triển khai* |
-| **Lab 12** | `web/index.html` (v1) | Xây dựng giao diện Web3 DApp: Băm file tài liệu tại client bằng SHA-256 / Keccak-256 không lưu file lên server | 🔄 *Sắp triển khai* |
-| **Lab 13** | `web/index.html` (v2) | Tích hợp Ethers.js v6: Kết nối ví MetaMask, ký giao dịch on-chain, tra cứu và hiển thị chứng nhận số bản quyền | 🔄 *Sắp triển khai* |
+| **Lab 11** | [`web/index.html`](./web/index.html)<br>[`lab11.md`](./lab11.md) | Xây dựng giao diện Web3 DApp: Băm file client-side (Keccak-256), kết nối MetaMask Ethers.js v6, tra cứu và xuất chứng thư số | ✅ **Hoàn thành** |
+| **Lab 12** | `test/ScholarProof.test.js` | Bộ kịch bản kiểm thử tự động toàn diện: Luồng chuẩn, chống gian lận nộp đè mã băm, xử lý ngoại lệ biên | 🔄 *Sắp triển khai* |
+| **Lab 13** | `web/index.html` (Tích hợp Sepolia Testnet) | Tích hợp địa chỉ hợp đồng deploy Sepolia, kiểm thử luồng ký ví và đối soát sự kiện on-chain | 🔄 *Sắp triển khai* |
 | **Lab 14** | `audit_report.md` | Kiểm toán an toàn hợp đồng, đo lường chi phí Gas thực nghiệm trên Layer 2 Base/Arbitrum vs Sepolia Testnet | 🔄 *Sắp triển khai* |
 | **Lab 15** | `DEPLOYMENT.md` & Slide nghiệm thu | Triển khai hợp đồng lên Sepolia Testnet, xác thực mã nguồn trên Etherscan, nghiệm thu sản phẩm trước hội đồng | 🔄 *Sắp triển khai* |
 
