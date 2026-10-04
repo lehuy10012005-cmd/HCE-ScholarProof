@@ -12,7 +12,7 @@
 | STT | Họ và tên sinh viên | Mã sinh viên | Lớp | Vai trò dự án | Email |
 | :---: | :--- | :---: | :---: | :--- | :--- |
 | 1 | **Lê Văn Quang Huy** | `23K4300010` | K57 Kinh Tế Số | **Trưởng nhóm** / Kỹ sư Hợp đồng Thông minh & Đặc tả Nghiệp vụ | `lehuy10012005@gmail.com` |
-| 2 | **Lại Vương Gia Bảo** | `23K4300024` | K57 Kinh Tế Số | **Thành viên cặp** / Kỹ sư Kiểm thử Tự động & Giao diện Web3 DApp | `baolvg.eco2432@gmail.com` |
+| 2 | **Lại Vương Gia Bảo** | `23K4300024` | K57 Kinh Tế Số | **Thành viên cặp** / Kỹ sư Kiểm thử Tự động & Giao diện Web3 DApp | `bao9d4tpsh@gmail.com` |
 
 ---
 
