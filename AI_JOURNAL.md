@@ -202,13 +202,40 @@ Nếu chỉ mô tả chung chung "viết tool phân tích ví", AI thường b�
 2. **Lỗi 2 (Thiếu cơ chế kiểm soát lỗi phía Client gây thất thoát Gas):** AI ban đầu cho phép người dùng bấm nút gửi giao dịch on-chain ngay cả khi chưa chọn tệp hoặc để trống tiêu đề. Sinh viên chấn chỉnh: Trên blockchain, nếu giao dịch gửi lên mạng với tham số lỗi thì hàm `registerIdea` sẽ bị `revert`, nhưng người dùng **vẫn bị trừ phí gas mạng lưới**. Giao diện Web3 chuẩn mực bắt buộc phải validate dữ liệu (Client-side Form Validation) và khóa nút gửi trước khi kích hoạt MetaMask, bảo vệ từng đồng phí gas cho sinh viên.
 
 **Ai phát hiện:** Sinh viên phát hiện và trực tiếp hoàn thiện kiến trúc UX Web3 an toàn.
+## Lần 11 (Lab 10: Rà soát mã nguồn do AI sinh ra & Kiểm toán hợp đồng ScholarProof v2)
 
+**Prompt:**
+> "Bạn là chuyên viên kiểm toán hợp đồng thông minh.
+> 1. Rà soát hợp đồng contracts/training/VaultBuggy.sol và liệt kê mọi lỗ hổng, xếp theo mức nghiêm trọng. Với mỗi lỗ hổng nêu: dòng số mấy, khai thác thế nào, sửa ra sao.
+> 2. Đưa ra đoạn mã JavaScript thực nghiệm bẻ khóa dữ liệu private bằng eth_getStorageAt.
+> 3. Rà soát hợp đồng ScholarProof.sol kết hợp SPEC.md để phát hiện lỗi nghiệp vụ và nâng cấp lên phiên bản v2 an toàn."
 
+**AI trả về:**
+- Phân tích chi tiết 4 lỗi trong `VaultBuggy.sol`: Biến `private emergencyPin` bị lộ trên storage, đảo ngược logic `<= unlockTime`, thiếu phân quyền `withdraw()`, dùng hàm `transfer` và thiếu sự kiện.
+- Đoạn mã Web3 JSON-RPC `eth_getStorageAt` đọc trực tiếp slot 2 của hợp đồng để lấy mã PIN `123456`.
+- Đề xuất nâng cấp `ScholarProof.sol` lên phiên bản v2: Bổ sung hàm `transferAuthorship`, chặn tấn công làm phình bộ nhớ Storage bằng cách giới hạn độ dài chuỗi (`MAX_TITLE_LENGTH = 200`, `MAX_CATEGORY_LENGTH = 100`).
 
+**Đánh giá:** Dùng được (kết hợp hoàn hảo giữa đọc thủ công của sinh viên và phân tích của AI).
 
+### Bảng bắt buộc theo Sổ tay thực hành ECO2432 (Trang 25):
 
+| STT | Lỗi phát hiện | Mô tả kỹ thuật | Ai phát hiện | Cách khắc phục |
+| :---: | :--- | :--- | :---: | :--- |
+| **1** | **Lộ mã PIN trên Storage** (`VaultBuggy.sol`, dòng 8) | Khai báo `uint256 private emergencyPin` nhưng trên EVM toàn bộ ô nhớ storage đều công khai. Bất kỳ ai cũng đọc được slot 2 qua RPC `eth_getStorageAt`. | **Sinh viên**<br>*(Đọc thủ công)* | Không lưu mật khẩu/PIN dạng bản rõ trên blockchain. Thay bằng mã băm `keccak256` hoặc chữ ký ngoài chuỗi. |
+| **2** | **Nghịch đảo điều kiện khóa thời gian** (`VaultBuggy.sol`, dòng 19) | Dùng `require(block.timestamp <= unlockTime)` làm tiền bị khóa vĩnh viễn sau ngày hết hạn, chỉ cho phép rút trước hạn. | **Sinh viên**<br>*(Đọc thủ công)* | Đổi thành `block.timestamp >= unlockTime` (hoặc kiểm tra `< unlockTime` thì `revert StillLocked()`). |
+| **3** | **Thiếu phân quyền rút tiền** (`VaultBuggy.sol`, dòng 18–21) | Hàm `withdraw()` không kiểm tra `msg.sender == owner`. Bất kỳ ai cũng có thể gọi để rút sạch tiền về ví họ. | **AI & Sinh viên** | Thêm điều kiện: `if (msg.sender != owner) revert NotOwner();` áp dụng CEI. |
+| **4** | **Lỗi chuyển tiền `transfer` & Thiếu Event** (`VaultBuggy.sol`, dòng 16, 20) | Dùng `payable(msg.sender).transfer` bị trần 2.300 gas; hàm `deposit()` rỗng không kiểm tra số tiền > 0; thiếu event kiểm toán. | **AI**<br>*(Kiểm toán AI)* | Đổi sang `call{value:...}("")`, kiểm tra `msg.value > 0`, phát sự kiện `Deposited` và `Withdrawn`. |
 
+### Kiểm toán Hợp đồng Đồ án Nhóm (`ScholarProof.sol` / `ProjectCore.sol`):
 
+1. **Phát hiện 1 (Thiếu cơ chế chuyển nhượng quyền tác giả):**
+   - *Vị trí:* Hàm đăng ký chỉ lưu cứng `author = msg.sender`, không có cơ chế chuyển giao tài sản trí tuệ.
+   - *Ai phát hiện:* **Sinh viên** (nhận diện từ bài toán thực tế khi bàn giao đề tài cho nhà tài trợ/doanh nghiệp).
+   - *Khắc phục:* Bổ sung hàm `transferAuthorship(bytes32 docHash, address newAuthor)` với kiểm tra quyền `NotAuthor()`.
+2. **Phát hiện 2 (Rủi ro tấn công làm phình bộ nhớ - Storage Bloat):**
+   - *Vị trí:* Tham số `title` và `category` không giới hạn độ dài ký tự.
+   - *Ai phát hiện:* **AI & Sinh viên**.
+   - *Khắc phục:* Khống chế `MAX_TITLE_LENGTH = 200` và `MAX_CATEGORY_LENGTH = 100` với Custom Errors tương ứng.
 
 
 

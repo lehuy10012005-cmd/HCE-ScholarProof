@@ -32,8 +32,8 @@
 | Giai đoạn | Sản phẩm bàn giao | Mô tả nghiệp vụ & Kỹ thuật | Trạng thái |
 | :---: | :--- | :--- | :---: |
 | **Lab 8** | [`TOPIC_REGISTRATION.md`](./TOPIC_REGISTRATION.md)<br>[`lab08.md`](./lab08.md)<br>[`ScholarProof.sol`](./contracts/capstone/ScholarProof.sol) | Khởi động đồ án Chủ đề 8, thiết lập cơ chế Proof of Existence, băm mật mã client-side, thiết kế Smart Contract & bộ 3 ca kiểm thử | ✅ **Hoàn thành** |
-| **Lab 9** | [`SPEC.md`](./SPEC.md)<br>[`lab09.md`](./lab09.md) | Hoàn thiện bản đặc tả nghiệp vụ BA Fintech (R1–R8, E1–E5), máy trạng thái và kịch bản UAT | ✅ **Hoàn thành** |
-| **Lab 10** | `contracts/capstone/ScholarProof.sol` (v2) | Hoàn thiện Smart Contract: Custom Errors, Events, chống băm trùng lặp, tối ưu Gas và tích hợp OpenZeppelin v5 | 🔄 *Sắp triển khai* |
+| **Lab 9** | [`SPEC.md`](./SPEC.md)<br>[`lab09.md`](./lab09.md)<br>[`contracts/training/TimeLockVault.sol`](./contracts/training/TimeLockVault.sol) | Đặc tả nghiệp vụ BA chi tiết cho nền tảng ScholarProof, máy trạng thái xác thực ý tưởng và ma trận rủi ro | ✅ **Hoàn thành** |
+| **Lab 10** | [`lab10.md`](./lab10.md)<br>[`contracts/capstone/ScholarProof.sol`](./contracts/capstone/ScholarProof.sol) (v2)<br>[`contracts/project/ProjectCore.sol`](./contracts/project/ProjectCore.sol) | Rà soát mã nguồn do AI sinh ra, giải mã Storage Slot 2 (VaultBuggy), kiểm toán & nâng cấp ScholarProof v2 | ✅ **Hoàn thành** |
 | **Lab 11** | [`web/index.html`](./web/index.html)<br>[`lab11.md`](./lab11.md) | Xây dựng giao diện Web3 DApp: Băm file client-side (Keccak-256), kết nối MetaMask Ethers.js v6, tra cứu và xuất chứng thư số | ✅ **Hoàn thành** |
 | **Lab 12** | `test/ScholarProof.test.js` | Bộ kịch bản kiểm thử tự động toàn diện: Luồng chuẩn, chống gian lận nộp đè mã băm, xử lý ngoại lệ biên | 🔄 *Sắp triển khai* |
 | **Lab 13** | `web/index.html` (Tích hợp Sepolia Testnet) | Tích hợp địa chỉ hợp đồng deploy Sepolia, kiểm thử luồng ký ví và đối soát sự kiện on-chain | 🔄 *Sắp triển khai* |
@@ -47,13 +47,18 @@
 HCE-ScholarProof/
 ├── contracts/
 │   ├── capstone/
-│   │   └── ScholarProof.sol     # Hợp đồng thông minh ghi nhận quyền tác giả ý tưởng
-│   └── training/                # Thư viện hợp đồng mẫu tham chiếu
+│   │   └── ScholarProof.sol     # Hợp đồng thông minh ghi nhận quyền tác giả ý tưởng (v2)
+│   ├── project/
+│   │   └── ProjectCore.sol      # Hợp đồng lõi theo định danh quy định của học phần
+│   └── training/                # Thư viện hợp đồng mẫu tham chiếu (TimeLockVault, VaultBuggy)
 ├── web/
 │   └── index.html               # Giao diện Web3 DApp băm file và tra cứu on-chain
 ├── AGENTS.md                    # Quy ước lập trình và chuẩn mực bảo mật dự án
+├── AI_JOURNAL.md                # Nhật ký làm việc, phản biện và giám sát AI (Lab 1 - 10)
+├── SPEC.md                      # Bản đặc tả nghiệp vụ BA và máy trạng thái hệ thống
 ├── TOPIC_REGISTRATION.md        # Bản đăng ký đề tài Capstone chính thức của cặp sinh viên
 ├── lab08.md                     # Báo cáo kỹ thuật và kinh tế khởi động đồ án (Lab 8)
+├── lab10.md                     # Báo cáo rà soát mã AI và kiểm toán hợp đồng lõi (Lab 10)
 ├── package.json                 # Cấu hình phụ thuộc OpenZeppelin Contracts v5
 └── README.md                    # Tài liệu giới thiệu tổng quan đồ án HCE-ScholarProof
 ```
