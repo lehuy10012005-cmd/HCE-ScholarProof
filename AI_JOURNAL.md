@@ -164,6 +164,26 @@ Nếu chỉ mô tả chung chung "viết tool phân tích ví", AI thường b�
 
 **Ai phát hiện:** Sinh viên phát hiện và định hướng kiến trúc bảo mật kết hợp kinh tế on-chain.
 
+## Lần 9 (Lab 9: Xác lập Đặc tả Nghiệp vụ BA SPEC.md cho Đồ án Capstone HCE-ScholarProof)
+
+**Prompt:**
+> "Hãy giúp tôi hoàn thiện bản đặc tả nghiệp vụ BA Fintech (SPEC.md) cho đề tài Capstone HCE-ScholarProof theo chuẩn học phần ECO2432 (Sổ tay thực hành). Không viết code trong buổi này. Xây dựng đầy đủ 6 phần: Mục đích, Đầu vào (Off-chain & On-chain), Quy tắc nghiệp vụ R1–R8, Đầu ra, Máy trạng thái và Ma trận rủi ro / Trường hợp ngoại lệ E1–E5, kèm bài toán chống Front-running trên Mempool."
+
+**AI trả về:**
+- Bản đặc tả nghiệp vụ BA hoàn chỉnh `SPEC.md` và báo cáo `lab09.md` chuyên sâu cho đề tài `HCE-ScholarProof`.
+- Mô hình hóa cây máy trạng thái 4 nấc (`Unregistered` ➔ `Hashing` ➔ `Registered` ➔ `Verified/Disputed`).
+- Định nghĩa 8 quy tắc nghiệp vụ on-chain (R1–R8) đảm bảo nguyên tắc First-to-File, băm Keccak-256 client-side, lấy dấu thời gian khối bất biến và tra cứu miễn phí gas.
+- Phân tích 5 kịch bản ngoại lệ (E1–E5) về kiểm soát băm rỗng, tiêu đề trống và thủ đoạn nghe lén Mempool (Front-running).
+
+**Đánh giá:** Dùng được (sau khi sinh viên chấn chỉnh góc nhìn rủi ro Front-running và phân tách phạm vi nghiên cứu).
+
+**Chỗ sai & Phản biện sắc bén của sinh viên:**
+1. **Lỗi 1 (Hiểu sai bản chất tấn công Front-running trên Blockchain):** Trong bản nháp phân tích rủi ro, AI cảnh báo rằng *"kẻ xấu có thể nghe lén Mempool, thấy giao dịch nộp hash của tác giả và đẩy gas cao hơn để cướp trắng bản quyền"*. Sinh viên phản biện ngay: Kẻ xấu nghe lén Mempool thì chỉ thấy chuỗi băm 32 bytes vô nghĩa (`docHash`) và chuỗi tiêu đề (`title`), chứ kẻ xấu **hoàn toàn KHÔNG THỂ có tệp tài liệu nội dung nghiên cứu gốc** (vì tệp gốc được giữ tuyệt mật tại client của tác giả). Khi xảy ra tranh chấp trước Hội đồng khoa học, bên nào không xuất trình được tệp tài liệu gốc tạo ra đúng mã băm đó thì bên đó tự động bị kết luận là kẻ mạo danh. Do đó, cơ chế hàm băm một chiều đã tự thân giải quyết rủi ro này mà không cần cơ chế Commit-Reveal rườm rà gây tốn gấp đôi phí gas cho sinh viên.
+2. **Lỗi 2 (Ảo tưởng về phạm vi pháp lý - Legal Overreach):** AI ban đầu ghi trong mục tiêu rằng "Hệ thống tự động cấp bằng độc quyền sáng chế quốc gia có giá trị thay thế Cục Sở hữu Trí tuệ". Sinh viên đã chấn chỉnh: Smart Contract chỉ là công cụ công nghệ cung cấp **Bằng chứng ưu tiên mật mã bất biến (Prior Art Evidence)**, không thể tự ý thay thế thẩm quyền cấp văn bằng bảo hộ nhà nước của cơ quan hành chính. Sinh viên đã yêu cầu chuyển mục này vào phần "Ngoài phạm vi (Out of Scope)" để đảm bảo tính chuẩn xác về mặt luật học và kinh tế thể chế.
+
+**Ai phát hiện:** Sinh viên phát hiện và trực tiếp chấn chỉnh tư duy mật mã học và thể chế pháp lý của AI.
+
+
 
 
 
