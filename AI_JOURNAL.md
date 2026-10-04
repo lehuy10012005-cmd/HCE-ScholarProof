@@ -237,5 +237,27 @@ Nếu chỉ mô tả chung chung "viết tool phân tích ví", AI thường b�
    - *Ai phát hiện:* **AI & Sinh viên**.
    - *Khắc phục:* Khống chế `MAX_TITLE_LENGTH = 200` và `MAX_CATEGORY_LENGTH = 100` với Custom Errors tương ứng.
 
+## Lần 12 (Lab 12: Thiết kế và Giám sát Bộ kiểm thử tự động Smart Contract)
+
+**Prompt:**
+> "Bạn là kỹ sư kiểm thử hợp đồng thông minh. Dựa trên SPEC.md và ScholarProof.sol v2, hãy:
+> 1. Thiết kế bộ kiểm thử tự động toàn diện theo chuẩn AGENTS.md, gồm tối thiểu 3 ca kiểm thử: luồng đúng, chống gian lận nộp đè mã băm (Anti-Scooping), và mạo danh chiếm đoạt quyền sở hữu (Unauthorized).
+> 2. Viết mã nguồn test/ScholarProof.test.js thực thi độc lập trên Node.js và contracts/test/ScholarProof_test.sol cho môi trường Remix IDE.
+> 3. Phân tích quản trị rủi ro kinh tế, đối soát tính toàn vẹn sổ cái (Reconciliation) và đo lường chi phí Gas."
+
+**AI trả về:**
+- Bộ kịch bản kiểm thử tự động `test/ScholarProof.test.js` bao phủ 5 ca kiểm thử: Luồng chuẩn (Happy Path), Chống gian lận nộp đè mã băm, Tấn công mạo danh quyền tác giả, Chuyển giao quyền tài sản trí tuệ và Kiểm soát dữ liệu biên chống phình Storage.
+- Hợp đồng kiểm thử On-chain `contracts/test/ScholarProof_test.sol` tương thích với trình cắm Remix IDE Solidity Unit Testing.
+- Bản báo cáo giải trình kỹ thuật và kinh tế on-chain `lab12.md`.
+
+**Đánh giá:** Dùng được (sau khi sinh viên chấn chỉnh cơ chế bắt mã lỗi Custom Error và kiểm toán tính cân đối sổ cái).
+
+**Chỗ sai & Phản biện sắc bén của sinh viên:**
+1. **Lỗi 1 (Chỉ bắt lỗi Revert chung chung thay vì xác thực đúng Custom Error):** Ban đầu AI chỉ viết assertion `assert.throws()` chung chung mà không xác định rõ loại lỗi phát sinh. Sinh viên chấn chỉnh: Trong Solidity 0.8.20, Custom Error là quy chuẩn bắt buộc của dự án. Nếu hợp đồng revert vì lỗi Out-of-gas hoặc lỗi ngữ nghĩa ngoài ý muốn mà test vẫn "Pass" thì sẽ tạo ra lỗ hổng đánh giá sai. Sinh viên yêu cầu test suite phải bắt chính xác mã lỗi (`IdeaAlreadyRegistered`, `NotAuthor`, `InvalidDocHash`) cùng các tham số đối soát đi kèm.
+2. **Lỗi 2 (Bỏ quên kiểm tra tính cân đối sổ cái sau khi Revert):** AI ban đầu không kiểm tra biến đếm `totalIdeas` sau khi một giao dịch gian lận bị Revert. Sinh viên yêu cầu bổ sung kiểm tra nghiêm ngặt: Biến `totalIdeas` bắt buộc không được tăng ảo và trạng thái mapping `_ideas` không được ghi đè, đảm bảo tính toàn vẹn và nguyên tắc đối soát sổ cái on-chain (On-chain Ledger Reconciliation).
+
+**Ai phát hiện:** Sinh viên phát hiện và trực tiếp chỉ đạo chuẩn hóa bộ kiểm thử tự động.
+
+
 
 
