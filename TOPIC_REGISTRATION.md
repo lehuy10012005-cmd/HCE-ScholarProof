@@ -18,7 +18,7 @@
 2. **Lại Vương Gia Bảo**
    * Mã sinh viên: **23K4300024**
    * Lớp: K57 Kinh Tế Số
-   * Email: `baolvg.eco2432@gmail.com`
+   * Email: `bao9d4tpsh@gmail.com`
    * Vai trò chính: Thành viên cặp / Kỹ sư Kiểm thử Tự động & Giao diện Web3 DApp
 
 ---
