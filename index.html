@@ -1089,8 +1089,9 @@
       display: none;
       position: fixed;
       top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0, 0, 0, 0.4);
-      z-index: 1000;
+      background: rgba(0, 0, 0, 0.45);
+      z-index: 9990;
+      backdrop-filter: blur(2px);
     }
     .detail-popover {
       display: none;
@@ -1103,8 +1104,8 @@
       border: 1px solid var(--border-color);
       border-radius: var(--radius-lg);
       padding: 24px;
-      box-shadow: var(--shadow-lg);
-      z-index: 1001;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+      z-index: 9995;
     }
     .popover-header {
       display: flex;
@@ -1910,6 +1911,79 @@
     </div>
   </footer>
 
+  <!-- ========================================================================
+       MODAL: QUẢN LÝ & KẾT NỐI VÍ WEB3 / METAMASK (TOÀN CỤC)
+       ======================================================================== -->
+  <div class="popover-backdrop" id="walletModalBackdrop" onclick="closeWalletModal()"></div>
+  <div class="detail-popover" id="walletModal" style="max-width: 480px;">
+    <div class="popover-header">
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <span style="font-size: 20px;">🦊</span>
+        <h4 style="margin: 0; font-size: 16px;">Quản Lý & Kết Nối Ví Web3</h4>
+      </div>
+      <button class="btn-close-popover" onclick="closeWalletModal()" title="Đóng">&times;</button>
+    </div>
+
+    <div style="font-size: 13px; line-height: 1.6; color: var(--text-secondary);">
+      <!-- Cảnh báo nếu mở trên file:/// -->
+      <div id="fileProtocolWarning" style="display: none; background: rgba(234, 88, 12, 0.08); border: 1.5px solid rgba(234, 88, 12, 0.35); padding: 12px 14px; border-radius: var(--radius-sm); margin-bottom: 14px; font-size: 12px; color: #ea580c; line-height: 1.55;">
+        <div style="font-weight: 700; margin-bottom: 4px; display: flex; align-items: center; gap: 6px;">
+          <span>⚠️</span> <span>Lưu ý khi mở tệp cục bộ (file://):</span>
+        </div>
+        <div>
+          Trình duyệt bảo mật mặc định <strong>chặn tiện ích MetaMask</strong> đối với đường dẫn <code>file:///</code>.
+        </div>
+        <div style="margin-top: 8px; padding-top: 6px; border-top: 1px dashed rgba(234, 88, 12, 0.3);">
+          👉 <strong>Khuyên dùng:</strong> <a href="https://lehuy10012005-cmd.github.io/HCE-ScholarProof/" target="_blank" style="color: #ea580c; font-weight: 800; text-decoration: underline;">Mở Bản Online trên GitHub Pages ↗</a> (kết nối MetaMask chuẩn 100%) hoặc chọn nút <strong>"Dùng Ví Thử Nghiệm HCE"</strong> bên dưới.
+        </div>
+      </div>
+
+      <!-- Trạng thái ví hiện tại -->
+      <div style="background: var(--bg-subtle); padding: 14px 16px; border-radius: var(--radius-md); margin-bottom: 16px; border: 1px solid var(--border-color);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+          <span style="font-weight: 600; color: var(--text-muted); font-size: 12px;">TRẠNG THÁI:</span>
+          <span id="walletModalStatus"><span style="color: var(--text-muted);">Chưa kết nối</span></span>
+        </div>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+          <span style="font-weight: 600; color: var(--text-muted); font-size: 12px;">ĐỊA CHỈ VÍ:</span>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <code id="walletModalAddress" style="font-family: var(--font-mono); font-size: 12px; color: var(--primary); font-weight: 600;">Chưa chọn</code>
+            <button id="btnCopyWalletAddr" onclick="copyWalletAddress()" title="Sao chép địa chỉ ví" style="display: none; background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 4px; padding: 2px 7px; cursor: pointer; font-size: 11px;">📋 Copy</button>
+          </div>
+        </div>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <span style="font-weight: 600; color: var(--text-muted); font-size: 12px;">MẠNG BLOCKCHAIN:</span>
+          <span id="walletModalNetwork" style="font-weight: 700; color: var(--text-primary); font-size: 12px;">Sepolia Testnet (11155111)</span>
+        </div>
+      </div>
+
+      <!-- Khối các hành động kết nối ví -->
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <button class="btn-cta-primary" id="btnSelectMetaMaskAccount" type="button" style="width: 100%; justify-content: center; font-size: 13.5px; padding: 11px; gap: 8px; box-shadow: var(--shadow-sm);">
+          <span>🦊</span> <strong>Chọn / Đổi Ví MetaMask Khác</strong>
+        </button>
+        <button class="btn-cta-secondary" id="btnSwitchSepoliaNetwork" type="button" style="width: 100%; justify-content: center; font-size: 13px; padding: 10px; gap: 8px;">
+          <span>⚡</span> <span>Chuyển Sang Mạng Sepolia (11155111)</span>
+        </button>
+        <button class="btn-cta-secondary" id="btnUseDemoWallet" type="button" style="width: 100%; justify-content: center; font-size: 13px; padding: 10px; gap: 8px;">
+          <span>🧪</span> <span>Dùng Ví Thử Nghiệm HCE (0xB07F...Fd50)</span>
+        </button>
+        <button class="btn-cta-secondary" id="btnDisconnectWallet" type="button" style="width: 100%; justify-content: center; font-size: 13px; padding: 10px; color: var(--danger); border-color: var(--danger-border); gap: 8px;">
+          <span>🚪</span> <span>Ngắt Kết Nối Ví</span>
+        </button>
+      </div>
+
+      <!-- Hướng dẫn chi tiết -->
+      <div style="margin-top: 14px; font-size: 12px; color: var(--text-muted); line-height: 1.5; border-top: 1px solid var(--border-color); padding-top: 10px;">
+        💡 <strong>Cách chọn đúng ví bạn muốn:</strong>
+        <ul style="margin: 6px 0 0 16px; padding: 0;">
+          <li>Bấm nút <strong>"Chọn / Đổi Ví MetaMask Khác"</strong> để MetaMask bung danh sách tài khoản cho bạn tích chọn ví mong muốn.</li>
+          <li>Bạn cũng có thể mở trực tiếp cửa sổ MetaMask trên trình duyệt, bấm đổi ví, hệ thống sẽ tự động cập nhật ngay lập tức.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
   <!-- TOAST BOX -->
   <div class="toast-box" id="toastBox"></div>
 
@@ -2004,24 +2078,210 @@
       toast(`Đã chuyển sang chế độ ${next === "dark" ? "Tối (Dark Mode)" : "Sáng (Light Mode)"}`);
     });
 
-    // Kết nối ví MetaMask
-    document.getElementById("btnConnectWallet").addEventListener("click", async () => {
-      if (typeof window.ethereum !== "undefined") {
-        try {
-          const provider = new ethers.BrowserProvider(window.ethereum);
-          const accounts = await provider.send("eth_requestAccounts", []);
-          currentWallet = accounts[0];
-          document.getElementById("lblWallet").textContent = `${currentWallet.slice(0, 6)}...${currentWallet.slice(-4)}`;
-          toast("Đã kết nối ví MetaMask thành công!", "success");
-        } catch (e) {
-          toast(e.message, "error");
+    // Trình cung cấp Web3 / MetaMask Provider
+    function getMetaMaskProvider() {
+      if (typeof window.ethereum === "undefined") return null;
+      if (window.ethereum.providers && window.ethereum.providers.length) {
+        return window.ethereum.providers.find(p => p.isMetaMask) || window.ethereum.providers[0];
+      }
+      return window.ethereum;
+    }
+
+    function updateWalletUI(wallet) {
+      currentWallet = wallet;
+      const lbl = document.getElementById("lblWallet");
+      if (currentWallet) {
+        if (currentWallet.includes("Demo") || currentWallet === "0xB07FB0761c33a01F7f7493A6a8a9667F4842Fd50") {
+          lbl.innerHTML = `<span style="color: #f59e0b;">●</span> 0xB07F...Fd50 (Demo)`;
+        } else {
+          lbl.innerHTML = `<span style="color: #22c55e;">●</span> ${currentWallet.slice(0, 6)}...${currentWallet.slice(-4)}`;
         }
       } else {
-        currentWallet = "0xB07FB0761c33a01F7f7493A6a8a9667F4842Fd50";
-        document.getElementById("lblWallet").textContent = "0xB07F...Fd50 (Demo)";
-        toast("Kích hoạt chế độ Demo Sepolia thành công!", "info");
+        lbl.textContent = "Wallet";
+      }
+      updateWalletModalInfo();
+    }
+
+    function updateWalletModalInfo() {
+      const statusEl = document.getElementById("walletModalStatus");
+      const addrEl = document.getElementById("walletModalAddress");
+      const netEl = document.getElementById("walletModalNetwork");
+      const btnCopy = document.getElementById("btnCopyWalletAddr");
+
+      if (currentWallet) {
+        statusEl.innerHTML = `<span style="color: var(--success); font-weight: 700;">● Đã kết nối</span>`;
+        addrEl.textContent = `${currentWallet.slice(0, 10)}...${currentWallet.slice(-6)}`;
+        addrEl.title = currentWallet;
+        if (btnCopy) btnCopy.style.display = "inline-block";
+        netEl.innerHTML = `<span style="color: var(--primary); font-weight: 700;">Sepolia Testnet (11155111)</span>`;
+      } else {
+        statusEl.innerHTML = `<span style="color: var(--text-muted);">Chưa kết nối</span>`;
+        addrEl.textContent = "Chưa chọn";
+        addrEl.title = "";
+        if (btnCopy) btnCopy.style.display = "none";
+        netEl.textContent = "Sepolia Testnet (11155111)";
+      }
+    }
+
+    function copyWalletAddress() {
+      if (currentWallet) {
+        navigator.clipboard.writeText(currentWallet);
+        toast("Đã sao chép địa chỉ ví vào bộ nhớ tạm!", "info");
+      }
+    }
+
+    function openWalletModal() {
+      const warnBox = document.getElementById("fileProtocolWarning");
+      if (warnBox) {
+        if (window.location.protocol === "file:") {
+          warnBox.style.display = "block";
+        } else {
+          warnBox.style.display = "none";
+        }
+      }
+      updateWalletModalInfo();
+      document.getElementById("walletModal").style.display = "block";
+      document.getElementById("walletModalBackdrop").style.display = "block";
+    }
+
+    function closeWalletModal() {
+      document.getElementById("walletModal").style.display = "none";
+      document.getElementById("walletModalBackdrop").style.display = "none";
+    }
+
+    // Bấm nút Wallet -> Mở Modal Chọn Ví
+    document.getElementById("btnConnectWallet").addEventListener("click", () => {
+      openWalletModal();
+    });
+
+    // 1. Chọn / Đổi ví MetaMask khác (gọi wallet_requestPermissions để MetaMask bung popup cho chọn)
+    document.getElementById("btnSelectMetaMaskAccount").addEventListener("click", async () => {
+      const eth = getMetaMaskProvider();
+      if (!eth) {
+        if (window.location.protocol === "file:") {
+          toast("Trình duyệt chặn tiện ích trên file://. Hãy mở link online GitHub Pages hoặc bật quyền truy cập tệp cho MetaMask!", "error");
+        } else {
+          toast("Không tìm thấy tiện ích MetaMask! Vui lòng cài đặt tiện ích MetaMask trên trình duyệt.", "error");
+        }
+        return;
+      }
+
+      toast("Đang yêu cầu MetaMask mở hộp thoại chọn tài khoản...", "info");
+      try {
+        // Gọi wallet_requestPermissions để MetaMask hiển thị màn hình chọn tài khoản
+        try {
+          await eth.request({
+            method: 'wallet_requestPermissions',
+            params: [{ eth_accounts: {} }]
+          });
+        } catch (permErr) {
+          console.warn("wallet_requestPermissions fallback:", permErr);
+          if (permErr.code === 4001) {
+            toast("Bạn đã hủy chọn tài khoản trên MetaMask.", "info");
+            return;
+          }
+          if (permErr.code === -32002) {
+            toast("Cửa sổ MetaMask đang chờ! Hãy bấm vào biểu tượng con cáo trên thanh tiện ích.", "warning");
+            return;
+          }
+          await eth.request({ method: 'eth_requestAccounts' });
+        }
+
+        const accounts = await eth.request({ method: 'eth_accounts' });
+        if (accounts && accounts.length > 0) {
+          updateWalletUI(accounts[0]);
+          toast(`Đã chọn ví MetaMask: ${accounts[0].slice(0, 6)}...${accounts[0].slice(-4)}`, "success");
+          closeWalletModal();
+        } else {
+          toast("Chưa chọn được tài khoản ví nào từ MetaMask.", "warning");
+        }
+      } catch (err) {
+        console.error("MetaMask error:", err);
+        if (err.code === -32002) {
+          toast("Yêu cầu chọn ví đang chờ! Hãy bấm vào biểu tượng con cáo MetaMask trên trình duyệt.", "warning");
+        } else if (err.code === 4001) {
+          toast("Bạn đã hủy chọn ví trên MetaMask.", "info");
+        } else {
+          toast(`Lỗi MetaMask: ${err.message || err}`, "error");
+        }
       }
     });
+
+    // 2. Chuyển sang mạng Sepolia Testnet
+    document.getElementById("btnSwitchSepoliaNetwork").addEventListener("click", async () => {
+      const eth = getMetaMaskProvider();
+      if (!eth) {
+        toast("Vui lòng cài đặt MetaMask để chuyển mạng!", "error");
+        return;
+      }
+      try {
+        await eth.request({
+          method: 'wallet_switchEthereumChain',
+          params: [{ chainId: '0xaa36a7' }] // 11155111 Sepolia
+        });
+        toast("Đã chuyển sang mạng Sepolia Testnet thành công!", "success");
+      } catch (switchError) {
+        if (switchError.code === 4902) {
+          try {
+            await eth.request({
+              method: 'wallet_addEthereumChain',
+              params: [{
+                chainId: '0xaa36a7',
+                chainName: 'Sepolia Testnet',
+                nativeCurrency: { name: 'Sepolia ETH', symbol: 'ETH', decimals: 18 },
+                rpcUrls: ['https://rpc.sepolia.org'],
+                blockExplorerUrls: ['https://sepolia.etherscan.io']
+              }]
+            });
+            toast("Đã thêm và chuyển sang mạng Sepolia Testnet!", "success");
+          } catch (addError) {
+            toast(addError.message, "error");
+          }
+        } else {
+          toast(switchError.message, "error");
+        }
+      }
+    });
+
+    // 3. Dùng Ví Thử Nghiệm Demo HCE
+    document.getElementById("btnUseDemoWallet").addEventListener("click", () => {
+      updateWalletUI("0xB07FB0761c33a01F7f7493A6a8a9667F4842Fd50");
+      toast("Đã kích hoạt Ví Demo Sepolia (0xB07F...Fd50)!", "info");
+      closeWalletModal();
+    });
+
+    // 4. Ngắt kết nối ví
+    document.getElementById("btnDisconnectWallet").addEventListener("click", () => {
+      updateWalletUI(null);
+      toast("Đã ngắt kết nối ví!", "info");
+      closeWalletModal();
+    });
+
+    // Tự động kiểm tra và lắng nghe sự kiện tài khoản MetaMask
+    const initialEth = getMetaMaskProvider();
+    if (initialEth) {
+      if (initialEth.on) {
+        initialEth.on('accountsChanged', (accounts) => {
+          if (accounts && accounts.length > 0) {
+            updateWalletUI(accounts[0]);
+            toast(`MetaMask đã chuyển sang ví: ${accounts[0].slice(0, 6)}...${accounts[0].slice(-4)}`, "info");
+          } else {
+            updateWalletUI(null);
+            toast("Đã ngắt kết nối ví MetaMask.", "info");
+          }
+        });
+        initialEth.on('chainChanged', () => {
+          window.location.reload();
+        });
+      }
+
+      // Tự động nhận diện nếu ví đã cấp quyền trước đó
+      initialEth.request({ method: 'eth_accounts' }).then(accs => {
+        if (accs && accs.length > 0) {
+          updateWalletUI(accs[0]);
+        }
+      }).catch(() => {});
+    }
 
     // Băm file Keccak-256
     async function hashFile(file) {
