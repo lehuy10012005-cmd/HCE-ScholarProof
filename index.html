@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>HCE-ScholarProof | Hệ thống Ghi nhận và Bảo chứng Quyền tác giả Ý tưởng Khoa học</title>
+  <link rel="icon" type="image/png" href="hce-logo.png">
   
   <!-- Phông chữ Google Fonts chuẩn học thuật & hiện đại -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -123,18 +124,21 @@
       text-decoration: none;
       color: inherit;
     }
-    .brand-badge {
-      width: 38px;
-      height: 38px;
-      background: linear-gradient(135deg, #1e3a8a 0%, #0284c7 100%);
-      color: #fff;
-      font-weight: 800;
-      font-size: 13px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-radius: 8px;
-      letter-spacing: -0.5px;
+    .brand-logo-img {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      object-fit: cover;
+      background: #ffffff;
+      padding: 1px;
+      box-shadow: 0 2px 8px rgba(30, 58, 138, 0.18);
+      border: 1.5px solid var(--border-color);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      flex-shrink: 0;
+    }
+    .brand-wrap:hover .brand-logo-img {
+      transform: scale(1.06);
+      box-shadow: 0 4px 12px rgba(30, 58, 138, 0.28);
     }
     .brand-title h1 {
       font-size: 16px;
@@ -347,9 +351,21 @@
       position: relative;
       overflow: hidden;
     }
-    .graphic-icon {
-      font-size: 64px;
-      margin-bottom: 16px;
+    .hero-crest-img {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      margin: 0 auto 16px;
+      display: block;
+      background: #ffffff;
+      padding: 4px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+      border: 2px solid rgba(255, 255, 255, 0.9);
+      animation: floatLogo 4s ease-in-out infinite;
+    }
+    @keyframes floatLogo {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-6px); }
     }
     .hero-graphic-card h3 {
       font-size: 20px;
@@ -888,6 +904,17 @@
     .deed-inner {
       text-align: center;
     }
+    .deed-crest-logo {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      margin: 0 auto 14px;
+      display: block;
+      background: #ffffff;
+      padding: 3px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+      border: 1px solid #e2e8f0;
+    }
     .deed-header {
       margin-bottom: 24px;
     }
@@ -1043,10 +1070,10 @@
   <header class="main-header">
     <div class="header-inner">
       <a href="#" class="brand-wrap" onclick="switchNavTab('tab-landing')">
-        <div class="brand-badge">HCE</div>
+        <img src="hce-logo.png" alt="Logo Trường Đại học Kinh tế - Đại học Huế" class="brand-logo-img">
         <div class="brand-title">
           <h1>HCE-ScholarProof</h1>
-          <p>Bảo vệ ý tưởng &bull; Khởi tạo tri thức</p>
+          <p>Trường Đại học Kinh tế &bull; Đại học Huế</p>
         </div>
       </a>
 
@@ -1115,7 +1142,7 @@
 
         <div>
           <div class="hero-graphic-card">
-            <div class="graphic-icon">🎓</div>
+            <img src="hce-logo.png" alt="Biểu trưng Đại học Kinh tế Huế" class="hero-crest-img">
             <h3>RESEARCH PROVENANCE</h3>
             <p>Khắc dấu thời gian khối (Block Timestamping) và vân tay số Keccak-256 bảo vệ toàn diện bản quyền nghiên cứu khoa học tại Trường Đại học Kinh tế, ĐH Huế.</p>
           </div>
@@ -1406,6 +1433,7 @@
       <div class="academic-deed-card" id="academicDeedPrintArea">
         <div class="deed-inner">
           <div class="deed-header">
+            <img src="hce-logo.png" alt="Logo HCE" class="deed-crest-logo">
             <p>TRƯỜNG ĐẠI HỌC KINH TẾ &bull; ĐẠI HỌC HUẾ</p>
             <h2>CHỨNG THƯ BẢO CHỨNG QUYỀN TÁC GIẢ</h2>
             <p>HCE ACADEMIC DEED OF SCIENTIFIC IDEA PROVENANCE &bull; ECO2432</p>
@@ -1471,8 +1499,11 @@
 
   <!-- FOOTER -->
   <footer>
-    <div style="max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
-      <div><strong>HCE-ScholarProof</strong> &bull; Đồ án Capstone Chủ đề 8 &bull; TS. Hà Ngọc Long</div>
+    <div style="max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <img src="hce-logo.png" alt="HCE Logo" style="width: 28px; height: 28px; border-radius: 50%; object-fit: cover;">
+        <span><strong>HCE-ScholarProof</strong> &bull; Đồ án Capstone Chủ đề 8 &bull; TS. Hà Ngọc Long</span>
+      </div>
       <div>Sinh viên: <strong>Lê Văn Quang Huy</strong> & <strong>Lại Vương Gia Bảo</strong> (K57 Kinh Tế Số)</div>
       <div><a href="https://github.com/lehuy10012005-cmd/HCE-ScholarProof" target="_blank" style="color: var(--primary); text-decoration: none;">GitHub Repository</a></div>
     </div>
