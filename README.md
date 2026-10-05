@@ -3,7 +3,8 @@
 > **Đồ án Capstone môn học:** Tiền điện tử và Hợp đồng thông minh (ECO2432)  
 > **Khoa:** Hệ thống Thông tin Kinh tế — Trường Đại học Kinh tế, Đại học Huế  
 > **Giảng viên hướng dẫn:** TS. Hà Ngọc Long  
-> **Kho lưu trữ chính thức:** [https://github.com/lehuy10012005-cmd/HCE-ScholarProof](https://github.com/lehuy10012005-cmd/HCE-ScholarProof)
+> **Kho lưu trữ chính thức:** [https://github.com/lehuy10012005-cmd/HCE-ScholarProof](https://github.com/lehuy10012005-cmd/HCE-ScholarProof)  
+> **Website DApp trực tuyến (Live Demo):** [https://lehuy10012005-cmd.github.io/HCE-ScholarProof/](https://lehuy10012005-cmd.github.io/HCE-ScholarProof/)
 
 ---
 
