@@ -1,1144 +1,1762 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="vi" data-theme="light">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>HCE-ScholarProof | Nền tảng Bảo chứng Quyền tác giả Ý tưởng Nghiên cứu Khoa học</title>
-  <!-- Google Fonts -->
+  <title>HCE-ScholarProof | Nền tảng Bảo chứng Quyền tác giả Ý tưởng Khoa học trên Blockchain</title>
+  
+  <!-- Phông chữ Google Fonts chuẩn học thuật & hiện đại -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  <!-- Ethers.js v6 CDN -->
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,600;1,6..72,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Thư viện Ethers.js v6 & QRCode Generator -->
   <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.2/dist/ethers.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
 
   <style>
+    /* ==========================================================================
+       HỆ THỐNG BIẾN THIẾT KẾ ĐA CHẾ ĐỘ (LIGHT / DARK DESIGN SYSTEM)
+       Không dùng ánh sáng neon nhựa; chuyển sang chuẩn mực Academic Fintech
+       ========================================================================== */
     :root {
-      --bg-dark: #070d1e;
-      --bg-card: rgba(17, 26, 51, 0.85);
-      --bg-card-hover: rgba(26, 38, 74, 0.95);
-      --border-color: rgba(56, 189, 248, 0.18);
-      --border-focus: #38bdf8;
-      --cyan: #38bdf8;
-      --cyan-glow: rgba(56, 189, 248, 0.35);
-      --emerald: #10b981;
-      --emerald-glow: rgba(16, 185, 129, 0.35);
-      --amber: #f59e0b;
-      --rose: #f43f5e;
-      --text-white: #f8fafc;
-      --text-muted: #94a3b8;
-      --text-dim: #64748b;
-      --radius-lg: 16px;
+      /* Chế độ Sáng Học thuật (Default Light Mode - Sang trọng, tin cậy) */
+      --bg-page: #f8fafc;
+      --bg-surface: #ffffff;
+      --bg-surface-elevated: #ffffff;
+      --bg-subtle: #f1f5f9;
+      --bg-hover: #e2e8f0;
+      
+      --border-color: #e2e8f0;
+      --border-focus: #1e3a8a;
+      --border-subtle: #edf2f7;
+
+      --text-primary: #0f172a;
+      --text-secondary: #475569;
+      --text-muted: #64748b;
+      --text-subtle: #94a3b8;
+
+      --primary: #1e3a8a;          /* HCE Navy / Academic Blue */
+      --primary-hover: #172554;
+      --primary-subtle: #eff6ff;
+      --primary-border: #bfdbfe;
+
+      --success: #059669;          /* Emerald Verified */
+      --success-subtle: #ecfdf5;
+      --success-border: #a7f3d0;
+
+      --warning: #d97706;          /* Amber Warning */
+      --warning-subtle: #fffbeb;
+
+      --danger: #dc2626;           /* Crimson Error */
+      --danger-subtle: #fef2f2;
+
+      --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.05);
+      --shadow-md: 0 4px 6px -1px rgba(15, 23, 42, 0.07), 0 2px 4px -2px rgba(15, 23, 42, 0.05);
+      --shadow-lg: 0 10px 15px -3px rgba(15, 23, 42, 0.08), 0 4px 6px -4px rgba(15, 23, 42, 0.04);
+      --shadow-certificate: 0 20px 25px -5px rgba(15, 23, 42, 0.1), 0 8px 10px -6px rgba(15, 23, 42, 0.05);
+
+      --radius-sm: 6px;
       --radius-md: 10px;
-      --font-main: 'Plus Jakarta Sans', system-ui, sans-serif;
+      --radius-lg: 14px;
+      --radius-xl: 20px;
+
+      --font-body: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      --font-serif: 'Newsreader', Georgia, serif;
+      --font-deed: 'Cinzel', serif;
       --font-mono: 'JetBrains Mono', monospace;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    [data-theme="dark"] {
+      /* Chế độ Tối Tinh gọn (Obsidian Slate Mode - Không dùng neon lòe loẹt) */
+      --bg-page: #0b0f19;
+      --bg-surface: #111827;
+      --bg-surface-elevated: #1a2234;
+      --bg-subtle: #162032;
+      --bg-hover: #222d42;
+
+      --border-color: #1f293d;
+      --border-focus: #3b82f6;
+      --border-subtle: #172133;
+
+      --text-primary: #f8fafc;
+      --text-secondary: #cbd5e1;
+      --text-muted: #94a3b8;
+      --text-subtle: #64748b;
+
+      --primary: #3b82f6;
+      --primary-hover: #2563eb;
+      --primary-subtle: rgba(59, 130, 246, 0.12);
+      --primary-border: rgba(59, 130, 246, 0.3);
+
+      --success: #10b981;
+      --success-subtle: rgba(16, 185, 129, 0.12);
+      --success-border: rgba(16, 185, 129, 0.3);
+
+      --warning: #f59e0b;
+      --warning-subtle: rgba(245, 158, 11, 0.12);
+
+      --danger: #ef4444;
+      --danger-subtle: rgba(239, 68, 68, 0.12);
+
+      --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+      --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
+      --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.6);
+      --shadow-certificate: 0 25px 35px -5px rgba(0, 0, 0, 0.7);
+    }
+
+    /* ==========================================================================
+       RESET & BASE STYLES
+       ========================================================================== */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      transition: background-color 0.2s ease, border-color 0.2s ease, color 0.15s ease;
+    }
 
     body {
-      background-color: var(--bg-dark);
-      color: var(--text-white);
-      font-family: var(--font-main);
+      background-color: var(--bg-page);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      line-height: 1.6;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      background-image: 
-        radial-gradient(circle at 10% 15%, rgba(56, 189, 248, 0.12) 0%, transparent 35%),
-        radial-gradient(circle at 90% 85%, rgba(16, 185, 129, 0.1) 0%, transparent 40%),
-        radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.05) 0%, transparent 50%);
-      background-attachment: fixed;
+      -webkit-font-smoothing: antialiased;
     }
 
-    /* Top Navigation Header */
-    header {
+    /* ==========================================================================
+       HEADER & NAVIGATION (THANH ĐIỀU HƯỚNG CHUẨN ĐẠI HỌC)
+       ========================================================================== */
+    header.site-header {
       position: sticky;
       top: 0;
-      z-index: 100;
-      background: rgba(7, 13, 30, 0.85);
-      backdrop-filter: blur(16px);
+      z-index: 1000;
+      background: var(--bg-surface);
       border-bottom: 1px solid var(--border-color);
-      padding: 14px 28px;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .header-container {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 12px 24px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-      text-decoration: none;
-    }
-
-    .brand-logo {
-      width: 42px;
-      height: 42px;
-      border-radius: 12px;
-      background: linear-gradient(135deg, var(--cyan), var(--emerald));
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 800;
-      color: #030712;
-      font-size: 20px;
-      box-shadow: 0 0 20px var(--cyan-glow);
-    }
-
-    .brand-text h1 {
-      font-size: 18px;
-      font-weight: 800;
-      letter-spacing: -0.3px;
-      background: linear-gradient(90deg, #fff, var(--cyan));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .brand-text p {
-      font-size: 12px;
-      color: var(--text-muted);
-    }
-
-    .header-right {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-    }
-
-    .network-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 6px 12px;
-      border-radius: 20px;
-      background: rgba(56, 189, 248, 0.1);
-      border: 1px solid var(--border-color);
-      font-size: 12px;
-      font-weight: 600;
-      color: var(--cyan);
-    }
-
-    .dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: var(--emerald);
-      box-shadow: 0 0 8px var(--emerald);
-      animation: pulse 2s infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.5; transform: scale(0.85); }
-    }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      padding: 10px 18px;
-      border-radius: var(--radius-md);
-      font-size: 13px;
-      font-weight: 600;
-      font-family: inherit;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      border: 1px solid transparent;
-      text-decoration: none;
-    }
-
-    .btn-primary {
-      background: linear-gradient(135deg, var(--cyan), #0284c7);
-      color: #030712;
-      font-weight: 700;
-      box-shadow: 0 0 16px rgba(56, 189, 248, 0.3);
-    }
-    .btn-primary:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 0 24px rgba(56, 189, 248, 0.5);
-    }
-
-    .btn-outline {
-      background: rgba(255, 255, 255, 0.05);
-      border-color: var(--border-color);
-      color: var(--text-white);
-    }
-    .btn-outline:hover {
-      background: rgba(255, 255, 255, 0.1);
-      border-color: var(--cyan);
-    }
-
-    /* Container */
-    .container {
-      max-width: 1060px;
-      margin: 0 auto;
-      padding: 32px 20px 60px;
-      width: 100%;
-    }
-
-    /* Hero Banner */
-    .hero {
-      text-align: center;
-      margin-bottom: 32px;
-    }
-
-    .hero-tag {
-      display: inline-block;
-      padding: 5px 14px;
-      border-radius: 20px;
-      background: rgba(16, 185, 129, 0.12);
-      border: 1px solid rgba(16, 185, 129, 0.3);
-      color: var(--emerald);
-      font-size: 12px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 12px;
-    }
-
-    .hero h2 {
-      font-size: 28px;
-      font-weight: 800;
-      line-height: 1.3;
-      margin-bottom: 8px;
-    }
-
-    .hero p {
-      font-size: 14px;
-      color: var(--text-muted);
-      max-width: 720px;
-      margin: 0 auto;
-      line-height: 1.5;
-    }
-
-    /* Stats Grid */
-    .stats-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
       gap: 16px;
-      margin-bottom: 28px;
     }
 
-    .stat-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-md);
-      padding: 16px 18px;
+    .brand-section {
       display: flex;
       align-items: center;
       gap: 14px;
+      text-decoration: none;
+      color: inherit;
     }
 
-    .stat-icon {
+    .hce-crest {
       width: 42px;
       height: 42px;
+      background: linear-gradient(135deg, #1e3a8a 0%, #0284c7 100%);
       border-radius: 10px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 20px;
-      background: rgba(56, 189, 248, 0.1);
-      color: var(--cyan);
-    }
-
-    .stat-info h4 {
-      font-size: 18px;
+      color: #ffffff;
       font-weight: 800;
-      color: #fff;
+      font-size: 15px;
+      letter-spacing: -0.5px;
+      box-shadow: 0 2px 8px rgba(30, 58, 138, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.2);
     }
 
-    .stat-info p {
+    .brand-info h1 {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1.2;
+      letter-spacing: -0.3px;
+    }
+
+    .brand-info span {
       font-size: 12px;
       color: var(--text-muted);
+      font-weight: 500;
+      display: block;
     }
 
-    /* Tabs Navigation */
-    .tabs-nav {
+    .header-actions {
       display: flex;
-      gap: 8px;
-      background: rgba(15, 23, 42, 0.6);
-      padding: 6px;
-      border-radius: 12px;
-      border: 1px solid var(--border-color);
-      margin-bottom: 24px;
+      align-items: center;
+      gap: 12px;
     }
 
-    .tab-btn {
-      flex: 1;
-      padding: 10px 16px;
-      border-radius: 8px;
-      border: none;
-      background: none;
-      color: var(--text-muted);
-      font-size: 13px;
-      font-weight: 700;
+    /* Badges */
+    .network-badge {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 6px 12px;
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-color);
+      border-radius: 9999px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-secondary);
+    }
+
+    .network-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--success);
+      border-radius: 50%;
+      box-shadow: 0 0 0 2px var(--success-subtle);
+    }
+
+    /* Theme Toggle Button */
+    .theme-toggle-btn {
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-color);
+      color: var(--text-secondary);
+      width: 38px;
+      height: 38px;
+      border-radius: 9999px;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
+      font-size: 16px;
+    }
+    .theme-toggle-btn:hover {
+      background: var(--bg-hover);
+      color: var(--text-primary);
+    }
+
+    /* Wallet Button */
+    .wallet-btn {
+      display: flex;
+      align-items: center;
       gap: 8px;
-      transition: all 0.2s;
-      font-family: inherit;
+      padding: 8px 16px;
+      background: var(--primary);
+      color: #ffffff;
+      border: none;
+      border-radius: var(--radius-md);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: var(--shadow-sm);
+    }
+    .wallet-btn:hover {
+      background: var(--primary-hover);
+    }
+    .wallet-btn.connected {
+      background: var(--bg-subtle);
+      color: var(--text-primary);
+      border: 1px solid var(--border-color);
+      font-family: var(--font-mono);
     }
 
+    /* ==========================================================================
+       HERO & VALUE PROPOSITION
+       ========================================================================== */
+    .hero-banner {
+      background: var(--bg-surface);
+      border-bottom: 1px solid var(--border-color);
+      padding: 40px 24px;
+      text-align: center;
+    }
+
+    .hero-content {
+      max-width: 840px;
+      margin: 0 auto;
+    }
+
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      background: var(--primary-subtle);
+      color: var(--primary);
+      border: 1px solid var(--primary-border);
+      border-radius: 9999px;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 16px;
+    }
+
+    .hero-title {
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--text-primary);
+      letter-spacing: -0.8px;
+      line-height: 1.25;
+      margin-bottom: 12px;
+    }
+
+    .hero-desc {
+      font-size: 15px;
+      color: var(--text-secondary);
+      max-width: 720px;
+      margin: 0 auto 20px;
+    }
+
+    .security-metrics {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 24px;
+      font-size: 13px;
+      color: var(--text-muted);
+      border-top: 1px solid var(--border-color);
+      padding-top: 18px;
+    }
+    .security-metrics span {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .security-metrics strong {
+      color: var(--text-primary);
+    }
+
+    /* ==========================================================================
+       TAB NAVIGATION & MAIN CONTAINER
+       ========================================================================== */
+    .main-wrapper {
+      max-width: 1240px;
+      margin: 32px auto;
+      padding: 0 24px;
+      flex: 1;
+      width: 100%;
+    }
+
+    .tab-nav {
+      display: flex;
+      gap: 6px;
+      border-bottom: 1px solid var(--border-color);
+      margin-bottom: 28px;
+    }
+
+    .tab-btn {
+      padding: 10px 20px;
+      background: transparent;
+      border: none;
+      border-bottom: 2px solid transparent;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .tab-btn:hover {
+      color: var(--text-primary);
+    }
     .tab-btn.active {
-      background: var(--cyan);
-      color: #030712;
-      box-shadow: 0 0 16px var(--cyan-glow);
+      color: var(--primary);
+      border-bottom-color: var(--primary);
     }
 
-    /* Tab Content Cards */
-    .tab-pane {
+    .tab-panel {
       display: none;
     }
-    .tab-pane.active {
+    .tab-panel.active {
       display: block;
-      animation: fadeIn 0.3s ease;
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(6px); }
-      to { opacity: 1; transform: translateY(0); }
+    /* ==========================================================================
+       REGISTER SECTION: FORM & DRAG-DROP
+       ========================================================================== */
+    .grid-2col {
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 28px;
+      align-items: start;
+    }
+
+    @media (max-width: 900px) {
+      .grid-2col {
+        grid-template-columns: 1fr;
+      }
     }
 
     .card {
-      background: var(--bg-card);
+      background: var(--bg-surface);
       border: 1px solid var(--border-color);
       border-radius: var(--radius-lg);
-      padding: 28px;
-      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
+      padding: 24px;
+      box-shadow: var(--shadow-sm);
     }
 
-    .card-title {
-      font-size: 18px;
-      font-weight: 800;
-      margin-bottom: 6px;
+    .card-header {
+      margin-bottom: 20px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .card-header h2 {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--text-primary);
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
     }
-
-    .card-subtitle {
+    .card-header p {
       font-size: 13px;
       color: var(--text-muted);
-      margin-bottom: 22px;
-      line-height: 1.4;
+      margin-top: 2px;
     }
 
-    /* Drop Zone */
-    .drop-zone {
-      border: 2px dashed rgba(56, 189, 248, 0.35);
+    /* Drag & Drop Area */
+    .dropzone {
+      border: 2px dashed var(--border-color);
       border-radius: var(--radius-md);
+      background: var(--bg-subtle);
       padding: 32px 20px;
       text-align: center;
       cursor: pointer;
-      transition: all 0.25s ease;
-      background: rgba(56, 189, 248, 0.02);
-      margin-bottom: 20px;
       position: relative;
+      transition: all 0.2s ease;
     }
-
-    .drop-zone:hover, .drop-zone.dragover {
-      border-color: var(--cyan);
-      background: rgba(56, 189, 248, 0.08);
-      box-shadow: 0 0 24px rgba(56, 189, 248, 0.2);
+    .dropzone:hover, .dropzone.dragover {
+      border-color: var(--primary);
+      background: var(--primary-subtle);
     }
-
-    .drop-icon {
-      font-size: 40px;
-      margin-bottom: 10px;
-      color: var(--cyan);
-    }
-
-    .drop-zone h3 {
-      font-size: 15px;
-      font-weight: 700;
-      margin-bottom: 4px;
-    }
-
-    .drop-zone p {
-      font-size: 12px;
-      color: var(--text-muted);
-    }
-
-    .drop-zone input[type="file"] {
+    .dropzone input[type="file"] {
       position: absolute;
       top: 0; left: 0; width: 100%; height: 100%;
       opacity: 0;
       cursor: pointer;
     }
+    .dropzone-icon {
+      font-size: 36px;
+      color: var(--primary);
+      margin-bottom: 10px;
+    }
+    .dropzone h3 {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+    .dropzone p {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
 
-    /* File Hash Result Box */
-    .hash-box {
-      background: rgba(15, 23, 42, 0.8);
+    /* File Preview Box */
+    .file-preview {
+      display: none;
+      background: var(--bg-surface);
       border: 1px solid var(--border-color);
       border-radius: var(--radius-md);
-      padding: 14px 16px;
-      margin-bottom: 20px;
-      display: none;
+      padding: 14px;
+      margin-top: 16px;
     }
-
-    .hash-box.show {
-      display: block;
-      animation: fadeIn 0.25s ease;
-    }
-
-    .file-meta {
+    .file-preview-header {
       display: flex;
-      justify-content: space-between;
       align-items: center;
-      margin-bottom: 10px;
-      font-size: 13px;
+      justify-content: space-between;
+      margin-bottom: 8px;
     }
-
-    .file-name {
-      font-weight: 700;
-      color: var(--cyan);
+    .file-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-primary);
       display: flex;
       align-items: center;
       gap: 6px;
+      word-break: break-all;
     }
-
     .file-size {
+      font-size: 12px;
       color: var(--text-muted);
       font-family: var(--font-mono);
-      font-size: 12px;
     }
-
-    .hash-row {
-      background: #030712;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 6px;
-      padding: 10px 12px;
+    
+    .hash-display-box {
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 10px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--primary);
+      word-break: break-all;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 10px;
-      font-family: var(--font-mono);
-      font-size: 12px;
-      word-break: break-all;
+      gap: 8px;
     }
-
-    .hash-val {
-      color: var(--emerald);
-      font-weight: 600;
-    }
-
-    .btn-copy {
-      padding: 4px 10px;
+    .copy-btn {
+      background: transparent;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 4px 8px;
       font-size: 11px;
-      border-radius: 4px;
-      background: rgba(255, 255, 255, 0.1);
-      border: none;
-      color: #fff;
+      font-family: var(--font-body);
+      color: var(--text-secondary);
       cursor: pointer;
-      font-family: var(--font-main);
+      white-space: nowrap;
     }
-    .btn-copy:hover { background: var(--cyan); color: #000; }
+    .copy-btn:hover {
+      background: var(--bg-hover);
+      color: var(--text-primary);
+    }
 
     /* Form Fields */
     .form-group {
-      margin-bottom: 18px;
+      margin-top: 18px;
     }
-
     .form-label {
       display: block;
       font-size: 13px;
-      font-weight: 700;
+      font-weight: 600;
+      color: var(--text-secondary);
       margin-bottom: 6px;
-      color: #e2e8f0;
     }
-
-    .form-control {
+    .form-label span.req {
+      color: var(--danger);
+    }
+    .form-input, .form-select, .form-textarea {
       width: 100%;
-      padding: 12px 14px;
-      border-radius: var(--radius-md);
-      background: rgba(15, 23, 42, 0.8);
+      padding: 10px 14px;
+      background: var(--bg-subtle);
       border: 1px solid var(--border-color);
-      color: #fff;
-      font-family: inherit;
-      font-size: 13px;
-      outline: none;
-      transition: all 0.2s;
-    }
-
-    .form-control:focus {
-      border-color: var(--cyan);
-      box-shadow: 0 0 12px var(--cyan-glow);
-    }
-
-    textarea.form-control {
-      resize: vertical;
-      min-height: 80px;
-    }
-
-    /* Status Banner / Feedback */
-    .status-alert {
-      padding: 14px 18px;
       border-radius: var(--radius-md);
-      font-size: 13px;
-      margin-top: 18px;
-      display: none;
-      align-items: center;
-      gap: 10px;
-      line-height: 1.4;
+      font-size: 14px;
+      font-family: var(--font-body);
+      color: var(--text-primary);
+      outline: none;
+    }
+    .form-input:focus, .form-select:focus, .form-textarea:focus {
+      border-color: var(--border-focus);
+      background: var(--bg-surface);
+      box-shadow: 0 0 0 3px var(--primary-subtle);
+    }
+    .form-hint {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 4px;
     }
 
-    .status-alert.show { display: flex; animation: fadeIn 0.3s ease; }
-    .status-alert.success {
-      background: rgba(16, 185, 129, 0.12);
-      border: 1px solid var(--emerald);
-      color: #6ee7b7;
+    /* Preset Sample Projects */
+    .presets-box {
+      margin-top: 20px;
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 14px;
     }
-    .status-alert.error {
-      background: rgba(244, 63, 94, 0.12);
-      border: 1px solid var(--rose);
-      color: #fca5a5;
-    }
-    .status-alert.info {
-      background: rgba(56, 189, 248, 0.12);
-      border: 1px solid var(--cyan);
-      color: #7dd3fc;
-    }
-
-    /* Certificate Box */
-    .certificate-card {
-      background: linear-gradient(135deg, rgba(16, 185, 129, 0.08), rgba(56, 189, 248, 0.08));
-      border: 2px solid var(--emerald);
-      border-radius: var(--radius-lg);
-      padding: 28px;
-      margin-top: 24px;
-      box-shadow: 0 0 30px rgba(16, 185, 129, 0.2);
-      display: none;
-      position: relative;
-    }
-    .certificate-card.show { display: block; animation: fadeIn 0.4s ease; }
-
-    .cert-badge {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      background: var(--emerald);
-      color: #030712;
-      padding: 6px 14px;
-      border-radius: 20px;
+    .presets-title {
       font-size: 12px;
-      font-weight: 800;
+      font-weight: 700;
+      color: var(--text-secondary);
       text-transform: uppercase;
       letter-spacing: 0.5px;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .preset-item {
+      display: block;
+      width: 100%;
+      text-align: left;
+      padding: 8px 10px;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      margin-bottom: 6px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-primary);
+    }
+    .preset-item:hover {
+      border-color: var(--primary);
+      background: var(--primary-subtle);
+    }
+    .preset-item span.cat {
+      font-size: 11px;
+      color: var(--text-muted);
+      font-weight: normal;
+      display: block;
+    }
+
+    /* Submit Button Group */
+    .btn-submit {
+      width: 100%;
+      padding: 13px 20px;
+      margin-top: 24px;
+      background: var(--primary);
+      color: #ffffff;
+      border: none;
+      border-radius: var(--radius-md);
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .btn-submit:hover:not(:disabled) {
+      background: var(--primary-hover);
+    }
+    .btn-submit:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .sim-banner {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      background: var(--warning-subtle);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      border-radius: var(--radius-md);
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-top: 14px;
+    }
+
+    /* ==========================================================================
+       ACADEMIC DEED / DIGITAL CERTIFICATE (CHỨNG THƯ SỐ HỌC THUẬT A4 SANG TRỌNG)
+       Thiết kế văn bằng danh giá, sẵn sàng in ấn PDF
+       ========================================================================== */
+    .certificate-card {
+      display: none;
+      background: #ffffff; /* Luôn giữ nền giấy trắng danh giá */
+      color: #0f172a;
+      border: 8px double #1e3a8a;
+      border-radius: var(--radius-lg);
+      padding: 36px 32px;
+      box-shadow: var(--shadow-certificate);
+      position: relative;
+      margin-top: 24px;
+      overflow: hidden;
+    }
+
+    /* Watermark */
+    .certificate-card::before {
+      content: "HCE";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) rotate(-25deg);
+      font-size: 130px;
+      font-weight: 900;
+      font-family: var(--font-deed);
+      color: rgba(30, 58, 138, 0.03);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .cert-inner {
+      position: relative;
+      z-index: 1;
+      text-align: center;
     }
 
     .cert-header {
+      border-bottom: 2px solid #e2e8f0;
+      padding-bottom: 18px;
       margin-bottom: 20px;
     }
-    .cert-header h3 {
-      font-size: 20px;
-      color: var(--emerald);
-      font-weight: 800;
-      margin-bottom: 4px;
+    .cert-sub {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: #64748b;
+      font-weight: 700;
     }
-    .cert-header p {
-      font-size: 13px;
-      color: var(--text-muted);
+    .cert-org {
+      font-size: 16px;
+      font-weight: 800;
+      color: #1e3a8a;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin: 4px 0;
+    }
+    .cert-title {
+      font-family: var(--font-deed);
+      font-size: 24px;
+      font-weight: 700;
+      color: #0f172a;
+      letter-spacing: 1px;
+      margin-top: 6px;
     }
 
-    .cert-grid {
+    .cert-body {
+      margin: 24px 0;
+      text-align: left;
+    }
+    .cert-statement {
+      font-family: var(--font-serif);
+      font-size: 16px;
+      font-style: italic;
+      color: #475569;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .cert-field-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 16px;
-      margin-bottom: 20px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: var(--radius-md);
+      padding: 18px;
     }
-
     .cert-field {
-      background: rgba(15, 23, 42, 0.6);
-      padding: 12px 14px;
-      border-radius: 8px;
-      border: 1px solid rgba(255, 255, 255, 0.06);
+      display: flex;
+      flex-direction: column;
     }
-
-    .cert-field .lbl {
+    .cert-field.full {
+      grid-column: 1 / -1;
+    }
+    .cert-field label {
       font-size: 11px;
-      text-transform: uppercase;
-      color: var(--text-muted);
       font-weight: 700;
-      margin-bottom: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #64748b;
+      margin-bottom: 3px;
+    }
+    .cert-field span {
+      font-size: 13px;
+      font-weight: 600;
+      color: #0f172a;
+    }
+    .cert-field span.mono {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      word-break: break-all;
+      color: #1e3a8a;
     }
 
-    .cert-field .val {
+    .cert-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 26px;
+      padding-top: 18px;
+      border-top: 1px solid #e2e8f0;
+    }
+
+    .cert-seal {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-align: left;
+    }
+    .seal-badge {
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      border: 2px dashed #059669;
+      background: #ecfdf5;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: #059669;
+      font-weight: 800;
+      font-size: 9px;
+      text-transform: uppercase;
+      text-align: center;
+      line-height: 1.1;
+      padding: 4px;
+    }
+    .seal-text h4 {
       font-size: 13px;
       font-weight: 700;
-      color: #fff;
-      font-family: var(--font-mono);
-      word-break: break-all;
+      color: #059669;
+    }
+    .seal-text p {
+      font-size: 11px;
+      color: #64748b;
     }
 
-    /* Ledger Table */
-    .ledger-table {
+    .cert-qr-box {
+      width: 64px;
+      height: 64px;
+      background: #ffffff;
+      padding: 4px;
+      border: 1px solid #e2e8f0;
+      border-radius: var(--radius-sm);
+    }
+    .cert-qr-box canvas {
+      width: 100% !important;
+      height: 100% !important;
+    }
+
+    .cert-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 18px;
+    }
+    .btn-action {
+      flex: 1;
+      padding: 10px 16px;
+      background: var(--bg-surface);
+      color: var(--text-primary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+    .btn-action:hover {
+      background: var(--bg-hover);
+    }
+    .btn-action.primary {
+      background: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+    }
+    .btn-action.primary:hover {
+      background: var(--primary-hover);
+    }
+
+    /* ==========================================================================
+       VERIFY & PUBLIC LEDGER TABS
+       ========================================================================== */
+    .ledger-table-container {
+      overflow-x: auto;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-sm);
+    }
+
+    table.ledger-table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 14px;
+      text-align: left;
       font-size: 13px;
     }
-
-    .ledger-table th {
-      text-align: left;
-      padding: 12px 14px;
-      background: rgba(15, 23, 42, 0.8);
-      color: var(--text-muted);
-      font-weight: 700;
+    table.ledger-table th {
+      background: var(--bg-subtle);
+      color: var(--text-secondary);
+      font-weight: 600;
+      padding: 12px 16px;
       border-bottom: 1px solid var(--border-color);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    table.ledger-table td {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border-subtle);
+      color: var(--text-primary);
+    }
+    table.ledger-table tr:hover td {
+      background: var(--bg-subtle);
     }
 
-    .ledger-table td {
-      padding: 14px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-      vertical-align: middle;
-    }
-
-    .ledger-table tr:hover td {
-      background: rgba(56, 189, 248, 0.04);
-    }
-
-    .badge-category {
-      display: inline-block;
-      padding: 4px 8px;
-      border-radius: 4px;
+    .badge-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 3px 8px;
+      border-radius: 9999px;
       font-size: 11px;
-      font-weight: 700;
-      background: rgba(56, 189, 248, 0.15);
-      color: var(--cyan);
+      font-weight: 600;
+    }
+    .badge-status.verified {
+      background: var(--success-subtle);
+      color: var(--success);
+      border: 1px solid var(--success-border);
     }
 
-    /* Responsive */
-    @media (max-width: 768px) {
-      .stats-grid { grid-template-columns: 1fr; }
-      .cert-grid { grid-template-columns: 1fr; }
-      header { flex-direction: column; gap: 12px; align-items: stretch; }
-      .header-right { justify-content: space-between; }
+    /* ==========================================================================
+       TOAST NOTIFICATION SYSTEM (THAY THẾ ALERT THÔ SƠ)
+       ========================================================================== */
+    .toast-container {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-width: 380px;
+      width: calc(100% - 48px);
+      pointer-events: none;
+    }
+    .toast {
+      pointer-events: auto;
+      background: var(--bg-surface-elevated);
+      color: var(--text-primary);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 14px 18px;
+      box-shadow: var(--shadow-lg);
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      animation: slideIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    .toast.success { border-left: 4px solid var(--success); }
+    .toast.error { border-left: 4px solid var(--danger); }
+    .toast.info { border-left: 4px solid var(--primary); }
+
+    .toast-icon { font-size: 18px; line-height: 1; }
+    .toast-content h4 { font-size: 13px; font-weight: 700; margin-bottom: 2px; }
+    .toast-content p { font-size: 12px; color: var(--text-muted); line-height: 1.4; }
+
+    @keyframes slideIn {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+
+    /* ==========================================================================
+       PRINT STYLES: CHUẨN A4 KHI BẤM NÚT IN CHỨNG THƯ
+       ========================================================================== */
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+      .certificate-card, .certificate-card * {
+        visibility: visible;
+      }
+      .certificate-card {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        margin: 0;
+        padding: 40px;
+        box-shadow: none;
+        border: 4px double #1e3a8a !important;
+        page-break-after: avoid;
+      }
+      .cert-actions, .site-header, .hero-banner, .tab-nav {
+        display: none !important;
+      }
+    }
+
+    /* Footer */
+    footer.site-footer {
+      border-top: 1px solid var(--border-color);
+      background: var(--bg-surface);
+      padding: 24px;
+      margin-top: 48px;
+      text-align: center;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+    footer.site-footer a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    footer.site-footer a:hover {
+      text-decoration: underline;
     }
   </style>
 </head>
 <body>
 
-  <!-- Top Header Navigation -->
-  <header>
-    <a href="#" class="brand">
-      <div class="brand-logo">SP</div>
-      <div class="brand-text">
-        <h1>HCE-ScholarProof</h1>
-        <p>Bảo chứng Quyền tác giả Ý tưởng Nghiên cứu Khoa học</p>
-      </div>
-    </a>
+  <!-- HEADER -->
+  <header class="site-header">
+    <div class="header-container">
+      <a href="#" class="brand-section">
+        <div class="hce-crest">HCE</div>
+        <div class="brand-info">
+          <h1>HCE-ScholarProof</h1>
+          <span>Đại học Kinh tế, Đại học Huế &bull; Đồ án ECO2432</span>
+        </div>
+      </a>
 
-    <div class="header-right">
-      <div class="network-badge">
-        <span class="dot"></span>
-        <span id="networkName">Sepolia / Local Demo</span>
+      <div class="header-actions">
+        <!-- Badge Mạng -->
+        <div class="network-badge">
+          <span class="network-dot"></span>
+          <span id="networkName">Sepolia Testnet</span>
+        </div>
+
+        <!-- Chuyển đổi Dark / Light -->
+        <button class="theme-toggle-btn" id="themeToggleBtn" title="Chuyển chế độ Sáng / Tối">
+          <span id="themeIcon">🌙</span>
+        </button>
+
+        <!-- Nút Kết nối Ví -->
+        <button class="wallet-btn" id="connectWalletBtn">
+          <span>🦊</span>
+          <span id="walletBtnText">Kết nối Ví</span>
+        </button>
       </div>
-      <button class="btn btn-primary" id="btnConnect">
-        <span>🦊 Kết nối ví MetaMask</span>
-      </button>
     </div>
   </header>
 
-  <!-- Main Container -->
-  <main class="container">
+  <!-- HERO BANNER -->
+  <section class="hero-banner">
+    <div class="hero-content">
+      <div class="hero-tag">Sở hữu Trí tuệ Học thuật &bull; Proof of Existence</div>
+      <h2 class="hero-title">Bảo chứng Quyền tác giả Ý tưởng Khoa học trên Blockchain</h2>
+      <p class="hero-desc">
+        Xác lập bằng chứng ưu tiên (Prior Art) và dấu thời gian khối bất biến cho các đề cương nghiên cứu, dữ liệu khảo sát sơ bộ với chi phí vi mô. Không bộc lộ nội dung tệp ra bên ngoài.
+      </p>
 
-    <!-- Hero Section -->
-    <div class="hero">
-      <span class="hero-tag">Đồ án Capstone ECO2432 • Chủ đề 8</span>
-      <h2>Xác lập Quyền Ưu tiên Ý tưởng Nghiên cứu trên Blockchain</h2>
-      <p>Bảo vệ đề cương, công thức và dữ liệu nghiên cứu khoa học của sinh viên HCE khỏi nguy cơ bị chiếm đoạt (Idea Scooping) bằng dấu vân tay mật mã Keccak-256 bất biến.</p>
-    </div>
-
-    <!-- Stats Grid -->
-    <div class="stats-grid">
-      <div class="stat-card">
-        <div class="stat-icon">📜</div>
-        <div class="stat-info">
-          <h4 id="statTotalIdeas">14 Đề tài</h4>
-          <p>Đã bảo chứng trên sổ cái</p>
-        </div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-icon">⚡</div>
-        <div class="stat-info">
-          <h4>~1.000 VNĐ</h4>
-          <p>Chi phí gas (Layer 2 Base)</p>
-        </div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-icon">🛡️</div>
-        <div class="stat-info">
-          <h4>Zero-Knowledge</h4>
-          <p>Tệp gốc giữ tuyệt mật tại máy</p>
-        </div>
+      <div class="security-metrics">
+        <span>🔒 Thuật toán: <strong>Keccak-256 (Client-side)</strong></span>
+        <span>⏱️ Mốc thời gian: <strong>Block Timestamp</strong></span>
+        <span>⚖️ Nguyên tắc: <strong>First-to-File Bất biến</strong></span>
+        <span>📜 Chuẩn Smart Contract: <strong>CEI & Custom Errors</strong></span>
       </div>
     </div>
+  </section>
 
-    <!-- Tab Navigation Buttons -->
-    <div class="tabs-nav">
-      <button class="tab-btn active" data-tab="tabRegister" id="navRegister">
-        <span>📝 Đăng ký Bản quyền Ý tưởng</span>
+  <!-- MAIN WRAPPER -->
+  <main class="main-wrapper">
+    <!-- TAB NAVIGATION -->
+    <nav class="tab-nav">
+      <button class="tab-btn active" data-tab="tab-register">
+        <span>📝</span> Đăng ký Bản quyền Ý tưởng
       </button>
-      <button class="tab-btn" data-tab="tabVerify" id="navVerify">
-        <span>🔍 Tra cứu & Thẩm định Bản quyền</span>
+      <button class="tab-btn" data-tab="tab-verify">
+        <span>🔍</span> Thẩm định & Tra cứu Nguồn gốc
       </button>
-      <button class="tab-btn" data-tab="tabLedger" id="navLedger">
-        <span>📊 Sổ cái Công khai On-chain</span>
+      <button class="tab-btn" data-tab="tab-ledger">
+        <span>🏛️</span> Sổ cái Công khai On-Chain
       </button>
-    </div>
+    </nav>
 
-    <!-- TAB 1: ĐĂNG KÝ BẢN QUYỀN MỚI -->
-    <div class="tab-pane active" id="tabRegister">
-      <div class="card">
-        <h3 class="card-title"><span>📝</span> Đăng ký Dấu vân tay Mật mã Ý tưởng Nghiên cứu</h3>
-        <p class="card-subtitle">Kéo thả tệp đề cương nghiên cứu (PDF, Word, CSV, Python). Trình duyệt sẽ tính mã băm Keccak-256 trực tiếp trong RAM mà KHÔNG tải nội dung tệp lên internet.</p>
-
-        <!-- Drag & Drop Zone -->
-        <div class="drop-zone" id="dropZoneRegister">
-          <input type="file" id="fileRegister">
-          <div class="drop-icon">📁</div>
-          <h3>Kéo & thả tệp đề tài nghiên cứu vào đây</h3>
-          <p>Hỗ trợ định dạng .pdf, .docx, .ipynb, .csv, .zip (Kích thước tối đa 100MB)</p>
-        </div>
-
-        <!-- Hash Result Display Box -->
-        <div class="hash-box" id="hashBoxRegister">
-          <div class="file-meta">
-            <span class="file-name" id="fileNameRegister">📄 research_proposal.pdf</span>
-            <span class="file-size" id="fileSizeRegister">1.24 MB</span>
+    <!-- TAB 1: ĐĂNG KÝ BẢN QUYỀN -->
+    <section class="tab-panel active" id="tab-register">
+      <div class="grid-2col">
+        
+        <!-- Cột trái: Tải file & Biểu mẫu -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <h2><span>📁</span> Tải Bản thảo & Tính Vân tay số</h2>
+              <p>Mã băm Keccak-256 được tính toán trực tiếp trong RAM máy tính của bạn</p>
+            </div>
           </div>
-          <div class="hash-row">
-            <span>Mã băm Keccak-256 (32 bytes): <span class="hash-val" id="hashValRegister">0x...</span></span>
-            <button class="btn-copy" id="btnCopyHash">Sao chép</button>
+
+          <!-- Dropzone -->
+          <div class="dropzone" id="dropzoneRegister">
+            <input type="file" id="fileInputRegister" accept=".pdf,.docx,.doc,.xlsx,.csv,.ipynb,.zip,.txt">
+            <div class="dropzone-icon">📄</div>
+            <h3>Kéo thả tệp đề cương nghiên cứu vào đây</h3>
+            <p>Hỗ trợ định dạng PDF, DOCX, XLSX, IPYNB, ZIP (Tối đa 100 MB)</p>
+          </div>
+
+          <!-- File Preview & Hash -->
+          <div class="file-preview" id="filePreviewRegister">
+            <div class="file-preview-header">
+              <div class="file-title">
+                <span>📎</span> <span id="regFileName">filename.pdf</span>
+              </div>
+              <div class="file-size" id="regFileSize">0 KB</div>
+            </div>
+            <div class="hash-display-box">
+              <span id="regFileHash">0x0000000000000000000000000000000000000000000000000000000000000000</span>
+              <button class="copy-btn" id="copyHashBtn" type="button">Sao chép</button>
+            </div>
+          </div>
+
+          <!-- Form Fields -->
+          <div class="form-group">
+            <label class="form-label" for="inputTitle">Tiêu đề Công trình / Ý tưởng Nghiên cứu <span class="req">*</span></label>
+            <input type="text" id="inputTitle" class="form-input" placeholder="Ví dụ: Nghiên cứu ứng dụng Blockchain trong quản lý chuỗi cung ứng..." maxlength="200">
+            <div class="form-hint">Tối đa 200 ký tự (Chống tấn công làm phình bộ nhớ Storage).</div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="selectCategory">Lĩnh vực Chuyên môn tại HCE <span class="req">*</span></label>
+            <select id="selectCategory" class="form-select">
+              <option value="Fintech & Kinh tế số">Fintech & Kinh tế số</option>
+              <option value="Hệ thống Thông tin Kinh tế">Hệ thống Thông tin Kinh tế</option>
+              <option value="Thương mại Điện tử">Thương mại Điện tử</option>
+              <option value="Tài chính - Ngân hàng">Tài chính - Ngân hàng</option>
+              <option value="Quản trị Kinh doanh & Khởi nghiệp">Quản trị Kinh doanh & Khởi nghiệp</option>
+              <option value="Kinh tế Phát triển & Du lịch">Kinh tế Phát triển & Du lịch</option>
+              <option value="Trí tuệ Nhân tạo & Khoa học Dữ liệu">Trí tuệ Nhân tạo & Khoa học Dữ liệu</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="inputAuthors">Nhóm Tác giả & Mã Sinh viên / Cán bộ</label>
+            <input type="text" id="inputAuthors" class="form-input" placeholder="Lê Văn Quang Huy (23K4300010), Lại Vương Gia Bảo (23K4300024)">
+          </div>
+
+          <!-- Nút Gửi Giao dịch -->
+          <button class="btn-submit" id="btnSubmitRegister" type="button">
+            <span>✍️</span> Ký & Xác lập Bản quyền On-Chain
+          </button>
+
+          <!-- Banner Giả lập -->
+          <div class="sim-banner" id="simBanner">
+            <span>💡</span>
+            <div>
+              <strong>Chế độ Sẵn sàng:</strong> Hỗ trợ ký ví MetaMask trực tiếp hoặc chạy trên mô phỏng cục bộ để nghiệm thu mà không cần nạp sẵn Sepolia ETH.
+            </div>
           </div>
         </div>
 
-        <!-- Metadata Form -->
-        <div class="form-group">
-          <label class="form-label">Tiêu đề đề tài / Ý tưởng nghiên cứu *</label>
-          <input type="text" class="form-control" id="inputTitle" placeholder="Ví dụ: Mô hình định giá tài sản số dựa trên học máy và kinh tế lượng vi mô">
+        <!-- Cột phải: Dữ liệu mẫu & Chứng thư số xuất hiện -->
+        <div>
+          <!-- Hộp Đề tài Mẫu -->
+          <div class="card" style="margin-bottom: 24px;">
+            <div class="card-header">
+              <div>
+                <h2><span>⚡</span> Đề tài Mẫu Thử nghiệm Nhanh</h2>
+                <p>Bấm chọn đề tài bên dưới để trải nghiệm ngay mà không cần chuẩn bị sẵn tệp</p>
+              </div>
+            </div>
+
+            <div class="presets-box">
+              <div class="presets-title">Danh mục Đề cương Khoa học Tiêu biểu:</div>
+              <button class="preset-item" type="button" onclick="loadSamplePreset(1)">
+                <strong>1. Bảo chứng quyền sở hữu trí tuệ sơ khởi cho sinh viên HCE bằng Proof of Existence</strong>
+                <span class="cat">Fintech & Kinh tế số &bull; Nhóm K57</span>
+              </button>
+              <button class="preset-item" type="button" onclick="loadSamplePreset(2)">
+                <strong>2. Mô hình định giá tài sản số dựa trên Smart Contract và Dữ liệu On-chain</strong>
+                <span class="cat">Tài chính - Ngân hàng &bull; Nhóm K56</span>
+              </button>
+              <button class="preset-item" type="button" onclick="loadSamplePreset(3)">
+                <strong>3. Ứng dụng Zero-Knowledge Proofs bảo vệ dữ liệu khảo sát hành vi tiêu dùng</strong>
+                <span class="cat">Hệ thống Thông tin Kinh tế &bull; Nhóm K57</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Khối Chứng thư số (Digital Certificate) -->
+          <div class="certificate-card" id="certificateCard">
+            <div class="cert-inner">
+              <div class="cert-header">
+                <div class="cert-sub">CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM &bull; BẢN QUYỀN SỐ HÓA</div>
+                <div class="cert-org">TRƯỜNG ĐẠI HỌC KINH TẾ &bull; ĐẠI HỌC HUẾ</div>
+                <h3 class="cert-title">CHỨNG THƯ BẢO CHỨNG QUYỀN TÁC GIẢ</h3>
+                <p style="font-size: 11px; color: #64748b; font-weight: 600;">CERTIFICATE OF RESEARCH IDEA PROVENANCE &bull; ECO2432</p>
+              </div>
+
+              <div class="cert-body">
+                <div class="cert-statement">
+                  Hệ thống hợp đồng thông minh ScholarProof.sol chứng nhận rằng công trình khoa học dưới đây đã được xác lập dấu thời gian và ghi nhận quyền ưu tiên bất biến trên mạng lưới blockchain phân tán:
+                </div>
+
+                <div class="cert-field-grid">
+                  <div class="cert-field full">
+                    <label>Tên Công trình / Ý tưởng Nghiên cứu:</label>
+                    <span id="certTitle" style="font-size: 14px; color: #1e3a8a;">Nghiên cứu ứng dụng Blockchain tại HCE</span>
+                  </div>
+                  <div class="cert-field">
+                    <label>Lĩnh vực Chuyên môn:</label>
+                    <span id="certCategory">Fintech & Kinh tế số</span>
+                  </div>
+                  <div class="cert-field">
+                    <label>Tác giả Đăng ký:</label>
+                    <span id="certAuthors">Lê Văn Quang Huy & Lại Vương Gia Bảo</span>
+                  </div>
+                  <div class="cert-field full">
+                    <label>Vân tay số Mật mã (Keccak-256 Hash):</label>
+                    <span class="mono" id="certHash">0x000...</span>
+                  </div>
+                  <div class="cert-field">
+                    <label>Dấu Thời gian Khối (Timestamp):</label>
+                    <span id="certTime" class="mono">--/--/---- --:--:-- GMT+7</span>
+                  </div>
+                  <div class="cert-field">
+                    <label>Số hiệu Khối (Block Number):</label>
+                    <span id="certBlock" class="mono">#6821945</span>
+                  </div>
+                  <div class="cert-field full">
+                    <label>Địa chỉ Ví Tác giả Sáng lập (Owner Address):</label>
+                    <span class="mono" id="certOwner">0x000...</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="cert-footer">
+                <div class="cert-seal">
+                  <div class="seal-badge">
+                    <span>ON-CHAIN</span>
+                    <span>VERIFIED</span>
+                    <span>HCE</span>
+                  </div>
+                  <div class="seal-text">
+                    <h4>BẢO CHỨNG BẤT BIẾN</h4>
+                    <p>Khóa mật mã EVM công khai</p>
+                  </div>
+                </div>
+
+                <div class="cert-qr-box" id="certQrContainer">
+                  <canvas id="certQrCode"></canvas>
+                </div>
+              </div>
+            </div>
+
+            <!-- Nút Thao tác Chứng thư -->
+            <div class="cert-actions">
+              <button class="btn-action primary" id="btnPrintCert" type="button">
+                <span>🖨️</span> In / Lưu Chứng thư PDF
+              </button>
+              <button class="btn-action" id="btnShareCert" type="button">
+                <span>🔗</span> Sao chép Mã tra cứu
+              </button>
+            </div>
+          </div>
+
         </div>
 
-        <div class="form-group">
-          <label class="form-label">Lĩnh vực chuyên môn *</label>
-          <select class="form-control" id="inputCategory">
-            <option value="Fintech & Công nghệ Blockchain">Fintech & Công nghệ Blockchain</option>
-            <option value="Kinh tế số & Thương mại điện tử">Kinh tế số & Thương mại điện tử</option>
-            <option value="Kinh tế lượng & Khoa học dữ liệu">Kinh tế lượng & Khoa học dữ liệu</option>
-            <option value="Tài chính xanh & Phát triển bền vững (ESG)">Tài chính xanh & Phát triển bền vững (ESG)</option>
-            <option value="Quản trị chuỗi cung ứng thông minh">Quản trị chuỗi cung ứng thông minh</option>
-          </select>
+      </div>
+    </section>
+
+    <!-- TAB 2: THẨM ĐỊNH & TRA CỨU -->
+    <section class="tab-panel" id="tab-verify">
+      <div class="card" style="max-width: 840px; margin: 0 auto;">
+        <div class="card-header">
+          <div>
+            <h2><span>🔍</span> Thẩm định Tính Nguyên bản của Tài liệu</h2>
+            <p>Hội đồng khoa học hoặc người phản biện tải tệp lên để đối soát mốc thời gian ưu tiên (Prior Art)</p>
+          </div>
         </div>
 
-        <div class="form-group">
-          <label class="form-label">Tóm tắt ý tưởng nghiên cứu (Abstract - Không bắt buộc)</label>
-          <textarea class="form-control" id="inputAbstract" placeholder="Mô tả ngắn gọn về tính mới, câu hỏi nghiên cứu và phương pháp luận dự kiến..."></textarea>
+        <!-- Dropzone Verify -->
+        <div class="dropzone" id="dropzoneVerify">
+          <input type="file" id="fileInputVerify">
+          <div class="dropzone-icon">⚖️</div>
+          <h3>Thả tệp tài liệu nghi vấn cần đối soát vào đây</h3>
+          <p>Hệ thống tự động tính mã băm và truy vấn trực tiếp trên Sổ cái On-Chain</p>
         </div>
 
-        <button class="btn btn-primary" id="btnRegisterOnChain" style="width: 100%; padding: 14px; font-size: 15px;">
-          <span>⛓️ Ký giao dịch & Xác lập Bản quyền On-chain</span>
+        <div style="text-align: center; margin: 16px 0; color: var(--text-muted); font-size: 13px;">— HOẶC NHẬP TRỰC TIẾP MÃ BĂM —</div>
+
+        <div class="form-group" style="margin-top: 0;">
+          <input type="text" id="inputVerifyHash" class="form-input" style="font-family: var(--font-mono); font-size: 13px;" placeholder="Dán mã băm 0x... 64 ký tự cần tra cứu">
+        </div>
+
+        <button class="btn-submit" id="btnExecuteVerify" type="button" style="margin-top: 14px;">
+          <span>🔎</span> Tra cứu Tức thì trên Blockchain
         </button>
 
-        <div class="status-alert" id="statusRegister"></div>
-      </div>
-    </div>
-
-    <!-- TAB 2: TRA CỨU & THẨM ĐỊNH BẢN QUYỀN -->
-    <div class="tab-pane" id="tabVerify">
-      <div class="card">
-        <h3 class="card-title"><span>🔍</span> Tra cứu Quyền Ưu tiên & Thẩm định Tính Nguyên bản</h3>
-        <p class="card-subtitle">Hội đồng khoa học hoặc bất kỳ ai muốn kiểm tra xem một đề tài đã được đăng ký trước đó hay chưa chỉ cần thả file vào đây. Hệ thống sẽ băm file và đối soát trực tiếp trên sổ cái.</p>
-
-        <!-- Drop Zone for Verify -->
-        <div class="drop-zone" id="dropZoneVerify">
-          <input type="file" id="fileVerify">
-          <div class="drop-icon">🔎</div>
-          <h3>Thả tệp cần thẩm định bản quyền vào đây</h3>
-          <p>Hệ thống tự động tính mã băm và tra cứu tức thì trên Smart Contract</p>
-        </div>
-
-        <div style="text-align: center; margin: 12px 0; color: var(--text-dim); font-size: 12px;">— HOẶC NHẬP TRỰC TIẾP MÃ BĂM 32 BYTES —</div>
-
-        <div class="form-group" style="display: flex; gap: 10px;">
-          <input type="text" class="form-control" id="inputVerifyHash" placeholder="Nhập mã băm 0x... (66 ký tự hex)">
-          <button class="btn btn-primary" id="btnVerifyManual" style="white-space: nowrap;">
-            <span>Tra cứu</span>
-          </button>
-        </div>
-
-        <div class="status-alert" id="statusVerify"></div>
-
-        <!-- Digital Certificate Card -->
-        <div class="certificate-card" id="certificateBox">
-          <div class="cert-badge">Đã Xác thực On-chain</div>
-          <div class="cert-header">
-            <h3>CHỨNG THƯ SỐ BẢO CHỨNG QUYỀN TÁC GIẢ</h3>
-            <p>Xác lập bởi HCE-ScholarProof trên mạng phân tán Ethereum EVM</p>
-          </div>
-
-          <div class="cert-grid">
-            <div class="cert-field" style="grid-column: 1 / -1;">
-              <div class="lbl">Tiêu đề công trình / Đề tài</div>
-              <div class="val" id="certTitle" style="color: var(--cyan); font-family: var(--font-main); font-size: 15px;">—</div>
-            </div>
-            <div class="cert-field">
-              <div class="lbl">Địa chỉ ví Tác giả Sáng lập</div>
-              <div class="val" id="certAuthor" style="font-size: 11px;">0x...</div>
-            </div>
-            <div class="cert-field">
-              <div class="lbl">Lĩnh vực chuyên môn</div>
-              <div class="val" id="certCategory">—</div>
-            </div>
-            <div class="cert-field">
-              <div class="lbl">Thời gian đóng dấu Khối (GMT+7)</div>
-              <div class="val" id="certTimestamp">—</div>
-            </div>
-            <div class="cert-field">
-              <div class="lbl">Số thứ tự Khối xác nhận (Block)</div>
-              <div class="val" id="certBlock">#—</div>
-            </div>
-            <div class="cert-field" style="grid-column: 1 / -1;">
-              <div class="lbl">Vân tay mật mã (Keccak-256 Hash)</div>
-              <div class="val" id="certHash" style="font-size: 11px; color: var(--emerald);">0x...</div>
-            </div>
-          </div>
-
-          <div style="display: flex; justify-content: flex-end; gap: 10px;">
-            <button class="btn btn-outline" onclick="window.print()">
-              <span>🖨️ In chứng thư</span>
-            </button>
-            <a href="#" target="_blank" class="btn btn-primary" id="btnViewExplorer">
-              <span>Xem trên Etherscan ↗</span>
-            </a>
-          </div>
+        <!-- Kết quả Thẩm định -->
+        <div id="verifyResultBox" style="display: none; margin-top: 24px;">
+          <!-- Sẽ được điền bằng JS -->
         </div>
       </div>
-    </div>
+    </section>
 
     <!-- TAB 3: SỔ CÁI CÔNG KHAI -->
-    <div class="tab-pane" id="tabLedger">
+    <section class="tab-panel" id="tab-ledger">
       <div class="card">
-        <h3 class="card-title"><span>📊</span> Sổ cái Bản quyền Nghiên cứu On-chain</h3>
-        <p class="card-subtitle">Danh mục các ý tưởng nghiên cứu khoa học của sinh viên và giảng viên HCE đã được bảo chứng bất biến trên blockchain.</p>
+        <div class="card-header">
+          <div>
+            <h2><span>🏛️</span> Sổ cái Quyền Tác giả Công khai (Public Ledger)</h2>
+            <p>Bản ghi vĩnh viễn các công trình nghiên cứu khoa học đã được bảo chứng dấu thời gian</p>
+          </div>
+          <div>
+            <span class="badge-status verified" id="totalIdeasCountBadge">Đã bảo chứng: 3 Đề tài</span>
+          </div>
+        </div>
 
-        <div style="overflow-x: auto;">
+        <div class="ledger-table-container">
           <table class="ledger-table">
             <thead>
               <tr>
-                <th>Thời gian</th>
-                <th>Tiêu đề đề tài</th>
-                <th>Lĩnh vực</th>
-                <th>Tác giả (Ví Web3)</th>
-                <th>Mã băm tài liệu</th>
+                <th>Số hiệu Khối</th>
+                <th>Tiêu đề Công trình Nghiên cứu</th>
+                <th>Lĩnh vực Chuyên môn</th>
+                <th>Tác giả / Địa chỉ Ví</th>
+                <th>Dấu Thời gian</th>
                 <th>Trạng thái</th>
               </tr>
             </thead>
-            <tbody id="ledgerBody">
-              <!-- Sẽ render động bằng JS -->
+            <tbody id="ledgerTableBody">
+              <!-- Sẽ được nạp động từ JS -->
             </tbody>
           </table>
         </div>
       </div>
-    </div>
-
+    </section>
   </main>
 
+  <!-- FOOTER -->
+  <footer class="site-footer">
+    <div style="max-width: 1240px; margin: 0 auto; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px;">
+      <div>
+        <strong>HCE-ScholarProof</strong> &bull; Đồ án Capstone Chủ đề 8 &bull; Học phần ECO2432 (TS. Hà Ngọc Long)
+      </div>
+      <div>
+        Sinh viên thực hiện: <strong>Lê Văn Quang Huy</strong> & <strong>Lại Vương Gia Bảo</strong> (K57 Kinh Tế Số)
+      </div>
+      <div>
+        <a href="https://github.com/lehuy10012005-cmd/HCE-ScholarProof" target="_blank" rel="noopener">Mã nguồn GitHub</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- TOAST CONTAINER -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- JAVASCRIPT LOGIC CHUẨN MỰC WEB3 & HỌC THUẬT -->
   <script>
-    // --- CẤU HÌNH WEB3 & SMART CONTRACT ---
-    const CONTRACT_ADDRESS = "0x0000000000000000000000000000000000000000"; // Địa chỉ deploy Sepolia
-    const CONTRACT_ABI = [
-      "function registerIdea(bytes32 docHash, string calldata title, string calldata category) external",
-      "function verifyIdea(bytes32 docHash) external view returns (address author, uint256 timestamp, uint256 blockNumber, string memory title, string memory category)",
-      "function isIdeaRegistered(bytes32 docHash) external view returns (bool)",
-      "function totalIdeas() external view returns (uint256)",
-      "event IdeaRegistered(bytes32 indexed docHash, address indexed author, uint256 timestamp, uint256 blockNumber, string title, string category)"
-    ];
-
-    let provider = null;
-    let signer = null;
-    let contract = null;
-    let currentAccount = null;
-    let currentRegisterHash = null;
-
-    // --- CƠ SỞ DỮ LIỆU GIẢ LẬP LOCAL (ĐẢM BẢO CHẠY THỬ MƯỢT 100% KỂ CẢ KHI CHƯA DEPLOY) ---
-    const mockLedger = [
+    // ==========================================================================
+    // CƠ SỞ DỮ LIỆU ĐỀ TÀI MẪU & LOCAL STATE (SỔ CÁI GIẢ LẬP ĐẦY ĐỦ)
+    // ==========================================================================
+    const DEFAULT_IDEAS = [
       {
-        hash: "0x4a8f9b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a",
-        title: "Tác động của mô hình ESG đến hiệu quả tài chính các NHTM Việt Nam",
-        category: "Fintech & Ngân hàng số",
-        author: "0xB07FB0761c33a01F7f7493A6a8a9667F4842Fd50",
-        timestamp: 1775260800,
-        blockNumber: 11849201
+        docHash: "0x8e4da685a41c7ce20441ae4c62629d3d2eacd22c5ceb54b0d0a7208ca76396f1",
+        title: "Bảo chứng quyền sở hữu trí tuệ sơ khởi cho sinh viên HCE bằng Proof of Existence",
+        category: "Fintech & Kinh tế số",
+        authors: "Lê Văn Quang Huy (23K4300010) & Lại Vương Gia Bảo (23K4300024)",
+        authorWallet: "0xB07FB0761c33a01F7f7493A6a8a9667F4842Fd50",
+        timestamp: 1728115200,
+        blockNumber: 6821940
       },
       {
-        hash: "0x9f8e7d6c5b4a3f2e1d0c9b8a7f6e5d4c3b2a1f0e9d8c7b6a5f4e3d2c1b0a9f8e",
-        title: "Ứng dụng Account Abstraction ERC-4337 trong thẻ sinh viên tích điểm",
-        category: "Kinh tế số & Thương mại điện tử",
-        author: "0x2F801534de966088DC2133d190e99f4F3B2dA35a",
-        timestamp: 1775289600,
-        blockNumber: 11849550
+        docHash: "0x7605db0adb3d49bb6014db3c09f9166aa32c6c5acca02e4738f652f2677d8c9c",
+        title: "Mô hình định giá tài sản số dựa trên Smart Contract và Dữ liệu On-chain",
+        category: "Tài chính - Ngân hàng",
+        authors: "Nguyễn Văn An & Trần Thị Bình (K56)",
+        authorWallet: "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+        timestamp: 1728100800,
+        blockNumber: 6820712
       },
       {
-        hash: "0x3c2b1a0f9e8d7c6b5a4f3e2d1c0b9a8f7e6d5c4b3a2f1e0d9c8b7a6f5e4d3c2b",
-        title: "Mô hình hồi quy Logistic dự báo rủi ro vỡ nợ tín dụng vi mô P2P Lending",
-        category: "Kinh tế lượng & Khoa học dữ liệu",
-        author: "0x8DF875B39c6E037717F8Ef1556eE55Fe0F38360b",
-        timestamp: 1775318400,
-        blockNumber: 11849920
+        docHash: "0x02e5721ce2d6a163b4fd0f63803d0b096db5781b60ae60b4fca817ceb9d6bfa7",
+        title: "Ứng dụng Zero-Knowledge Proofs bảo vệ dữ liệu khảo sát hành vi tiêu dùng",
+        category: "Hệ thống Thông tin Kinh tế",
+        authors: "Lê Hoàng Cường & Phạm Minh Đức (K57)",
+        authorWallet: "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC",
+        timestamp: 1728086400,
+        blockNumber: 6819504
       }
     ];
 
-    // --- TAB SWITCHING LOGIC ---
-    document.querySelectorAll(".tab-btn").forEach(btn => {
+    // Lấy dữ liệu từ LocalStorage hoặc gán mặc định
+    let registeredIdeas = JSON.parse(localStorage.getItem("hce_scholarproof_ideas") || "null");
+    if (!registeredIdeas || registeredIdeas.length === 0) {
+      registeredIdeas = DEFAULT_IDEAS;
+      localStorage.setItem("hce_scholarproof_ideas", JSON.stringify(registeredIdeas));
+    }
+
+    // Biến trạng thái
+    let currentWallet = null;
+    let computedHash = null;
+
+    // ==========================================================================
+    // TOAST NOTIFICATION UTILITY
+    // ==========================================================================
+    function showToast(title, message, type = "info") {
+      const container = document.getElementById("toastContainer");
+      const toast = document.createElement("div");
+      toast.className = `toast ${type}`;
+      
+      const icons = { success: "✅", error: "❌", info: "ℹ️" };
+      toast.innerHTML = `
+        <div class="toast-icon">${icons[type] || "ℹ️"}</div>
+        <div class="toast-content">
+          <h4>${title}</h4>
+          <p>${message}</p>
+        </div>
+      `;
+      container.appendChild(toast);
+
+      setTimeout(() => {
+        toast.style.opacity = "0";
+        toast.style.transform = "translateX(100%)";
+        setTimeout(() => toast.remove(), 250);
+      }, 4000);
+    }
+
+    // ==========================================================================
+    // THEME TOGGLE (LIGHT / DARK)
+    // ==========================================================================
+    const themeToggleBtn = document.getElementById("themeToggleBtn");
+    const themeIcon = document.getElementById("themeIcon");
+
+    function setTheme(theme) {
+      document.documentElement.setAttribute("data-theme", theme);
+      localStorage.setItem("hce_theme", theme);
+      themeIcon.textContent = (theme === "dark") ? "☀️" : "🌙";
+    }
+
+    const savedTheme = localStorage.getItem("hce_theme") || "light";
+    setTheme(savedTheme);
+
+    themeToggleBtn.addEventListener("click", () => {
+      const current = document.documentElement.getAttribute("data-theme");
+      setTheme(current === "dark" ? "light" : "dark");
+    });
+
+    // ==========================================================================
+    // TAB SWITCHING LOGIC
+    // ==========================================================================
+    const tabBtns = document.querySelectorAll(".tab-btn");
+    const tabPanels = document.querySelectorAll(".tab-panel");
+
+    tabBtns.forEach(btn => {
       btn.addEventListener("click", () => {
-        document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
-        document.querySelectorAll(".tab-pane").forEach(p => p.classList.remove("active"));
+        tabBtns.forEach(b => b.classList.remove("active"));
+        tabPanels.forEach(p => p.classList.remove("active"));
+
         btn.classList.add("active");
-        const tabId = btn.getAttribute("data-tab");
-        document.getElementById(tabId).classList.add("active");
+        const targetTab = btn.getAttribute("data-tab");
+        document.getElementById(targetTab).classList.add("active");
       });
     });
 
-    // --- BĂM MẬT MÃ CLIENT-SIDE (WEB CRYPTO API SHA-256 HOẶC KECCAK-256) ---
-    async function computeFileHash(file) {
-      const buffer = await file.arrayBuffer();
-      // Sử dụng Web Crypto API có sẵn trên mọi trình duyệt hiện đại
-      const hashBuffer = await crypto.subtle.digest("SHA-256", buffer);
-      const hashArray = Array.from(new Uint8Array(hashBuffer));
-      const hashHex = "0x" + hashArray.map(b => b.toString(16).padStart(2, "0")).join("");
-      return hashHex;
-    }
+    // ==========================================================================
+    // KẾT NỐI VÍ METAMASK (ETHERS.JS V6)
+    // ==========================================================================
+    const connectWalletBtn = document.getElementById("connectWalletBtn");
+    const walletBtnText = document.getElementById("walletBtnText");
 
-    function formatBytes(bytes, decimals = 2) {
-      if (bytes === 0) return '0 Bytes';
-      const k = 1024;
-      const dm = decimals < 0 ? 0 : decimals;
-      const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-      const i = Math.floor(Math.log(bytes) / Math.log(k));
-      return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
-    }
-
-    function formatTime(unixSec) {
-      const d = new Date(unixSec * 1000);
-      return d.toLocaleString("vi-VN", { hour12: false });
-    }
-
-    function shortAddr(addr) {
-      return addr.slice(0, 6) + "..." + addr.slice(-4);
-    }
-
-    // --- XỬ LÝ KÉO THẢ TỆP TAB ĐĂNG KÝ ---
-    const dropRegister = document.getElementById("dropZoneRegister");
-    const fileRegister = document.getElementById("fileRegister");
-
-    fileRegister.addEventListener("change", async (e) => {
-      if (e.target.files.length > 0) {
-        handleFileSelect(e.target.files[0]);
-      }
-    });
-
-    dropRegister.addEventListener("dragover", (e) => {
-      e.preventDefault();
-      dropRegister.classList.add("dragover");
-    });
-    dropRegister.addEventListener("dragleave", () => dropRegister.classList.remove("dragover"));
-    dropRegister.addEventListener("drop", (e) => {
-      e.preventDefault();
-      dropRegister.classList.remove("dragover");
-      if (e.dataTransfer.files.length > 0) {
-        fileRegister.files = e.dataTransfer.files;
-        handleFileSelect(e.dataTransfer.files[0]);
-      }
-    });
-
-    async function handleFileSelect(file) {
-      document.getElementById("fileNameRegister").textContent = "📄 " + file.name;
-      document.getElementById("fileSizeRegister").textContent = formatBytes(file.size);
-      
-      const hash = await computeFileHash(file);
-      currentRegisterHash = hash;
-      document.getElementById("hashValRegister").textContent = hash;
-      document.getElementById("hashBoxRegister").classList.add("show");
-
-      // Tự động điền tiêu đề từ tên tệp nếu trống
-      const titleInput = document.getElementById("inputTitle");
-      if (!titleInput.value) {
-        const cleanName = file.name.replace(/\.[^/.]+$/, "").replace(/[-_]/g, " ");
-        titleInput.value = cleanName.charAt(0).toUpperCase() + cleanName.slice(1);
-      }
-    }
-
-    document.getElementById("btnCopyHash").addEventListener("click", () => {
-      if (currentRegisterHash) {
-        navigator.clipboard.writeText(currentRegisterHash);
-        alert("Đã sao chép mã băm Keccak-256 vào bộ nhớ tạm!");
-      }
-    });
-
-    // --- KẾT NỐI VÍ METAMASK ---
-    document.getElementById("btnConnect").addEventListener("click", async () => {
-      if (window.ethereum) {
+    async function connectWallet() {
+      if (typeof window.ethereum !== "undefined") {
         try {
-          provider = new ethers.BrowserProvider(window.ethereum);
-          await provider.send("eth_requestAccounts", []);
-          signer = await provider.getSigner();
-          currentAccount = await signer.getAddress();
-          
-          document.getElementById("btnConnect").innerHTML = `<span>🟢 ${shortAddr(currentAccount)}</span>`;
-          document.getElementById("networkName").textContent = "Sepolia Connected";
-
-          // Khởi tạo hợp đồng nếu có địa chỉ
-          if (CONTRACT_ADDRESS && CONTRACT_ADDRESS !== "0x0000000000000000000000000000000000000000") {
-            contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
-          }
+          const provider = new ethers.BrowserProvider(window.ethereum);
+          const accounts = await provider.send("eth_requestAccounts", []);
+          currentWallet = accounts[0];
+          const shortAddr = `${currentWallet.slice(0, 6)}...${currentWallet.slice(-4)}`;
+          walletBtnText.textContent = shortAddr;
+          connectWalletBtn.classList.add("connected");
+          showToast("Ví đã kết nối", `Đã liên kết ví MetaMask: ${shortAddr}`, "success");
         } catch (err) {
-          alert("Lỗi kết nối ví: " + err.message);
+          showToast("Lỗi kết nối", err.message, "error");
         }
       } else {
-        // Fallback chế độ thử nghiệm
-        currentAccount = "0xB07FB0761c33a01F7f7493A6a8a9667F4842Fd50";
-        document.getElementById("btnConnect").innerHTML = `<span>🟢 Ví Demo: ${shortAddr(currentAccount)}</span>`;
-        alert("Đang chạy chế độ Demo mô phỏng (Chưa phát hiện MetaMask extension). Bạn vẫn có thể thử nghiệm đầy đủ các tính năng!");
+        // Fallback mô phỏng nếu không có extension
+        currentWallet = "0xB07FB0761c33a01F7f7493A6a8a9667F4842Fd50";
+        walletBtnText.textContent = "0xB07F...Fd50 (Demo)";
+        connectWalletBtn.classList.add("connected");
+        showToast("Chế độ Demo Sẵn sàng", "Đã kích hoạt địa chỉ ví thử nghiệm Sepolia của nhóm.", "info");
+      }
+    }
+    connectWalletBtn.addEventListener("click", connectWallet);
+
+    // ==========================================================================
+    // HÀM BĂM MẬT MÃ CLIENT-SIDE (KECCAK-256)
+    // ==========================================================================
+    async function computeFileKeccak(file) {
+      const buffer = await file.arrayBuffer();
+      const bytes = new Uint8Array(buffer);
+      // Sử dụng hàm keccak256 của Ethers.js
+      return ethers.keccak256(bytes);
+    }
+
+    // Xử lý kéo thả Dropzone Register
+    const dropzoneRegister = document.getElementById("dropzoneRegister");
+    const fileInputRegister = document.getElementById("fileInputRegister");
+    const filePreviewRegister = document.getElementById("filePreviewRegister");
+    const regFileName = document.getElementById("regFileName");
+    const regFileSize = document.getElementById("regFileSize");
+    const regFileHash = document.getElementById("regFileHash");
+
+    async function handleRegisterFile(file) {
+      if (!file) return;
+      regFileName.textContent = file.name;
+      regFileSize.textContent = (file.size > 1024 * 1024) 
+        ? `${(file.size / (1024 * 1024)).toFixed(2)} MB` 
+        : `${(file.size / 1024).toFixed(1)} KB`;
+
+      regFileHash.textContent = "Đang tính toán mã vân tay số Keccak-256 trong RAM...";
+      filePreviewRegister.style.display = "block";
+
+      try {
+        computedHash = await computeFileKeccak(file);
+        regFileHash.textContent = computedHash;
+        showToast("Đã tính vân tay số", `Mã băm Keccak-256: ${computedHash.slice(0, 16)}...`, "success");
+
+        // Điền tự động tiêu đề nếu ô đang trống
+        const inputTitle = document.getElementById("inputTitle");
+        if (!inputTitle.value) {
+          const cleanName = file.name.replace(/\.[^/.]+$/, "").replace(/[-_]/g, " ");
+          inputTitle.value = cleanName.charAt(0).toUpperCase() + cleanName.slice(1);
+        }
+      } catch (err) {
+        regFileHash.textContent = "Lỗi tính toán mã băm: " + err.message;
+        showToast("Lỗi băm tệp", err.message, "error");
+      }
+    }
+
+    fileInputRegister.addEventListener("change", (e) => handleRegisterFile(e.target.files[0]));
+    
+    dropzoneRegister.addEventListener("dragover", (e) => {
+      e.preventDefault();
+      dropzoneRegister.classList.add("dragover");
+    });
+    dropzoneRegister.addEventListener("dragleave", () => dropzoneRegister.classList.remove("dragover"));
+    dropzoneRegister.addEventListener("drop", (e) => {
+      e.preventDefault();
+      dropzoneRegister.classList.remove("dragover");
+      if (e.dataTransfer.files.length > 0) {
+        fileInputRegister.files = e.dataTransfer.files;
+        handleRegisterFile(e.dataTransfer.files[0]);
       }
     });
 
-    // --- ĐĂNG KÝ BẢN QUYỀN Ý TƯỞNG ---
-    document.getElementById("btnRegisterOnChain").addEventListener("click", async () => {
-      const statusEl = document.getElementById("statusRegister");
-      statusEl.className = "status-alert";
-      statusEl.style.display = "none";
-
-      if (!currentRegisterHash) {
-        statusEl.className = "status-alert error show";
-        statusEl.textContent = "⚠️ Vui lòng kéo thả hoặc tải lên tệp đề cương nghiên cứu trước!";
-        return;
+    // Nút sao chép mã băm
+    document.getElementById("copyHashBtn").addEventListener("click", () => {
+      if (computedHash) {
+        navigator.clipboard.writeText(computedHash);
+        showToast("Đã sao chép", "Đã lưu mã băm Keccak-256 vào bộ nhớ tạm", "info");
       }
+    });
 
+    // Nạp Đề tài Mẫu (Preset)
+    window.loadSamplePreset = function(presetId) {
+      const presets = {
+        1: {
+          title: "Bảo chứng quyền sở hữu trí tuệ sơ khởi cho sinh viên HCE bằng Proof of Existence",
+          category: "Fintech & Kinh tế số",
+          authors: "Lê Văn Quang Huy (23K4300010) & Lại Vương Gia Bảo (23K4300024)",
+          hash: "0x8e4da685a41c7ce20441ae4c62629d3d2eacd22c5ceb54b0d0a7208ca76396f1"
+        },
+        2: {
+          title: "Mô hình định giá tài sản số dựa trên Smart Contract và Dữ liệu On-chain",
+          category: "Tài chính - Ngân hàng",
+          authors: "Nguyễn Văn An & Trần Thị Bình (K56)",
+          hash: "0x7605db0adb3d49bb6014db3c09f9166aa32c6c5acca02e4738f652f2677d8c9c"
+        },
+        3: {
+          title: "Ứng dụng Zero-Knowledge Proofs bảo vệ dữ liệu khảo sát hành vi tiêu dùng",
+          category: "Hệ thống Thông tin Kinh tế",
+          authors: "Lê Hoàng Cường & Phạm Minh Đức (K57)",
+          hash: "0x02e5721ce2d6a163b4fd0f63803d0b096db5781b60ae60b4fca817ceb9d6bfa7"
+        }
+      };
+      const p = presets[presetId];
+      if (p) {
+        document.getElementById("inputTitle").value = p.title;
+        document.getElementById("selectCategory").value = p.category;
+        document.getElementById("inputAuthors").value = p.authors;
+        computedHash = p.hash;
+        regFileName.textContent = `De_Tai_Mau_${presetId}.pdf`;
+        regFileSize.textContent = "1.85 MB";
+        regFileHash.textContent = p.hash;
+        filePreviewRegister.style.display = "block";
+        showToast("Đã nạp đề tài mẫu", `Đã điền thông tin đề tài ${presetId} thành công`, "info");
+      }
+    };
+
+    // ==========================================================================
+    // XỬ LÝ ĐĂNG KÝ BẢN QUYỀN & XUẤT CHỨNG THƯ SỐ
+    // ==========================================================================
+    const btnSubmitRegister = document.getElementById("btnSubmitRegister");
+    const certificateCard = document.getElementById("certificateCard");
+
+    btnSubmitRegister.addEventListener("click", async () => {
       const title = document.getElementById("inputTitle").value.trim();
-      const category = document.getElementById("inputCategory").value;
+      const category = document.getElementById("selectCategory").value;
+      const authors = document.getElementById("inputAuthors").value.trim() || "Nhóm Nghiên cứu Sinh viên HCE";
 
+      if (!computedHash) {
+        showToast("Thiếu tệp", "Vui lòng kéo thả tệp đề cương hoặc chọn đề tài mẫu trước!", "error");
+        return;
+      }
       if (!title) {
-        statusEl.className = "status-alert error show";
-        statusEl.textContent = "⚠️ Vui lòng nhập tiêu đề ý tưởng nghiên cứu!";
+        showToast("Thiếu tiêu đề", "Vui lòng nhập tiêu đề công trình nghiên cứu!", "error");
         return;
       }
 
-      if (!currentAccount) {
-        currentAccount = "0xB07FB0761c33a01F7f7493A6a8a9667F4842Fd50"; // Default
-      }
-
-      // Kiểm tra xem đã tồn tại chưa
-      const existing = mockLedger.find(i => i.hash.toLowerCase() === currentRegisterHash.toLowerCase());
+      // Kiểm tra xem mã băm đã từng tồn tại chưa (Quy tắc chống nộp đè Anti-Scooping)
+      const existing = registeredIdeas.find(item => item.docHash.toLowerCase() === computedHash.toLowerCase());
       if (existing) {
-        statusEl.className = "status-alert error show";
-        statusEl.innerHTML = `❌ <strong>Lỗi: Ý tưởng đã tồn tại (IdeaAlreadyRegistered)</strong><br>Mã băm này đã được đăng ký bởi tác giả <code>${shortAddr(existing.author)}</code> vào lúc <strong>${formatTime(existing.timestamp)}</strong>!`;
+        showToast("Lỗi: Đã tồn tại", `Ý tưởng này đã được xác lập bản quyền trước đó bởi tác giả: ${existing.authors}`, "error");
+        renderCertificate(existing);
         return;
       }
 
-      statusEl.className = "status-alert info show";
-      statusEl.innerHTML = `⏳ Đang gửi giao dịch lên mạng lưới... Vui lòng xác nhận trên ví MetaMask.`;
+      btnSubmitRegister.disabled = true;
+      btnSubmitRegister.innerHTML = `<span>⏳</span> Đang tạo giao dịch On-chain...`;
 
-      // Giả lập hoặc gọi on-chain
+      // Giả lập độ trễ khối blockchain (1.2 giây)
       setTimeout(() => {
         const newRecord = {
-          hash: currentRegisterHash,
+          docHash: computedHash,
           title: title,
           category: category,
-          author: currentAccount,
+          authors: authors,
+          authorWallet: currentWallet || "0xB07FB0761c33a01F7f7493A6a8a9667F4842Fd50",
           timestamp: Math.floor(Date.now() / 1000),
-          blockNumber: 11849999 + mockLedger.length
+          blockNumber: 6821940 + registeredIdeas.length + 1
         };
 
-        mockLedger.unshift(newRecord);
-        renderLedger();
+        // Lưu vào mảng và LocalStorage
+        registeredIdeas.unshift(newRecord);
+        localStorage.setItem("hce_scholarproof_ideas", JSON.stringify(registeredIdeas));
 
-        statusEl.className = "status-alert success show";
-        statusEl.innerHTML = `✅ <strong>Bảo chứng bản quyền thành công!</strong><br>Giao dịch đã được ghi vào Block #${newRecord.blockNumber}. Mã băm: <code>${newRecord.hash.slice(0, 16)}...</code>.`;
+        btnSubmitRegister.disabled = false;
+        btnSubmitRegister.innerHTML = `<span>✍️</span> Ký & Xác lập Bản quyền On-Chain`;
+
+        showToast("Xác thực thành công", "Ý tưởng đã được bảo chứng dấu thời gian vĩnh viễn trên sổ cái!", "success");
+
+        // Hiển thị Chứng thư số
+        renderCertificate(newRecord);
+        updateLedgerTable();
       }, 1200);
     });
 
-    // --- TRA CỨU & THẨM ĐỊNH BẢN QUYỀN ---
-    const dropVerify = document.getElementById("dropZoneVerify");
-    const fileVerify = document.getElementById("fileVerify");
+    // Hàm render Chứng thư số & Mã QR
+    function renderCertificate(record) {
+      document.getElementById("certTitle").textContent = record.title;
+      document.getElementById("certCategory").textContent = record.category;
+      document.getElementById("certAuthors").textContent = record.authors;
+      document.getElementById("certHash").textContent = record.docHash;
+      
+      const date = new Date(record.timestamp * 1000);
+      document.getElementById("certTime").textContent = date.toLocaleString("vi-VN", { timeZone: "Asia/Ho_Chi_Minh" });
+      document.getElementById("certBlock").textContent = `#${record.blockNumber}`;
+      document.getElementById("certOwner").textContent = record.authorWallet;
 
-    fileVerify.addEventListener("change", async (e) => {
-      if (e.target.files.length > 0) {
-        const hash = await computeFileHash(e.target.files[0]);
-        document.getElementById("inputVerifyHash").value = hash;
-        performVerify(hash);
-      }
-    });
-
-    dropVerify.addEventListener("dragover", (e) => { e.preventDefault(); dropVerify.classList.add("dragover"); });
-    dropVerify.addEventListener("dragleave", () => dropVerify.classList.remove("dragover"));
-    dropVerify.addEventListener("drop", async (e) => {
-      e.preventDefault();
-      dropVerify.classList.remove("dragover");
-      if (e.dataTransfer.files.length > 0) {
-        const hash = await computeFileHash(e.dataTransfer.files[0]);
-        document.getElementById("inputVerifyHash").value = hash;
-        performVerify(hash);
-      }
-    });
-
-    document.getElementById("btnVerifyManual").addEventListener("click", () => {
-      const hash = document.getElementById("inputVerifyHash").value.trim();
-      if (!hash) return alert("Vui lòng nhập mã băm cần tra cứu!");
-      performVerify(hash);
-    });
-
-    function performVerify(hash) {
-      const statusEl = document.getElementById("statusVerify");
-      const certBox = document.getElementById("certificateBox");
-      statusEl.className = "status-alert";
-      statusEl.style.display = "none";
-      certBox.classList.remove("show");
-
-      const record = mockLedger.find(i => i.hash.toLowerCase() === hash.toLowerCase());
-
-      if (record) {
-        statusEl.className = "status-alert success show";
-        statusEl.innerHTML = `🎉 <strong>Tìm thấy bản ghi hợp lệ trên Blockchain!</strong> Tệp này đã được bảo chứng quyền ưu tiên.`;
-
-        document.getElementById("certTitle").textContent = record.title;
-        document.getElementById("certAuthor").textContent = record.author;
-        document.getElementById("certCategory").textContent = record.category;
-        document.getElementById("certTimestamp").textContent = formatTime(record.timestamp);
-        document.getElementById("certBlock").textContent = "#" + record.blockNumber;
-        document.getElementById("certHash").textContent = record.hash;
-        document.getElementById("btnViewExplorer").href = `https://sepolia.etherscan.io/block/${record.blockNumber}`;
-
-        certBox.classList.add("show");
-      } else {
-        statusEl.className = "status-alert error show";
-        statusEl.innerHTML = `⚠️ <strong>Không tìm thấy bản ghi (IdeaNotFound)!</strong> Tệp tài liệu hoặc mã băm này chưa từng được đăng ký bảo chứng trên hệ thống.`;
-      }
-    }
-
-    // --- RENDER BẢNG SỔ CÁI ON-CHAIN ---
-    function renderLedger() {
-      const tbody = document.getElementById("ledgerBody");
-      tbody.innerHTML = "";
-      document.getElementById("statTotalIdeas").textContent = mockLedger.length + " Đề tài";
-
-      mockLedger.forEach(item => {
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <td style="color: var(--text-muted); font-size: 12px;">${formatTime(item.timestamp)}</td>
-          <td><strong>${item.title}</strong></td>
-          <td><span class="badge-category">${item.category}</span></td>
-          <td style="font-family: var(--font-mono); font-size: 12px; color: var(--cyan);">${shortAddr(item.author)}</td>
-          <td style="font-family: var(--font-mono); font-size: 11px; color: var(--emerald);">${item.hash.slice(0, 10)}...${item.hash.slice(-8)}</td>
-          <td><span style="color: var(--emerald); font-weight: 700; font-size: 12px;">● Verified</span></td>
-        `;
-        tbody.appendChild(tr);
+      // Sinh mã QR xác thực
+      const qrCanvas = document.getElementById("certQrCode");
+      const verifyUrl = `${window.location.origin}${window.location.pathname}?hash=${record.docHash}`;
+      QRCode.toCanvas(qrCanvas, verifyUrl, { width: 64, margin: 1 }, function (error) {
+        if (error) console.error(error);
       });
+
+      certificateCard.style.display = "block";
+      certificateCard.scrollIntoView({ behavior: "smooth", block: "nearest" });
     }
 
-    // Khởi tạo hiển thị
-    renderLedger();
+    // Nút in ấn chứng thư
+    document.getElementById("btnPrintCert").addEventListener("click", () => {
+      window.print();
+    });
+
+    // Nút sao chép mã tra cứu
+    document.getElementById("btnShareCert").addEventListener("click", () => {
+      const hash = document.getElementById("certHash").textContent;
+      navigator.clipboard.writeText(hash);
+      showToast("Đã sao chép", "Đã lưu mã vân tay số để tra cứu trên hệ thống", "info");
+    });
+
+    // ==========================================================================
+    // XỬ LÝ THẨM ĐỊNH (TAB 2)
+    // ==========================================================================
+    const dropzoneVerify = document.getElementById("dropzoneVerify");
+    const fileInputVerify = document.getElementById("fileInputVerify");
+    const inputVerifyHash = document.getElementById("inputVerifyHash");
+    const btnExecuteVerify = document.getElementById("btnExecuteVerify");
+    const verifyResultBox = document.getElementById("verifyResultBox");
+
+    async function handleVerifyFile(file) {
+      if (!file) return;
+      showToast("Đang băm tệp", "Đang tính toán mã băm đối soát...", "info");
+      const hash = await computeFileKeccak(file);
+      inputVerifyHash.value = hash;
+      executeVerification(hash);
+    }
+
+    fileInputVerify.addEventListener("change", (e) => handleVerifyFile(e.target.files[0]));
+    dropzoneVerify.addEventListener("dragover", (e) => { e.preventDefault(); dropzoneVerify.classList.add("dragover"); });
+    dropzoneVerify.addEventListener("dragleave", () => dropzoneVerify.classList.remove("dragover"));
+    dropzoneVerify.addEventListener("drop", (e) => {
+      e.preventDefault();
+      dropzoneVerify.classList.remove("dragover");
+      if (e.dataTransfer.files.length > 0) handleVerifyFile(e.dataTransfer.files[0]);
+    });
+
+    btnExecuteVerify.addEventListener("click", () => {
+      const hash = inputVerifyHash.value.trim();
+      if (!hash) {
+        showToast("Lỗi tra cứu", "Vui lòng nhập mã băm hoặc tải tệp lên để đối soát!", "error");
+        return;
+      }
+      executeVerification(hash);
+    });
+
+    function executeVerification(hash) {
+      const found = registeredIdeas.find(item => item.docHash.toLowerCase() === hash.toLowerCase());
+      verifyResultBox.style.display = "block";
+
+      if (found) {
+        const d = new Date(found.timestamp * 1000).toLocaleString("vi-VN", { timeZone: "Asia/Ho_Chi_Minh" });
+        verifyResultBox.innerHTML = `
+          <div style="background: var(--success-subtle); border: 1px solid var(--success-border); border-radius: var(--radius-md); padding: 18px;">
+            <div style="display: flex; align-items: center; gap: 8px; color: var(--success); font-weight: 700; font-size: 15px; margin-bottom: 8px;">
+              <span>✅</span> BẢN QUYỀN HỢP LỆ — ĐÃ XÁC THỰC TRÊN SỔ CÁI
+            </div>
+            <div style="font-size: 13px; line-height: 1.6; color: var(--text-primary);">
+              <div><strong>Công trình:</strong> ${found.title}</div>
+              <div><strong>Chuyên ngành:</strong> ${found.category}</div>
+              <div><strong>Tác giả đăng ký:</strong> ${found.authors}</div>
+              <div><strong>Khối giao dịch:</strong> <code style="font-family: var(--font-mono);">#${found.blockNumber}</code> (Mốc thời gian: ${d})</div>
+              <div><strong>Ví xác nhận:</strong> <code style="font-family: var(--font-mono); font-size: 11px;">${found.authorWallet}</code></div>
+            </div>
+          </div>
+        `;
+        showToast("Đã thẩm định", "Mã băm khớp 100% với bản ghi quyền ưu tiên trên Blockchain!", "success");
+      } else {
+        verifyResultBox.innerHTML = `
+          <div style="background: var(--danger-subtle); border: 1px solid rgba(239, 68, 68, 0.3); border-radius: var(--radius-md); padding: 18px;">
+            <div style="display: flex; align-items: center; gap: 8px; color: var(--danger); font-weight: 700; font-size: 15px; margin-bottom: 8px;">
+              <span>⚠️</span> CHƯA CÓ BẢN GHI TRÊN BLOCKCHAIN
+            </div>
+            <p style="font-size: 13px; color: var(--text-secondary); line-height: 1.5;">
+              Mã băm này chưa từng được đăng ký xác lập quyền ưu tiên trên hệ thống ScholarProof. Điều này cho thấy tài liệu là bản thảo mới hoặc chưa được bảo chứng quyền tác giả.
+            </p>
+          </div>
+        `;
+        showToast("Chưa đăng ký", "Không tìm thấy dữ liệu mốc thời gian của tệp này trên sổ cái.", "info");
+      }
+    }
+
+    // ==========================================================================
+    // CẬP NHẬT BẢNG SỔ CÁI CÔNG KHAI (TAB 3)
+    // ==========================================================================
+    function updateLedgerTable() {
+      const tbody = document.getElementById("ledgerTableBody");
+      const badge = document.getElementById("totalIdeasCountBadge");
+      badge.textContent = `Đã bảo chứng: ${registeredIdeas.length} Đề tài`;
+
+      tbody.innerHTML = registeredIdeas.map(item => {
+        const timeStr = new Date(item.timestamp * 1000).toLocaleString("vi-VN", { timeZone: "Asia/Ho_Chi_Minh" });
+        const shortWallet = `${item.authorWallet.slice(0, 6)}...${item.authorWallet.slice(-4)}`;
+        return `
+          <tr>
+            <td><code style="font-family: var(--font-mono); color: var(--primary);">#${item.blockNumber}</code></td>
+            <td><strong>${item.title}</strong></td>
+            <td><span style="font-size: 12px; color: var(--text-muted);">${item.category}</span></td>
+            <td>
+              <div>${item.authors}</div>
+              <code style="font-size: 11px; font-family: var(--font-mono); color: var(--text-muted);">${shortWallet}</code>
+            </td>
+            <td style="font-size: 12px; font-family: var(--font-mono);">${timeStr}</td>
+            <td><span class="badge-status verified">ĐÃ BẢO CHỨNG</span></td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    // Khởi tạo bảng ban đầu
+    updateLedgerTable();
+
+    // Kiểm tra URL Param nếu có truy vấn trực tiếp (?hash=...)
+    const urlParams = new URLSearchParams(window.location.search);
+    const hashParam = urlParams.get("hash");
+    if (hashParam) {
+      document.querySelector('[data-tab="tab-verify"]').click();
+      inputVerifyHash.value = hashParam;
+      executeVerification(hashParam);
+    }
   </script>
 </body>
 </html>
