@@ -1,0 +1,38 @@
+name: Trien khai GitHub Pages cho HCE-ScholarProof
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Sao chep ma nguon (Checkout)
+        uses: actions/checkout@v4
+
+      - name: Thiet lap GitHub Pages
+        uses: actions/configure-pages@v4
+
+      - name: Dong goi thu muc web lam Artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: './web'
+
+      - name: Trien khai len may chu GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
