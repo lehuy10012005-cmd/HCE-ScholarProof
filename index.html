@@ -596,18 +596,14 @@
        2. IDEA REGISTRATION VIEW (ĐĂNG KÝ BẢN QUYỀN - DROPZONE & FORM HỌC THUẬT)
        ========================================================================== */
     .reg-wrapper {
-      max-width: 1200px;
+      max-width: 980px;
       margin: 32px auto;
       padding: 0 24px;
     }
     .reg-grid {
-      display: grid;
-      grid-template-columns: 0.95fr 1.05fr;
-      gap: 28px;
-      align-items: start;
-    }
-    @media (max-width: 900px) {
-      .reg-grid { grid-template-columns: 1fr; }
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
     }
 
     .panel-card {
@@ -1690,8 +1686,6 @@
               </div>
             </div>
           </div>
-
-          </div>
         </div>
 
         <!-- Cột phải: Live Preview Card, Hash Box & Metadata Form -->
@@ -1810,25 +1804,66 @@
           <h3>Thẩm Định Độc Bản Đề Tài</h3>
           <p class="sub">Đối soát tệp đề cương với toàn bộ cơ sở dữ liệu bản quyền trên Blockchain Sepolia</p>
 
-          <div class="upload-zone" id="appraisalDropzone" style="margin-bottom: 16px;">
-            <input type="file" id="appraisalFileInput">
-            <div class="upload-icon">🔍</div>
-            <h4>Kéo tệp đề cương cần đối soát vào đây</h4>
-            <p>Hệ thống tự động băm Keccak-256 và so khớp với Sổ cái On-Chain</p>
+          <div class="upload-zone" id="appraisalDropzone">
+            <input type="file" id="appraisalFileInput" accept=".pdf,.doc,.docx,.xls,.xlsx">
+            
+            <!-- Trạng thái khi chưa có tệp đối soát -->
+            <div id="appraisalEmptyState">
+              <div class="upload-icon">🔍</div>
+              <h4>Kéo tệp đề cương cần đối soát vào đây</h4>
+              <p>Hệ thống tự động băm Keccak-256 và so khớp với Sổ cái On-Chain</p>
+            </div>
+
+            <!-- Trạng thái khi đã nạp tệp đối soát -->
+            <div id="appraisalFilledState" class="file-loaded-container" style="display: none;">
+              <div class="file-loaded-card">
+                <div class="file-loaded-icon-wrap doc" id="appraisalLoadedIconWrap">
+                  <span id="appraisalLoadedEmoji">📄</span>
+                  <span class="file-loaded-badge" id="appraisalLoadedTypeBadge">DOC</span>
+                </div>
+                <div class="file-loaded-details">
+                  <div class="file-loaded-name" id="appraisalLoadedName">De_cuong_doi_soat.pdf</div>
+                  <div class="file-loaded-meta">
+                    <span id="appraisalLoadedSize">-- MB</span>
+                    <span>&bull;</span>
+                    <span style="color: var(--primary); font-weight: 600;">✓ Đang đối soát với Sổ cái Sepolia</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Nút đổi hoặc xóa tệp đối soát -->
+              <div class="file-loaded-actions">
+                <button type="button" class="btn-file-action btn-file-change" onclick="event.stopPropagation(); triggerSelectNewAppraisalFile();">
+                  🔄 Đổi tệp khác
+                </button>
+                <button type="button" class="btn-file-action btn-file-remove" onclick="event.stopPropagation(); removeAppraisalFile();">
+                  🗑️ Xóa tệp
+                </button>
+              </div>
+            </div>
           </div>
         </div>
 
         <!-- Cột phải: Thẻ Trạng thái Xanh & Đỏ + Biên Bản Đối Soát -->
         <div>
-          <!-- Thẻ VERIFIED AUTHENTIC -->
-          <div class="status-card-verified" id="cardVerifiedStatus">
+          <!-- Trạng thái Ban đầu: Đang chờ tệp -->
+          <div class="status-card-waiting" id="cardPendingAudit" style="border: 2px dashed var(--border-color); border-radius: var(--radius-lg); padding: 48px 24px; text-align: center; background: var(--bg-subtle);">
+            <div style="font-size: 42px; margin-bottom: 12px;">⏳</div>
+            <h4 style="font-size: 16px; font-weight: 700; color: var(--text-primary); margin-bottom: 8px;">Đang Chờ Tệp Đề Cương Để Thẩm Định</h4>
+            <p style="font-size: 12.5px; color: var(--text-muted); line-height: 1.6; max-width: 380px; margin: 0 auto;">
+              Vui lòng kéo thả hoặc chọn tệp đề cương nghiên cứu vào ô bên trái. Hội đồng sẽ trích xuất mã băm Keccak-256 và đối soát thời gian thực với Sổ cái Blockchain Sepolia.
+            </p>
+          </div>
+
+          <!-- Thẻ VERIFIED AUTHENTIC (Chỉ hiện khi tệp hợp lệ 100% nguyên bản) -->
+          <div class="status-card-verified" id="cardVerifiedStatus" style="display: none;">
             <div class="status-icon-circle">✓</div>
             <h3>VERIFIED AUTHENTIC</h3>
             <p>Ý tưởng nghiên cứu nguyên bản — Đã xác thực dấu thời gian ưu tiên thành công trên sổ cái HCE.</p>
           </div>
 
           <!-- Thẻ DUPLICATE FOUND (Phát hiện trùng lặp / Đạo văn) -->
-          <div class="status-card-duplicate" id="cardDuplicateStatus">
+          <div class="status-card-duplicate" id="cardDuplicateStatus" style="display: none;">
             <div class="duplicate-header">
               <span>⚠️</span> DUPLICATE FOUND (PHÁT HIỆN TRÙNG LẶP)
             </div>
@@ -1844,7 +1879,7 @@
           </div>
 
           <!-- BIÊN BẢN ĐỐI SOÁT HỌC THUẬT (ELECTRONIC APPRAISAL MEMORANDUM) -->
-          <div class="audit-memo-box">
+          <div class="audit-memo-box" id="auditMemoBox" style="display: none;">
             <div class="memo-badge">VĂN THƯ HỘI ĐỒNG KH&ĐT</div>
             <div class="memo-title">Biên Bản Đối Soát Quyền Tác Giả & Tính Nguyên Bản</div>
             <table class="memo-table">
@@ -2738,18 +2773,59 @@
     const appraisalDropzone = document.getElementById("appraisalDropzone");
     const appraisalFileInput = document.getElementById("appraisalFileInput");
     appraisalFileInput.addEventListener("change", async (e) => {
-      if (e.target.files[0]) runAuditFile(e.target.files[0]);
+      if (e.target.files && e.target.files[0]) runAuditFile(e.target.files[0]);
     });
-    appraisalDropzone.addEventListener("dragover", (e) => { e.preventDefault(); appraisalDropzone.style.borderColor = "var(--primary)"; });
-    appraisalDropzone.addEventListener("dragleave", () => { appraisalDropzone.style.borderColor = "var(--border-color)"; });
+    appraisalDropzone.addEventListener("dragover", (e) => { 
+      e.preventDefault(); 
+      if (!appraisalDropzone.classList.contains("has-file")) appraisalDropzone.style.borderColor = "var(--primary)"; 
+    });
+    appraisalDropzone.addEventListener("dragleave", () => { 
+      if (!appraisalDropzone.classList.contains("has-file")) appraisalDropzone.style.borderColor = "var(--border-color)"; 
+    });
     appraisalDropzone.addEventListener("drop", (e) => {
       e.preventDefault();
-      appraisalDropzone.style.borderColor = "var(--border-color)";
-      if (e.dataTransfer.files[0]) runAuditFile(e.dataTransfer.files[0]);
+      if (!appraisalDropzone.classList.contains("has-file")) appraisalDropzone.style.borderColor = "var(--border-color)";
+      if (e.dataTransfer.files && e.dataTransfer.files[0]) runAuditFile(e.dataTransfer.files[0]);
     });
 
     async function runAuditFile(file) {
       toast("Đang đối soát dấu vân tay số với Sổ cái Sepolia...", "info");
+
+      // Cập nhật giao diện tệp trong ô thẩm định
+      const ext = file.name.split('.').pop().toLowerCase();
+      let emoji = "📄";
+      let typeBadge = "DOC";
+      let iconClass = "other";
+
+      if (ext === "pdf") {
+        emoji = "📕";
+        typeBadge = "PDF";
+        iconClass = "pdf";
+      } else if (ext === "doc" || ext === "docx") {
+        emoji = "📘";
+        typeBadge = "WORD";
+        iconClass = "doc";
+      }
+
+      const wrapEl = document.getElementById("appraisalLoadedIconWrap");
+      if (wrapEl) wrapEl.className = `file-loaded-icon-wrap ${iconClass}`;
+      document.getElementById("appraisalLoadedEmoji").textContent = emoji;
+      document.getElementById("appraisalLoadedTypeBadge").textContent = typeBadge;
+      document.getElementById("appraisalLoadedName").textContent = file.name;
+
+      const sizeStr = (file.size > 1024 * 1024) 
+        ? `${(file.size / 1024 / 1024).toFixed(2)} MB` 
+        : `${(file.size / 1024).toFixed(1)} KB`;
+      document.getElementById("appraisalLoadedSize").textContent = `${sizeStr} • Tệp kiểm tra`;
+
+      appraisalDropzone.classList.add("has-file");
+      document.getElementById("appraisalEmptyState").style.display = "none";
+      document.getElementById("appraisalFilledState").style.display = "flex";
+
+      // Ẩn màn hình chờ
+      document.getElementById("cardPendingAudit").style.display = "none";
+      document.getElementById("auditMemoBox").style.display = "block";
+
       const hash = await hashFile(file);
       const found = SAMPLE_RECORDS.find(r => r.hash.toLowerCase() === hash.toLowerCase());
 
@@ -2762,7 +2838,7 @@
         document.getElementById("memoVerdict").textContent = "CẢNH BÁO TRÙNG LẶP (Nguy cơ Đạo văn)";
         document.getElementById("memoVerdict").style.color = "var(--danger)";
         document.getElementById("memoCode").textContent = `BB-CBTĐ/${found.code}`;
-        toast("Phát hiện trùng lặp! Ý tưởng này đã được đăng ký trước đó.", "error");
+        toast("Phát hiện trùng lặp! Ý tưởng này đã được đăng ký trước đó trên Blockchain.", "error");
       } else {
         // Nguyên bản
         document.getElementById("cardVerifiedStatus").style.display = "block";
@@ -2770,8 +2846,27 @@
         document.getElementById("memoVerdict").textContent = "100% Độc Bản (Hợp Lệ)";
         document.getElementById("memoVerdict").style.color = "var(--success)";
         document.getElementById("memoCode").textContent = `BB-TĐ/2026-HCE-${Math.floor(Math.random() * 900 + 100)}`;
-        toast("Ý tưởng nguyên bản! Chưa từng tồn tại trên Blockchain.", "success");
+        toast("Ý tưởng nguyên bản! Chưa từng tồn tại trên Blockchain Sepolia.", "success");
       }
+    }
+
+    function removeAppraisalFile() {
+      appraisalFileInput.value = "";
+      appraisalDropzone.classList.remove("has-file");
+      document.getElementById("appraisalFilledState").style.display = "none";
+      document.getElementById("appraisalEmptyState").style.display = "block";
+
+      // Đặt lại kết quả về màn hình chờ
+      document.getElementById("cardPendingAudit").style.display = "block";
+      document.getElementById("cardVerifiedStatus").style.display = "none";
+      document.getElementById("cardDuplicateStatus").style.display = "none";
+      document.getElementById("auditMemoBox").style.display = "none";
+
+      toast("Đã gỡ tệp đối soát!", "info");
+    }
+
+    function triggerSelectNewAppraisalFile() {
+      appraisalFileInput.click();
     }
 
     function printAppraisalMemo() {
