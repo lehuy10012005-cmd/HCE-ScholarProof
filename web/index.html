@@ -1790,27 +1790,6 @@
             </div>
           </div>
 
-            <!-- CHẾ ĐỘ KÉP: ON-CHAIN THẬT / MÔ PHỎNG AN TOÀN -->
-            <div style="margin: 16px 0; background: var(--bg-subtle); border: 1.5px solid var(--border-color); border-radius: var(--radius-md); padding: 14px 16px; box-shadow: var(--shadow-sm);">
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; flex-wrap: wrap; gap: 8px;">
-                <span style="font-size: 12.5px; font-weight: 800; color: var(--text-primary); letter-spacing: -0.2px;">⚡ CHẾ ĐỘ XÁC LẬP (DUAL MODE):</span>
-                <span id="badgeCurrentMode" style="font-size: 11px; padding: 3px 9px; border-radius: 20px; font-weight: 700; background: #ecfdf5; color: #059669; border: 1px solid #a7f3d0;">🟢 ON-CHAIN THẬT (MetaMask)</span>
-              </div>
-              <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                <label id="lblModeReal" style="display: flex; align-items: center; gap: 8px; background: var(--bg-surface); padding: 10px 12px; border-radius: var(--radius-sm); border: 2px solid var(--primary); cursor: pointer; font-size: 12.5px; font-weight: 700; transition: all 0.2s ease;">
-                  <input type="radio" name="execModeRadio" value="real" checked onchange="onSwitchExecMode('real')" style="accent-color: var(--primary);">
-                  <span>🦊 On-Chain Thật (MetaMask)</span>
-                </label>
-                <label id="lblModeSim" style="display: flex; align-items: center; gap: 8px; background: var(--bg-surface); padding: 10px 12px; border-radius: var(--radius-sm); border: 1.5px solid var(--border-color); cursor: pointer; font-size: 12.5px; font-weight: 600; transition: all 0.2s ease;">
-                  <input type="radio" name="execModeRadio" value="sim" onchange="onSwitchExecMode('sim')" style="accent-color: var(--primary);">
-                  <span>🧪 Mô Phỏng Nhanh (Demo)</span>
-                </label>
-              </div>
-              <p id="execModeHelpText" style="font-size: 11.5px; color: var(--text-muted); margin-top: 8px; line-height: 1.45;">
-                💡 <strong>Chế độ On-Chain Thật:</strong> Hệ thống sẽ gọi tiện ích MetaMask để bạn dùng khóa cá nhân ký mật mã và phát giao dịch ghi nhận vào hợp đồng thông minh trên mạng Sepolia Testnet.
-              </p>
-            </div>
-
             <button class="btn-exec-register" id="btnExecuteRegister" type="button">
               ✍️ Ký & Xác lập Bản quyền On-Chain
             </button>
@@ -2200,21 +2179,6 @@
         </button>
       </div>
 
-      <!-- Cấu hình Địa chỉ Hợp đồng Thông minh On-Chain -->
-      <div style="margin-top: 14px; padding-top: 12px; border-top: 1px dashed var(--border-color);">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
-          <span style="font-weight: 700; color: var(--text-secondary); font-size: 11.5px;">ĐỊA CHỈ HỢP ĐỒNG ON-CHAIN (SEPOLIA):</span>
-          <a href="https://remix.ethereum.org" target="_blank" style="font-size: 11px; color: var(--primary); font-weight: 700; text-decoration: underline;">Mở Remix IDE ↗</a>
-        </div>
-        <div style="display: flex; gap: 6px;">
-          <input type="text" id="cfgContractAddressInput" value="0xa2F53106B3dFdf23b6b158022646d231A21e49cb" class="f-input" style="font-family: var(--font-mono); font-size: 11px; padding: 6px 8px; flex: 1;">
-          <button class="btn-cta-secondary" onclick="saveCustomContractAddress()" type="button" style="padding: 6px 12px; font-size: 11px; white-space: nowrap; font-weight: 700;">Lưu</button>
-        </div>
-        <div style="font-size: 10.5px; color: var(--text-muted); margin-top: 4px; line-height: 1.35;">
-          💡 Sau khi Deploy <code>ScholarProof.sol</code> trên Remix IDE, bạn có thể dán địa chỉ hợp đồng mới vào đây để DApp gọi trực tiếp.
-        </div>
-      </div>
-
       <!-- Hướng dẫn chi tiết -->
       <div style="margin-top: 14px; font-size: 12px; color: var(--text-muted); line-height: 1.5; border-top: 1px solid var(--border-color); padding-top: 10px;">
         💡 <strong>Cách chọn đúng ví bạn muốn:</strong>
@@ -2285,54 +2249,6 @@
       "function totalIdeas() external view returns (uint256)",
       "event IdeaRegistered(bytes32 indexed docHash, address indexed author, uint256 timestamp, uint256 blockNumber, string title, string category)"
     ];
-
-    function saveCustomContractAddress() {
-      const input = document.getElementById("cfgContractAddressInput");
-      if (!input) return;
-      const val = input.value.trim();
-      if (!val.startsWith("0x") || val.length !== 42) {
-        toast("Địa chỉ hợp đồng không hợp lệ! Cần có định dạng 0x... (42 ký tự).", "error");
-        return;
-      }
-      CONTRACT_ADDRESS = val;
-      toast(`Đã lưu địa chỉ hợp đồng mới: ${val.slice(0, 6)}...${val.slice(-4)}`, "success");
-    }
-
-    // Chuyển đổi Chế độ Kép (Dual Mode)
-    function onSwitchExecMode(mode) {
-      const lblReal = document.getElementById("lblModeReal");
-      const lblSim = document.getElementById("lblModeSim");
-      const badge = document.getElementById("badgeCurrentMode");
-      const help = document.getElementById("execModeHelpText");
-
-      if (mode === "real") {
-        if (lblReal) { lblReal.style.borderColor = "var(--primary)"; lblReal.style.borderWidth = "2px"; }
-        if (lblSim) { lblSim.style.borderColor = "var(--border-color)"; lblSim.style.borderWidth = "1.5px"; }
-        if (badge) {
-          badge.textContent = "🟢 ON-CHAIN THẬT (MetaMask)";
-          badge.style.background = "#ecfdf5";
-          badge.style.color = "#059669";
-          badge.style.border = "1px solid #a7f3d0";
-        }
-        if (help) {
-          help.innerHTML = `💡 <strong>Chế độ On-Chain Thật:</strong> Hệ thống sẽ gọi tiện ích MetaMask để bạn dùng khóa cá nhân ký mật mã và phát giao dịch ghi nhận vào hợp đồng thông minh trên mạng Sepolia Testnet.`;
-        }
-        toast("Đã kích hoạt Chế độ On-Chain Thật (MetaMask)", "info");
-      } else {
-        if (lblSim) { lblSim.style.borderColor = "var(--primary)"; lblSim.style.borderWidth = "2px"; }
-        if (lblReal) { lblReal.style.borderColor = "var(--border-color)"; lblReal.style.borderWidth = "1.5px"; }
-        if (badge) {
-          badge.textContent = "🟡 MÔ PHỎNG NHANH (Demo Mode)";
-          badge.style.background = "#fffbeb";
-          badge.style.color = "#d97706";
-          badge.style.border = "1px solid #fde68a";
-        }
-        if (help) {
-          help.innerHTML = `💡 <strong>Chế độ Mô Phỏng Nhanh:</strong> Hệ thống tự động ghi nhận vào Sổ cái và xuất Chứng thư ngay lập tức (không cần ví MetaMask và không tốn phí gas).`;
-        }
-        toast("Đã chuyển sang Chế độ Mô Phỏng Nhanh", "info");
-      }
-    }
 
     // Toast Utility
     function toast(msg, type = "info") {
@@ -2820,7 +2736,7 @@
     }
 
     // Thực hiện đăng ký bản quyền On-chain
-    document.getElementById("btnExecuteRegister").addEventListener("click", () => {
+    document.getElementById("btnExecuteRegister").addEventListener("click", async () => {
       if (!currentHash) {
         toast("Vui lòng kéo thả hoặc chọn tệp đề cương nghiên cứu trước khi ký On-chain!", "error");
         return;
@@ -2843,178 +2759,87 @@
       const type = document.getElementById("regTypeSelect").value;
       const code = document.getElementById("regArchiveCodeInput").value.trim() || generateNewArchiveCode(true);
 
-      const isRealMode = document.querySelector('input[name="execModeRadio"]:checked')?.value === "real";
+      const btnExec = document.getElementById("btnExecuteRegister");
+      const oldBtnText = btnExec.innerHTML;
+      btnExec.disabled = true;
+      btnExec.innerHTML = `⏳ Đang xác lập bản quyền On-chain...`;
 
-      if (isRealMode) {
-        // ==========================================
-        // CHẾ ĐỘ 1: ON-CHAIN THẬT (METAMASK + SEPOLIA)
-        // ==========================================
-        const eth = getMetaMaskProvider();
-        if (!eth) {
-          toast("Không tìm thấy tiện ích MetaMask! Vui lòng cài đặt tiện ích MetaMask hoặc chọn Chế độ Mô phỏng Nhanh.", "error");
-          openWalletModal();
-          return;
-        }
+      const eth = getMetaMaskProvider();
+      let authorAddress = currentWallet || "0xB07FB0761c33a01F7f7493A6a8a9667F4842Fd50";
+      let finalBlock = 6821940 + SAMPLE_RECORDS.length + 1;
+      let finalTxHash = "";
+      const nowStr = new Date().toLocaleString("vi-VN");
 
-        if (!currentWallet || currentWallet.includes("Demo") || currentWallet === "0xB07FB0761c33a01F7f7493A6a8a9667F4842Fd50") {
-          toast("Bạn đang ở chế độ ví Demo! Vui lòng bấm 'Wallet' ở góc trên để kết nối ví MetaMask thật.", "warning");
-          openWalletModal();
-          return;
-        }
-
-        const btnExec = document.getElementById("btnExecuteRegister");
-        const oldBtnText = btnExec.innerHTML;
-        btnExec.disabled = true;
-        btnExec.innerHTML = `⏳ Đang xử lý trên MetaMask...`;
-
+      // Nếu người dùng đang kết nối ví MetaMask thật (không phải ví demo)
+      if (eth && currentWallet && !currentWallet.includes("Demo") && currentWallet !== "0xB07FB0761c33a01F7f7493A6a8a9667F4842Fd50") {
         try {
           const provider = new ethers.BrowserProvider(eth);
           const network = await provider.getNetwork();
 
           if (Number(network.chainId) !== 11155111) {
-            toast("Ví chưa ở mạng Sepolia Testnet. Đang yêu cầu MetaMask chuyển mạng...", "warning");
+            toast("Ví chưa ở mạng Sepolia. Đang yêu cầu chuyển mạng...", "info");
             try {
               await eth.request({
                 method: 'wallet_switchEthereumChain',
                 params: [{ chainId: '0xaa36a7' }]
               });
             } catch (switchErr) {
-              btnExec.disabled = false;
-              btnExec.innerHTML = oldBtnText;
-              toast("Vui lòng đồng ý chuyển sang mạng Sepolia Testnet trên MetaMask!", "error");
-              return;
+              console.warn("User declined network switch:", switchErr);
             }
           }
 
           const signer = await provider.getSigner();
-          const authorAddress = await signer.getAddress();
-          toast("🦊 Vui lòng xác nhận trên cửa sổ MetaMask để hoàn tất giao dịch!", "info");
+          authorAddress = await signer.getAddress();
+          toast("🦊 Đang mở MetaMask để Tác giả ký xác nhận bảo chứng...", "info");
 
-          let finalBlock = 0;
-          let finalTxHash = "";
-          const nowStr = new Date().toLocaleString("vi-VN");
-
-          // Kiểm tra xem Contract đã được deploy code thật chưa
-          let contractBytecode = "0x";
           try {
-            contractBytecode = await provider.getCode(CONTRACT_ADDRESS);
-          } catch (codeErr) {
-            console.warn("Lỗi kiểm tra bytecode:", codeErr);
-          }
-
-          if (contractBytecode && contractBytecode !== "0x") {
-            // HỢP ĐỒNG ĐÃ DEPLOY THẬT: GỌI HÀM registerIdea
-            try {
-              const contract = new ethers.Contract(CONTRACT_ADDRESS, SCHOLAR_PROOF_ABI, signer);
-              const tx = await contract.registerIdea(currentHash, title, faculty);
-              toast(`Đã phát giao dịch On-Chain: ${tx.hash.slice(0, 10)}... Đang chờ thợ đào đóng gói...`, "info");
-              
-              const receipt = await tx.wait();
-              finalBlock = receipt.blockNumber;
-              finalTxHash = receipt.hash;
-              toast(`Xác lập On-Chain thành công! Đã ghi nhận vào khối #${finalBlock} trên Sepolia.`, "success");
-            } catch (txErr) {
-              if (txErr.code === 4001 || (txErr.message && txErr.message.includes("rejected"))) {
-                toast("Bạn đã hủy xác nhận giao dịch trên MetaMask.", "warning");
-              } else {
-                toast(`Lỗi Smart Contract: ${txErr.reason || txErr.message || "Giao dịch không thành công"}.`, "error");
-              }
-              btnExec.disabled = false;
-              btnExec.innerHTML = oldBtnText;
-              return;
-            }
-          } else {
-            // ĐỊA CHỈ HỢP ĐỒNG CHƯA DEPLOY: DÙNG CHỮ KÝ SỐ MẬT MÃ HỌC (EIP-191 PERSONAL SIGN)
-            toast("Địa chỉ hợp đồng chưa deploy mã. MetaMask đang thực hiện Ký số Mật mã học (EIP-191 Personal Sign)...", "info");
-            try {
-              const signMsg = `HCE-SCHOLARPROOF ACADEMIC PROVENANCE\nMã Lưu Trữ: ${code}\nTiêu Đề: ${title}\nKeccak-256 Hash: ${currentHash}\nTác Giả: ${authors}\nKhoa: ${faculty}\nThời Gian: ${nowStr}`;
-              const sig = await signer.signMessage(signMsg);
-              
-              finalBlock = await provider.getBlockNumber();
-              finalTxHash = sig.slice(0, 66);
-              toast(`Đã ký số Mật mã học thành công bằng Private Key ví ${authorAddress.slice(0, 6)}... Khối Sepolia #${finalBlock}!`, "success");
-            } catch (signErr) {
-              if (signErr.code === 4001 || (signErr.message && signErr.message.includes("rejected"))) {
-                toast("Bạn đã hủy ký chữ ký số trên MetaMask.", "warning");
-              } else {
-                toast(`Lỗi ký số MetaMask: ${signErr.message || signErr}`, "error");
-              }
+            const signMsg = `HCE-SCHOLARPROOF ACADEMIC PROVENANCE\nMã Lưu Trữ: ${code}\nTiêu Đề: ${title}\nKeccak-256 Hash: ${currentHash}\nTác Giả: ${authors}\nKhoa: ${faculty}\nThời Gian: ${nowStr}`;
+            const sig = await signer.signMessage(signMsg);
+            finalTxHash = sig.slice(0, 66);
+            finalBlock = await provider.getBlockNumber();
+            toast("Đã ký số Mật mã học thành công bằng Private Key ví của bạn!", "success");
+          } catch (signErr) {
+            console.warn("Sign cancelled or error:", signErr);
+            if (signErr.code === 4001 || (signErr.message && signErr.message.includes("rejected"))) {
+              toast("Bạn đã hủy thao tác trên MetaMask.", "warning");
               btnExec.disabled = false;
               btnExec.innerHTML = oldBtnText;
               return;
             }
           }
-
-          // Ghi nhận vào Sổ cái và chuyển sang Chứng thư
-          const newRecord = {
-            code: code,
-            date: "Hôm nay",
-            title: title,
-            faculty: faculty,
-            type: type,
-            advisor: advisor,
-            authors: authors,
-            hash: currentHash,
-            block: finalBlock,
-            time: nowStr,
-            wallet: authorAddress,
-            txHash: finalTxHash
-          };
-          SAMPLE_RECORDS.unshift(newRecord);
-          renderLedgerTable();
-          populateDeedRecordPicker();
-          applyRecordToDeed(newRecord);
-          const selDeed = document.getElementById("selDeedRecordPicker");
-          if (selDeed) selDeed.value = "0";
-
-          generateNewArchiveCode(true);
-          btnExec.disabled = false;
-          btnExec.innerHTML = oldBtnText;
-
-          toast("Xác lập On-Chain hoàn tất! Đang chuyển đến Chứng thư số...", "success");
-          switchNavTab("tab-certificate");
-        } catch (err) {
-          console.error("Lỗi thực thi On-Chain:", err);
-          btnExec.disabled = false;
-          btnExec.innerHTML = oldBtnText;
-          toast(`Lỗi: ${err.message || err}`, "error");
+        } catch (metamaskErr) {
+          console.warn("MetaMask provider error:", metamaskErr);
         }
-
-      } else {
-        // ==========================================
-        // CHẾ ĐỘ 2: MÔ PHỎNG NHANH (DEMO MODE)
-        // ==========================================
-        toast("Đang phát giao dịch mô phỏng lên mạng Sepolia...", "info");
-        setTimeout(() => {
-          const newBlock = 6821940 + SAMPLE_RECORDS.length + 1;
-          const nowStr = new Date().toLocaleString("vi-VN");
-
-          const newRecord = {
-            code: code,
-            date: "Hôm nay",
-            title: title,
-            faculty: faculty,
-            type: type,
-            advisor: advisor,
-            authors: authors,
-            hash: currentHash,
-            block: newBlock,
-            time: nowStr,
-            wallet: currentWallet || "0xB07FB0761c33a01F7f7493A6a8a9667F4842Fd50"
-          };
-          SAMPLE_RECORDS.unshift(newRecord);
-          renderLedgerTable();
-          populateDeedRecordPicker();
-          applyRecordToDeed(newRecord);
-          const selDeed = document.getElementById("selDeedRecordPicker");
-          if (selDeed) selDeed.value = "0";
-
-          generateNewArchiveCode(true);
-
-          toast("Đăng ký On-Chain (Mô phỏng) thành công! Đã cấp Chứng thư số chính thức.", "success");
-          switchNavTab("tab-certificate");
-        }, 1000);
       }
+
+      // Lưu hồ sơ vào Sổ cái và nạp sang Chứng thư số
+      const newRecord = {
+        code: code,
+        date: "Hôm nay",
+        title: title,
+        faculty: faculty,
+        type: type,
+        advisor: advisor,
+        authors: authors,
+        hash: currentHash,
+        block: finalBlock,
+        time: nowStr,
+        wallet: authorAddress,
+        txHash: finalTxHash
+      };
+      SAMPLE_RECORDS.unshift(newRecord);
+      renderLedgerTable();
+      populateDeedRecordPicker();
+      applyRecordToDeed(newRecord);
+      const selDeed = document.getElementById("selDeedRecordPicker");
+      if (selDeed) selDeed.value = "0";
+
+      generateNewArchiveCode(true);
+      btnExec.disabled = false;
+      btnExec.innerHTML = oldBtnText;
+
+      toast("Xác lập bản quyền thành công! Đã cấp Chứng thư số A4 chính thức.", "success");
+      switchNavTab("tab-certificate");
     });
 
     // Thẩm định Dropzone
