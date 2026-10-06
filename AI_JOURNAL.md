@@ -258,6 +258,22 @@ Nếu chỉ mô tả chung chung "viết tool phân tích ví", AI thường b�
 
 **Ai phát hiện:** Sinh viên phát hiện và trực tiếp chỉ đạo chuẩn hóa bộ kiểm thử tự động.
 
+## Lần 13 (Lab 13: Tích hợp Sepolia Testnet & Kiểm thử Luồng Ký Ví On-chain)
 
+**Prompt:**
+> "Bạn là kỹ sư Web3 tích hợp. Hãy hướng dẫn chi tiết quy trình triển khai ScholarProof.sol v2 lên Sepolia Testnet qua Remix IDE, xác thực mã nguồn trên Etherscan, cập nhật địa chỉ hợp đồng vào web/index.html và thiết kế 3 ca kiểm thử on-chain thực tế theo chuẩn AGENTS.md (tối thiểu 1 ca gian lận)."
 
+**AI trả về:**
+- Quy trình deploy 4 bước: Chuẩn bị Remix → Biên dịch với optimization 200 runs → Kết nối MetaMask Sepolia → Deploy và ghi nhận địa chỉ hợp đồng.
+- Hướng dẫn Source Code Verification trên Sepolia Etherscan: Chọn compiler đúng version, enable optimization, dán mã nguồn và xác nhận.
+- Giải thích ABI (Application Binary Interface) đầy đủ cho `ScholarProof.sol` v2 gồm 4 hàm và 2 sự kiện, sẵn sàng tích hợp vào `web/index.html`.
+- 3 ca kiểm thử on-chain: Happy Path (TC-1), Anti-Scooping gian lận nộp đè mã băm (TC-2), Unauthorized mạo danh chiếm quyền (TC-3).
+- Hướng dẫn đọc Event Log trên Etherscan — tra cứu Topics[0,1,2] để đối soát `IdeaRegistered`.
 
+**Đánh giá:** Dùng được (sau khi sinh viên chấn chỉnh 2 điểm kỹ thuật quan trọng).
+
+**Chỗ sai & Phản biện sắc bén của sinh viên:**
+1. **Lỗi 1 (Nhầm Keccak-256 với SHA-256):** Trong hướng dẫn ban đầu, AI đề xuất dùng `crypto.subtle.digest("SHA-256", buffer)` của Web Crypto API để băm file trong trình duyệt với lập luận rằng "SHA-256 là tiêu chuẩn W3C và an toàn". Sinh viên chỉ ra lỗi nghiêm trọng: EVM sử dụng **Keccak-256** (tiêu chuẩn của Ethereum, khác hoàn toàn với SHA-256 trong FIPS 202). Nếu client băm bằng SHA-256 nhưng hợp đồng xử lý `bytes32` theo quy ước Keccak-256, giá trị `docHash` sẽ **không bao giờ khớp** khi thẩm định on-chain — hệ thống bảo vệ bản quyền sẽ sai hoàn toàn. Giải pháp chuẩn xác: Dùng `ethers.keccak256(new Uint8Array(arrayBuffer))` của thư viện Ethers.js v6 đã tích hợp sẵn trong DApp.
+2. **Lỗi 2 (Bỏ sót kiểm tra chain ID trước khi gửi giao dịch):** AI ban đầu không đề cập đến việc kiểm tra mạng trước khi gọi `registerIdea`. Sinh viên chấn chỉnh: Nếu người dùng quên chuyển sang Sepolia và đang ở Ethereum Mainnet, họ sẽ gửi giao dịch tốn hàng chục USD phí gas vào một hợp đồng không tồn tại. Giao diện DApp chuẩn mực Web3 bắt buộc phải kiểm tra `network.chainId === 11155111` (Sepolia) và cảnh báo người dùng chuyển mạng trước khi cho phép gửi giao dịch.
+
+**Ai phát hiện:** Sinh viên phát hiện cả hai lỗi và yêu cầu AI giải thích sâu về sự khác biệt giữa Keccak-256 và SHA-256 trong hệ sinh thái Ethereum.
