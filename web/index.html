@@ -628,12 +628,12 @@
       margin-bottom: 18px;
     }
 
-    /* Dropzone */
+    /* Dropzone Base */
     .upload-zone {
       border: 2px dashed var(--border-color);
       border-radius: var(--radius-md);
       background: var(--bg-subtle);
-      padding: 32px 20px;
+      padding: 28px 20px;
       text-align: center;
       cursor: pointer;
       position: relative;
@@ -643,53 +643,257 @@
       border-color: var(--primary);
       background: var(--primary-subtle);
     }
+    .upload-zone.has-file {
+      border-style: solid;
+      border-color: #10b981;
+      background: #f0fdf4;
+      padding: 16px;
+      cursor: default;
+    }
     .upload-zone input {
       position: absolute;
       top: 0; left: 0; width: 100%; height: 100%;
       opacity: 0;
       cursor: pointer;
     }
+    .upload-zone.has-file input {
+      display: none;
+    }
     .upload-icon { font-size: 36px; margin-bottom: 8px; color: var(--primary); }
     .upload-zone h4 { font-size: 14px; font-weight: 600; }
     .upload-zone p { font-size: 11px; color: var(--text-muted); margin-top: 4px; }
 
-    /* Sample Cards */
-    .sample-presets-wrap {
-      margin-top: 20px;
-      border-top: 1px solid var(--border-color);
-      padding-top: 16px;
+    /* Loaded File Visual Inside Dropzone */
+    .file-loaded-container {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      text-align: left;
     }
-    .sample-presets-wrap h5 {
-      font-size: 12px;
-      font-weight: 700;
+    .file-loaded-card {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      background: #ffffff;
+      border: 1px solid #a7f3d0;
+      border-radius: var(--radius-md);
+      padding: 12px 14px;
+      box-shadow: var(--shadow-sm);
+    }
+    .file-loaded-icon-wrap {
+      width: 48px;
+      height: 52px;
+      border-radius: 6px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+    .file-loaded-icon-wrap.pdf {
+      background: #fee2e2;
+      border: 1px solid #fca5a5;
+      color: #dc2626;
+    }
+    .file-loaded-icon-wrap.doc {
+      background: #e0f2fe;
+      border: 1px solid #7dd3fc;
+      color: #0284c7;
+    }
+    .file-loaded-icon-wrap.other {
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+      color: #475569;
+    }
+    .file-loaded-badge {
+      font-size: 9px;
+      font-weight: 800;
       text-transform: uppercase;
       letter-spacing: 0.5px;
-      color: var(--text-muted);
-      margin-bottom: 10px;
+      margin-top: 2px;
+      line-height: 1;
     }
-    .preset-card-btn {
-      width: 100%;
-      text-align: left;
-      padding: 10px 12px;
-      background: var(--bg-subtle);
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-sm);
-      margin-bottom: 8px;
+    .file-loaded-details {
+      flex: 1;
+      min-width: 0;
+    }
+    .file-loaded-name {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-bottom: 3px;
+    }
+    .file-loaded-meta {
+      font-size: 11px;
+      color: #059669;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .file-loaded-actions {
+      display: flex;
+      gap: 8px;
+      justify-content: flex-end;
+      margin-top: 2px;
+    }
+    .btn-file-action {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
       cursor: pointer;
       transition: all 0.2s;
+      border: 1px solid transparent;
     }
-    .preset-card-btn:hover {
-      border-color: var(--primary);
+    .btn-file-change {
+      background: #ffffff;
+      color: var(--primary);
+      border-color: var(--border-color);
+    }
+    .btn-file-change:hover {
       background: var(--primary-subtle);
+      border-color: var(--primary);
     }
-    .preset-card-btn strong {
-      display: block;
-      font-size: 12px;
+    .btn-file-remove {
+      background: #fef2f2;
+      color: #dc2626;
+      border-color: #fecaca;
+    }
+    .btn-file-remove:hover {
+      background: #fee2e2;
+      border-color: #f87171;
+    }
+
+    /* Tiêu chuẩn Đăng ký Quyền tác giả HCE Card (Thay thế Mẫu nạp nhanh) */
+    .standards-info-card {
+      margin-top: 18px;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      background: var(--bg-surface);
+      padding: 16px;
+      box-shadow: var(--shadow-sm);
+    }
+    .standards-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12.5px;
+      color: var(--text-primary);
+      margin-bottom: 10px;
+    }
+    .standards-icon { font-size: 16px; }
+    .standards-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .standards-list li {
+      font-size: 11.5px;
+      line-height: 1.5;
+      color: var(--text-secondary);
+      position: relative;
+      padding-left: 16px;
+    }
+    .standards-list li::before {
+      content: "•";
+      position: absolute;
+      left: 2px;
+      top: 0;
+      color: var(--primary);
+      font-size: 14px;
+      font-weight: bold;
+    }
+    .standards-list li strong {
       color: var(--text-primary);
     }
-    .preset-card-btn span {
+
+    /* Author Form Styling */
+    .author-section-wrap {
+      margin-bottom: 16px;
+      background: var(--bg-subtle);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 14px;
+    }
+    .author-section-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text-secondary);
+      margin-bottom: 8px;
+      display: block;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .author-type-toggle {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .btn-author-type {
+      padding: 8px 12px;
+      border: 1px solid var(--border-color);
+      background: #ffffff;
+      border-radius: var(--radius-sm);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+    .btn-author-type:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+    .btn-author-type.active {
+      background: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+      box-shadow: var(--shadow-sm);
+    }
+    .author-member-card {
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 12px;
+      margin-bottom: 10px;
+    }
+    .author-member-card:last-child {
+      margin-bottom: 0;
+    }
+    .author-member-badge {
       font-size: 11px;
-      color: var(--text-muted);
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .author-fields-grid {
+      display: grid;
+      grid-template-columns: 1.3fr 1fr 1fr;
+      gap: 8px;
+    }
+    @media (max-width: 640px) {
+      .author-fields-grid {
+        grid-template-columns: 1fr;
+      }
     }
 
     /* Live Preview Card (Right Column) */
@@ -1474,32 +1678,61 @@
     <div class="reg-wrapper">
       <div class="reg-grid">
         
-        <!-- Cột trái: Upload Document & Sample Presets -->
+        <!-- Cột trái: Upload Document & Tiêu chuẩn Học thuật -->
         <div class="panel-card">
           <h3>Tải Lên Đề Cương Nghiên Cứu</h3>
           <p class="sub">Tệp được tính vân tay số trong RAM (Zero-Knowledge, không lưu tệp thô)</p>
 
           <div class="upload-zone" id="regDropzone">
-            <input type="file" id="regFileInput">
-            <div class="upload-icon">📤</div>
-            <h4>Kéo thả tệp đề cương vào đây</h4>
-            <p>Hỗ trợ PDF, DOCX (Tối đa 100 MB) hoặc bấm để chọn tệp</p>
+            <input type="file" id="regFileInput" accept=".pdf,.doc,.docx,.xls,.xlsx">
+            
+            <!-- Trạng thái khi chưa có tệp -->
+            <div id="dropzoneEmptyState">
+              <div class="upload-icon">📤</div>
+              <h4>Kéo thả tệp đề cương vào đây</h4>
+              <p>Hỗ trợ PDF, DOCX, XLSX (Tối đa 100 MB) hoặc bấm để chọn tệp từ thiết bị</p>
+            </div>
+
+            <!-- Trạng thái khi đã nạp tệp vào ô -->
+            <div id="dropzoneFilledState" class="file-loaded-container" style="display: none;">
+              <div class="file-loaded-card">
+                <div class="file-loaded-icon-wrap pdf" id="fileLoadedIconWrap">
+                  <span id="fileLoadedEmoji">📕</span>
+                  <span class="file-loaded-badge" id="fileLoadedTypeBadge">PDF</span>
+                </div>
+                <div class="file-loaded-details">
+                  <div class="file-loaded-name" id="fileLoadedName">De_cuong_nghien_cuu.pdf</div>
+                  <div class="file-loaded-meta">
+                    <span id="fileLoadedSize">5.65 MB</span>
+                    <span>&bull;</span>
+                    <span style="color: #059669; font-weight: 600;">✓ Đã tính Keccak-256 an toàn trong RAM</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Nút đổi hoặc xóa tệp khi chọn nhầm -->
+              <div class="file-loaded-actions">
+                <button type="button" class="btn-file-action btn-file-change" onclick="event.stopPropagation(); triggerSelectNewFile();">
+                  🔄 Đổi tệp khác
+                </button>
+                <button type="button" class="btn-file-action btn-file-remove" onclick="event.stopPropagation(); removeCurrentFile();">
+                  🗑️ Xóa tệp
+                </button>
+              </div>
+            </div>
           </div>
 
-          <div class="sample-presets-wrap">
-            <h5>Nạp nhanh đề tài mẫu thử nghiệm:</h5>
-            <button class="preset-card-btn" type="button" onclick="loadSamplePreset(1)">
-              <strong>📄 Mẫu 1: Khóa luận HTTT Kinh tế K57</strong>
-              <span>Bảo chứng quyền sở hữu trí tuệ sơ khởi</span>
-            </button>
-            <button class="preset-card-btn" type="button" onclick="loadSamplePreset(2)">
-              <strong>📄 Mẫu 2: NCKH Tài chính - Ngân hàng</strong>
-              <span>Mô hình định giá tài sản số trên Smart Contract</span>
-            </button>
-            <button class="preset-card-btn" type="button" onclick="loadSamplePreset(3)">
-              <strong>📄 Mẫu 3: Bài báo khoa học HCE Journal</strong>
-              <span>Ứng dụng Zero-Knowledge Proofs trong khảo sát</span>
-            </button>
+          <!-- Khối Tiêu chuẩn Đăng ký Bản quyền HCE (Thay thế Mẫu thử nghiệm cũ) -->
+          <div class="standards-info-card">
+            <div class="standards-header">
+              <span class="standards-icon">🛡️</span>
+              <strong>Tiêu chuẩn Xác lập Bản quyền HCE:</strong>
+            </div>
+            <ul class="standards-list">
+              <li><strong>Nguyên tắc First-to-File:</strong> Xác lập quyền ưu tiên nghiên cứu sơ khởi bất biến theo mốc khối Sepolia Blockchain.</li>
+              <li><strong>Bảo mật Zero-Knowledge:</strong> Dấu vân tay số (Keccak-256) trích xuất hoàn toàn trong RAM máy tính của bạn; cam kết không rò rỉ đề cương.</li>
+              <li><strong>Giá trị Học thuật:</strong> Mã băm được in trực tiếp lên Chứng thư số A4 và dùng để đối soát tính độc bản, chống đạo văn.</li>
+            </ul>
           </div>
         </div>
 
@@ -1509,17 +1742,17 @@
           <p class="sub">Xem trước siêu dữ liệu trước khi thực hiện ký giao dịch On-chain</p>
 
           <div class="live-preview-box">
-            <div class="doc-thumbnail">📄</div>
+            <div class="doc-thumbnail" id="previewThumbIcon">📄</div>
             <div class="doc-meta">
-              <h4 id="lblPreviewFilename">Đề cương_Khóa luận_HCE.pdf</h4>
-              <span id="lblPreviewFilesize">5.65 MB &bull; Keccak-256 Calculated</span>
+              <h4 id="lblPreviewFilename">Chưa chọn tệp đề cương</h4>
+              <span id="lblPreviewFilesize">Kéo thả hoặc tải tệp lên để tạo vân tay số Keccak-256</span>
             </div>
           </div>
 
           <div class="hash-field-wrap">
             <label>Keccak-256 Hash (Vân tay số bất biến)</label>
             <div class="hash-display-box">
-              <span id="lblKeccakHash">0x8e4da685a41c7ce20441ae4c62629d3d2eacd22c5ceb54b0d0a7208ca76396f1</span>
+              <span id="lblKeccakHash">Chưa có vân tay số — Vui lòng nạp tệp tài liệu</span>
               <button class="btn-copy-code" type="button" onclick="copyCurrentHash()">Copy</button>
             </div>
           </div>
@@ -1542,7 +1775,7 @@
 
           <div class="f-group">
             <label>Tiêu đề công trình / Đề tài nghiên cứu</label>
-            <input type="text" id="regTitleInput" class="f-input" placeholder="Nhập tên đề cương nghiên cứu khoa học" value="Bảo chứng quyền sở hữu trí tuệ sơ khởi bằng Proof of Existence">
+            <input type="text" id="regTitleInput" class="f-input" placeholder="VD: Bảo chứng quyền sở hữu trí tuệ sơ khởi bằng Proof of Existence">
           </div>
 
           <div class="f-row">
@@ -1558,18 +1791,38 @@
             </div>
             <div class="f-group">
               <label>Giảng viên hướng dẫn (GVHD)</label>
-              <input type="text" id="regAdvisorInput" class="f-input" placeholder="GVHD" value="TS. Hà Ngọc Long">
+              <input type="text" id="regAdvisorInput" class="f-input" placeholder="VD: TS. Hà Ngọc Long">
             </div>
           </div>
 
-          <div class="f-row">
-            <div class="f-group">
-              <label>Tên tác giả / Nhóm nghiên cứu</label>
-              <input type="text" id="regAuthorInput" class="f-input" placeholder="Họ và tên tác giả" value="Lê Văn Quang Huy & Lại Vương Gia Bảo">
+          <!-- Khu vực Tác giả / Nhóm nghiên cứu Chuyên nghiệp -->
+          <div class="author-section-wrap">
+            <label class="author-section-label">Tác giả công trình nghiên cứu:</label>
+            <div class="author-type-toggle">
+              <button type="button" class="btn-author-type active" id="btnTypeSingle" onclick="setAuthorType('single')">
+                👤 Tác giả Cá nhân (1 người)
+              </button>
+              <button type="button" class="btn-author-type" id="btnTypeGroup" onclick="setAuthorType('group')">
+                👥 Nhóm Nghiên cứu (Đồng tác giả)
+              </button>
             </div>
-            <div class="f-group">
-              <label>MSSV & Lớp sinh hoạt</label>
-              <input type="text" id="regMssvInput" class="f-input" placeholder="MSSV, Lớp" value="23K4300010, 23K4300024 (K57 Kinh tế số)">
+
+            <!-- Nếu chọn Nhóm: Hiển thị bộ chọn số lượng thành viên -->
+            <div id="groupCountWrap" style="display: none; margin-bottom: 10px;">
+              <div style="display: flex; align-items: center; justify-content: space-between; background: #ffffff; padding: 8px 12px; border-radius: var(--radius-sm); border: 1px solid var(--border-color);">
+                <span style="font-size: 12px; font-weight: 600; color: var(--text-secondary);">Số lượng thành viên nhóm:</span>
+                <select id="selGroupMemberCount" class="f-select" onchange="renderGroupMemberInputs()" style="width: 140px; padding: 6px 10px;">
+                  <option value="2" selected>2 thành viên</option>
+                  <option value="3">3 thành viên</option>
+                  <option value="4">4 thành viên</option>
+                  <option value="5">5 thành viên</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Danh sách các ô Họ tên, MSSV, Lớp sinh hoạt -->
+            <div id="authorListContainer">
+              <!-- Render động bởi JS -->
             </div>
           </div>
 
@@ -1969,7 +2222,7 @@
       }
     ];
 
-    let currentHash = SAMPLE_RECORDS[0].hash;
+    let currentHash = "";
     let currentWallet = null;
 
     // Toast Utility
@@ -2226,65 +2479,246 @@
       return ethers.keccak256(new Uint8Array(buf));
     }
 
-    // Dropzone Register
-    const regDropzone = document.getElementById("regDropzone");
-    const regFileInput = document.getElementById("regFileInput");
-    regFileInput.addEventListener("change", async (e) => {
-      if (e.target.files[0]) processRegFile(e.target.files[0]);
-    });
-    regDropzone.addEventListener("dragover", (e) => { e.preventDefault(); regDropzone.style.borderColor = "var(--primary)"; });
-    regDropzone.addEventListener("dragleave", () => { regDropzone.style.borderColor = "var(--border-color)"; });
-    regDropzone.addEventListener("drop", (e) => {
-      e.preventDefault();
-      regDropzone.style.borderColor = "var(--border-color)";
-      if (e.dataTransfer.files[0]) processRegFile(e.dataTransfer.files[0]);
-    });
+    // Quản lý Cấu hình Tác giả / Nhóm nghiên cứu
+    let currentAuthorType = "single";
 
-    async function processRegFile(file) {
-      document.getElementById("lblPreviewFilename").textContent = file.name;
-      const sizeStr = (file.size > 1024 * 1024) ? `${(file.size / 1024 / 1024).toFixed(2)} MB` : `${(file.size / 1024).toFixed(1)} KB`;
-      document.getElementById("lblPreviewFilesize").textContent = `${sizeStr} • Đã băm Keccak-256`;
-      
-      currentHash = await hashFile(file);
-      document.getElementById("lblKeccakHash").textContent = currentHash;
-      toast("Đã tính vân tay số Keccak-256 an toàn trong RAM!", "success");
-    }
+    function setAuthorType(type) {
+      currentAuthorType = type;
+      const btnSingle = document.getElementById("btnTypeSingle");
+      const btnGroup = document.getElementById("btnTypeGroup");
+      const groupCountWrap = document.getElementById("groupCountWrap");
 
-    // Nạp Đề tài Mẫu Preset
-    function loadSamplePreset(id) {
-      const item = SAMPLE_RECORDS[id - 1];
-      if (item) {
-        document.getElementById("lblPreviewFilename").textContent = `De_cuong_${id}_HCE.pdf`;
-        document.getElementById("lblPreviewFilesize").textContent = "3.42 MB • Đã băm Keccak-256";
-        currentHash = item.hash;
-        document.getElementById("lblKeccakHash").textContent = item.hash;
-        document.getElementById("regTitleInput").value = item.title;
-        document.getElementById("regAuthorInput").value = item.authors;
-        document.getElementById("regAdvisorInput").value = item.advisor;
-        document.getElementById("regTypeSelect").value = item.type;
-        document.getElementById("regArchiveCodeInput").value = item.code;
-        toast(`Đã nạp đề tài mẫu ${id}!`, "info");
+      if (type === "single") {
+        btnSingle.classList.add("active");
+        btnGroup.classList.remove("active");
+        groupCountWrap.style.display = "none";
+        renderSingleAuthorInput();
+      } else {
+        btnGroup.classList.add("active");
+        btnSingle.classList.remove("active");
+        groupCountWrap.style.display = "block";
+        renderGroupMemberInputs();
       }
     }
 
+    function renderSingleAuthorInput() {
+      const container = document.getElementById("authorListContainer");
+      container.innerHTML = `
+        <div class="author-member-card">
+          <div class="author-member-badge">👤 Tác giả chủ nhiệm đề tài</div>
+          <div class="author-fields-grid">
+            <div>
+              <input type="text" class="f-input author-name" placeholder="Họ và tên tác giả" required>
+            </div>
+            <div>
+              <input type="text" class="f-input author-mssv" placeholder="Mã số sinh viên (MSSV)">
+            </div>
+            <div>
+              <input type="text" class="f-input author-class" placeholder="Lớp (VD: K57 Kinh tế số)">
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderGroupMemberInputs() {
+      const count = parseInt(document.getElementById("selGroupMemberCount").value, 10) || 2;
+      const container = document.getElementById("authorListContainer");
+      let html = "";
+      for (let i = 1; i <= count; i++) {
+        const roleLabel = (i === 1) ? "👑 Thành viên 1 (Trưởng nhóm)" : `👥 Thành viên ${i} (Đồng tác giả)`;
+        html += `
+          <div class="author-member-card">
+            <div class="author-member-badge">${roleLabel}</div>
+            <div class="author-fields-grid">
+              <div>
+                <input type="text" class="f-input author-name" placeholder="Họ và tên thành viên ${i}" required>
+              </div>
+              <div>
+                <input type="text" class="f-input author-mssv" placeholder="Mã số SV ${i}">
+              </div>
+              <div>
+                <input type="text" class="f-input author-class" placeholder="Lớp sinh hoạt ${i}">
+              </div>
+            </div>
+          </div>
+        `;
+      }
+      container.innerHTML = html;
+    }
+
+    function getFormattedAuthors() {
+      const container = document.getElementById("authorListContainer");
+      const cards = container.querySelectorAll(".author-member-card");
+      const authors = [];
+
+      for (let i = 0; i < cards.length; i++) {
+        const card = cards[i];
+        const nameInput = card.querySelector(".author-name");
+        const mssvInput = card.querySelector(".author-mssv");
+        const classInput = card.querySelector(".author-class");
+
+        const name = nameInput ? nameInput.value.trim() : "";
+        const mssv = mssvInput ? mssvInput.value.trim() : "";
+        const cl = classInput ? classInput.value.trim() : "";
+
+        if (name) {
+          let detail = name;
+          const metaParts = [];
+          if (mssv) metaParts.push(mssv);
+          if (cl) metaParts.push(cl);
+          if (metaParts.length > 0) {
+            detail += ` (${metaParts.join(", ")})`;
+          }
+          authors.push(detail);
+        }
+      }
+
+      if (authors.length === 0) {
+        toast("Vui lòng nhập họ và tên tác giả / thành viên nhóm nghiên cứu!", "error");
+        return "";
+      }
+
+      return authors.join(" & ");
+    }
+
+    // Xử lý Kéo thả & Quản lý Tệp Đề Cương
+    const regDropzone = document.getElementById("regDropzone");
+    const regFileInput = document.getElementById("regFileInput");
+
+    regFileInput.addEventListener("change", async (e) => {
+      if (e.target.files && e.target.files[0]) {
+        await processRegFile(e.target.files[0]);
+      }
+    });
+
+    regDropzone.addEventListener("dragover", (e) => {
+      e.preventDefault();
+      if (!regDropzone.classList.contains("has-file")) {
+        regDropzone.style.borderColor = "var(--primary)";
+      }
+    });
+
+    regDropzone.addEventListener("dragleave", () => {
+      if (!regDropzone.classList.contains("has-file")) {
+        regDropzone.style.borderColor = "var(--border-color)";
+      }
+    });
+
+    regDropzone.addEventListener("drop", async (e) => {
+      e.preventDefault();
+      if (!regDropzone.classList.contains("has-file")) {
+        regDropzone.style.borderColor = "var(--border-color)";
+      }
+      if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+        await processRegFile(e.dataTransfer.files[0]);
+      }
+    });
+
+    async function processRegFile(file) {
+      toast("Đang băm Keccak-256 an toàn trong RAM...", "info");
+      currentHash = await hashFile(file);
+
+      // Nhận diện định dạng tệp để hiển thị logo trực quan
+      const ext = file.name.split('.').pop().toLowerCase();
+      let emoji = "📄";
+      let typeBadge = "FILE";
+      let iconClass = "other";
+
+      if (ext === "pdf") {
+        emoji = "📕";
+        typeBadge = "PDF";
+        iconClass = "pdf";
+      } else if (ext === "doc" || ext === "docx") {
+        emoji = "📘";
+        typeBadge = "WORD";
+        iconClass = "doc";
+      } else if (ext === "xls" || ext === "xlsx") {
+        emoji = "📊";
+        typeBadge = "EXCEL";
+        iconClass = "doc";
+      }
+
+      // Cập nhật card tệp trực quan bên trong ô Kéo thả
+      const wrapEl = document.getElementById("fileLoadedIconWrap");
+      wrapEl.className = `file-loaded-icon-wrap ${iconClass}`;
+      document.getElementById("fileLoadedEmoji").textContent = emoji;
+      document.getElementById("fileLoadedTypeBadge").textContent = typeBadge;
+      document.getElementById("fileLoadedName").textContent = file.name;
+      
+      const sizeStr = (file.size > 1024 * 1024) 
+        ? `${(file.size / 1024 / 1024).toFixed(2)} MB` 
+        : `${(file.size / 1024).toFixed(1)} KB`;
+      document.getElementById("fileLoadedSize").textContent = `${sizeStr} • Tệp cục bộ thiết bị`;
+
+      // Chuyển trạng thái Dropzone: Ẩn vùng trống, Hiện vùng tệp đã nạp
+      regDropzone.classList.add("has-file");
+      document.getElementById("dropzoneEmptyState").style.display = "none";
+      document.getElementById("dropzoneFilledState").style.display = "flex";
+
+      // Cập nhật Live Preview Card & Hash Box ở cột bên phải
+      document.getElementById("lblPreviewFilename").textContent = file.name;
+      document.getElementById("lblPreviewFilesize").textContent = `${sizeStr} • Đã băm Keccak-256`;
+      document.getElementById("previewThumbIcon").textContent = emoji;
+      document.getElementById("lblKeccakHash").textContent = currentHash;
+
+      toast("Đã tính vân tay số Keccak-256 an toàn trong RAM!", "success");
+    }
+
+    // Xóa tệp hiện tại khi người dùng chọn nhầm
+    function removeCurrentFile() {
+      currentHash = "";
+      regFileInput.value = "";
+      regDropzone.classList.remove("has-file");
+      document.getElementById("dropzoneFilledState").style.display = "none";
+      document.getElementById("dropzoneEmptyState").style.display = "block";
+
+      // Reset Live Preview Card & Hash Box
+      document.getElementById("lblPreviewFilename").textContent = "Chưa chọn tệp đề cương";
+      document.getElementById("lblPreviewFilesize").textContent = "Kéo thả hoặc tải tệp lên để tạo vân tay số Keccak-256";
+      document.getElementById("previewThumbIcon").textContent = "📄";
+      document.getElementById("lblKeccakHash").textContent = "Chưa có vân tay số — Vui lòng nạp tệp tài liệu";
+
+      toast("Đã gỡ bỏ tệp tài liệu!", "info");
+    }
+
+    // Đổi tệp khác
+    function triggerSelectNewFile() {
+      regFileInput.click();
+    }
+
     function copyCurrentHash() {
+      if (!currentHash) {
+        toast("Chưa có vân tay số Keccak-256 để sao chép. Vui lòng nạp tệp trước!", "error");
+        return;
+      }
       navigator.clipboard.writeText(currentHash);
       toast("Đã sao chép mã băm Keccak-256!", "info");
     }
 
     // Thực hiện đăng ký bản quyền On-chain
     document.getElementById("btnExecuteRegister").addEventListener("click", () => {
-      const title = document.getElementById("regTitleInput").value.trim();
-      const authors = document.getElementById("regAuthorInput").value.trim();
-      const faculty = document.getElementById("regFacultySelect").value;
-      const advisor = document.getElementById("regAdvisorInput").value.trim();
-      const type = document.getElementById("regTypeSelect").value;
-      const code = document.getElementById("regArchiveCodeInput").value;
-
-      if (!title) {
-        toast("Vui lòng nhập tiêu đề công trình nghiên cứu!", "error");
+      if (!currentHash) {
+        toast("Vui lòng kéo thả hoặc chọn tệp đề cương nghiên cứu trước khi ký On-chain!", "error");
         return;
       }
+
+      const title = document.getElementById("regTitleInput").value.trim();
+      if (!title) {
+        toast("Vui lòng nhập tiêu đề công trình nghiên cứu!", "error");
+        document.getElementById("regTitleInput").focus();
+        return;
+      }
+
+      const authors = getFormattedAuthors();
+      if (!authors) {
+        return;
+      }
+
+      const faculty = document.getElementById("regFacultySelect").value;
+      const advisor = document.getElementById("regAdvisorInput").value.trim() || "Chưa cập nhật";
+      const type = document.getElementById("regTypeSelect").value;
+      const code = document.getElementById("regArchiveCodeInput").value;
 
       toast("Đang phát giao dịch lên Sepolia Testnet...", "info");
       setTimeout(() => {
@@ -2318,6 +2752,9 @@
           wallet: currentWallet || "0xB07FB0761c33a01F7f7493A6a8a9667F4842Fd50"
         });
         renderLedgerTable();
+
+        // Tự động tạo mã hồ sơ mới cho lần đăng ký tiếp theo
+        document.getElementById("regArchiveCodeInput").value = `HCE-IP-2026-K57-${String(SAMPLE_RECORDS.length + 10).padStart(3, '0')}`;
 
         toast("Đăng ký On-Chain thành công! Đang chuyển đến Chứng thư số...", "success");
         switchNavTab("tab-certificate");
@@ -2446,6 +2883,9 @@
       navigator.clipboard.writeText(h);
       toast("Đã sao chép mã băm tra cứu chứng thư!", "info");
     }
+
+    // Khởi tạo mặc định ban đầu
+    setAuthorType("single");
   </script>
 </body>
 </html>
