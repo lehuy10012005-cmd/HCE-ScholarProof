@@ -9,7 +9,7 @@
   <!-- Phông chữ Google Fonts chuẩn học thuật & hiện đại -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Merriweather:wght@400;700;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   
   <!-- Ethers.js v6 & QRCode Generator -->
   <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.2/dist/ethers.umd.min.js"></script>
@@ -55,7 +55,7 @@
 
       --font-main: 'Plus Jakarta Sans', system-ui, sans-serif;
       --font-mono: 'JetBrains Mono', monospace;
-      --font-deed: 'Cinzel', Georgia, serif;
+      --font-deed: 'Merriweather', 'Times New Roman', Georgia, serif;
     }
 
     [data-theme="dark"] {
@@ -1403,22 +1403,29 @@
       border-top: 1px solid #e2e8f0;
     }
     .deed-seal-stamp {
-      width: 80px;
-      height: 80px;
+      width: 88px;
+      height: 88px;
       border-radius: 50%;
-      border: 3px dashed #059669;
-      background: #ecfdf5;
+      border: 3px double #dc2626;
+      background: rgba(239, 68, 68, 0.04);
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      color: #059669;
-      font-size: 9px;
+      color: #dc2626;
+      font-size: 7.5px;
       font-weight: 800;
-      line-height: 1.1;
+      line-height: 1.15;
       text-transform: uppercase;
       text-align: center;
       padding: 6px;
+      transform: rotate(-6deg);
+      box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.12);
+    }
+    .deed-seal-star {
+      font-size: 13px;
+      color: #dc2626;
+      margin-bottom: 1px;
     }
     .deed-qr-box {
       width: 76px;
@@ -1999,7 +2006,20 @@
   <section class="tab-content" id="tab-certificate">
     <div class="cert-section-wrapper">
       
-      <!-- Academic Deed Card -->
+      <!-- Thanh chọn & Đổi hồ sơ Chứng thư linh hoạt -->
+      <div style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 12px 18px; margin-bottom: 20px; box-shadow: var(--shadow-sm); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
+        <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+          <span style="font-size: 13px; font-weight: 700; color: var(--text-secondary);">📜 Chọn hồ sơ hiển thị Chứng thư:</span>
+          <select id="selDeedRecordPicker" class="f-select" onchange="onSelectDeedFromDropdown()" style="width: auto; min-width: 320px; padding: 7px 12px; font-size: 12.5px;">
+            <!-- Nạp động danh sách các đề tài đã đăng ký trong sổ cái -->
+          </select>
+        </div>
+        <div style="display: flex; gap: 8px;">
+          <button class="btn-deed-action print" onclick="window.print()" style="padding: 7px 16px; font-size: 12.5px;">🖨️ In / Lưu PDF A4</button>
+        </div>
+      </div>
+
+      <!-- Academic Deed Card Khổ A4 -->
       <div class="academic-deed-card" id="academicDeedPrintArea">
         <div class="deed-inner">
           <div class="deed-header">
@@ -2053,19 +2073,21 @@
 
           <div class="deed-footer-row">
             <div style="text-align: left;">
-              <span style="font-size: 11px; color: #64748b; font-family: var(--font-deed);">Quy cách: Khổ A4 Lưu Trữ Học Thuật<br>Hợp đồng CEI &bull; EVM Sepolia Verified</span>
+              <span style="font-size: 11px; color: #64748b; font-family: var(--font-deed);">Quy cách: Khổ A4 Lưu Trữ Học Thuật<br>Hợp đồng Thông minh HCE &bull; Sepolia EVM Verified</span>
             </div>
 
-            <!-- Dấu mộc tròn ON-CHAIN VERIFIED HCE -->
-            <div class="deed-seal-stamp">
-              <span>ON-CHAIN</span>
-              <span>VERIFIED</span>
-              <span>HCE</span>
+            <!-- Dấu mộc đỏ kỹ thuật số chính thức của Đại học Kinh tế Huế -->
+            <div class="deed-seal-stamp" title="Con dấu số bảo chứng On-Chain HCE">
+              <div class="deed-seal-star">★</div>
+              <span>ĐẠI HỌC KINH TẾ HUẾ</span>
+              <span style="font-size: 6.8px; opacity: 0.95;">HỘI ĐỒNG KHOA HỌC</span>
+              <span style="color: #991b1b; font-size: 6.5px; margin-top: 1px; font-weight: 900;">ON-CHAIN VERIFIED</span>
             </div>
 
-            <!-- Mã QR Code động -->
-            <div class="deed-qr-box">
-              <canvas id="deedQrCanvas"></canvas>
+            <!-- Mã QR Code động dẫn trực tiếp tới Sepolia Etherscan -->
+            <div class="deed-qr-box" title="Quét mã QR để đối soát giao dịch trên Ethereum Etherscan">
+              <img id="deedQrImg" src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sepolia.etherscan.io/address/0xa2F53106B3dFdf23b6b158022646d231A21e49cb" alt="Mã QR On-Chain" style="width: 100%; height: 100%; object-fit: contain;">
+              <canvas id="deedQrCanvas" style="display: none;"></canvas>
             </div>
           </div>
         </div>
@@ -2733,20 +2755,8 @@
         const newBlock = 6821940 + SAMPLE_RECORDS.length + 1;
         const nowStr = new Date().toLocaleString("vi-VN");
 
-        // Cập nhật sang Chứng thư số
-        document.getElementById("deedTitle").textContent = title;
-        document.getElementById("deedArchiveCode").textContent = code;
-        document.getElementById("deedDepartment").textContent = `${faculty} • Đại học Kinh tế Huế`;
-        document.getElementById("deedAuthors").textContent = authors;
-        document.getElementById("deedAdvisor").textContent = advisor;
-        document.getElementById("deedType").textContent = type;
-        document.getElementById("deedHash").textContent = currentHash;
-        document.getElementById("deedTimestamp").textContent = nowStr;
-        document.getElementById("deedBlockNumber").textContent = `#${newBlock}`;
-        document.getElementById("deedDispatchNum").textContent = `Số: ${26 + SAMPLE_RECORDS.length}/CT-ĐHKT-NCKH • HCE ACADEMIC DEED`;
-
-        // Thêm vào Sổ cái
-        SAMPLE_RECORDS.unshift({
+        // Cập nhật và lưu vào Sổ cái
+        const newRecord = {
           code: code,
           date: "Hôm nay",
           title: title,
@@ -2758,13 +2768,18 @@
           block: newBlock,
           time: nowStr,
           wallet: currentWallet || "0xB07FB0761c33a01F7f7493A6a8a9667F4842Fd50"
-        });
+        };
+        SAMPLE_RECORDS.unshift(newRecord);
         renderLedgerTable();
+        populateDeedRecordPicker();
+        applyRecordToDeed(newRecord);
+        const selDeed = document.getElementById("selDeedRecordPicker");
+        if (selDeed) selDeed.value = "0";
 
         // Tự động tạo mã hồ sơ mới cho lần đăng ký tiếp theo
         generateNewArchiveCode(true);
 
-        toast("Đăng ký On-Chain thành công! Đang chuyển đến Chứng thư số...", "success");
+        toast("Đăng ký On-Chain thành công! Đã cấp Chứng thư số chính thức.", "success");
         switchNavTab("tab-certificate");
       }, 1200);
     });
@@ -2892,7 +2907,10 @@
           <td><code style="font-family: var(--font-mono); color: var(--primary);">#${r.block}</code></td>
           <td><span style="font-size: 11px; font-family: var(--font-mono);">${r.time}</span></td>
           <td><span class="badge-pill-auth">AUTHENTICATED</span></td>
-          <td><button class="btn-detail" onclick="openBlockDetail(${i})">Chi tiết</button></td>
+          <td style="white-space: nowrap;">
+            <button class="btn-detail" onclick="openBlockDetail(${i})" title="Xem chi tiết khối & giao dịch">Khối</button>
+            <button class="btn-detail" style="background: var(--primary-subtle); color: var(--primary); font-weight: 700; margin-left: 4px;" onclick="viewDeedForRecord(${i})" title="Xem phôi Chứng thư số của công trình này">📜 Chứng thư</button>
+          </td>
         </tr>
       `).join("");
     }
@@ -2937,13 +2955,68 @@
       document.getElementById("popoverBackdrop").style.display = "none";
     }
 
-    // Vẽ QR trên Chứng thư
-    function renderDeedQr() {
+    // Quản lý Chứng thư Số Động (Dynamic Academic Deed)
+    function populateDeedRecordPicker() {
+      const sel = document.getElementById("selDeedRecordPicker");
+      if (!sel) return;
+      sel.innerHTML = SAMPLE_RECORDS.map((r, i) => `
+        <option value="${i}">[${r.code}] ${r.title} — ${r.authors}</option>
+      `).join("");
+    }
+
+    function onSelectDeedFromDropdown() {
+      const sel = document.getElementById("selDeedRecordPicker");
+      if (!sel) return;
+      const idx = parseInt(sel.value, 10);
+      if (!isNaN(idx) && SAMPLE_RECORDS[idx]) {
+        applyRecordToDeed(SAMPLE_RECORDS[idx]);
+        toast(`Đã nạp Chứng thư: ${SAMPLE_RECORDS[idx].code}`, "info");
+      }
+    }
+
+    function viewDeedForRecord(idx) {
+      const r = SAMPLE_RECORDS[idx];
+      if (!r) return;
+      applyRecordToDeed(r);
+      const sel = document.getElementById("selDeedRecordPicker");
+      if (sel) sel.value = idx.toString();
+      switchNavTab("tab-certificate");
+      toast(`Đã hiển thị Chứng thư số cho: ${r.code}!`, "success");
+    }
+
+    function applyRecordToDeed(r) {
+      if (!r) return;
+      document.getElementById("deedTitle").textContent = r.title;
+      document.getElementById("deedArchiveCode").textContent = r.code;
+      document.getElementById("deedDepartment").textContent = `${r.faculty} • Đại học Kinh tế Huế`;
+      document.getElementById("deedAuthors").textContent = r.authors;
+      document.getElementById("deedAdvisor").textContent = r.advisor;
+      document.getElementById("deedType").textContent = r.type;
+      document.getElementById("deedHash").textContent = r.hash;
+      document.getElementById("deedTimestamp").textContent = r.time;
+      document.getElementById("deedBlockNumber").textContent = `#${r.block}`;
+      
+      const numMatch = r.code.match(/\d+$/);
+      const dispatchNum = numMatch ? numMatch[0] : "26";
+      document.getElementById("deedDispatchNum").textContent = `Số: ${dispatchNum}/CT-ĐHKT-NCKH • HCE ACADEMIC DEED OF SCIENTIFIC PROVENANCE`;
+      
+      const targetUrl = `https://sepolia.etherscan.io/address/0xa2F53106B3dFdf23b6b158022646d231A21e49cb`;
+      renderDeedQr(targetUrl);
+    }
+
+    // Vẽ QR trên Chứng thư (tích hợp API trực tiếp + Canvas dự phòng)
+    function renderDeedQr(customUrl) {
+      const url = customUrl || `https://sepolia.etherscan.io/address/0xa2F53106B3dFdf23b6b158022646d231A21e49cb`;
+      const qrImg = document.getElementById("deedQrImg");
+      if (qrImg) {
+        qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(url)}`;
+      }
       const canvas = document.getElementById("deedQrCanvas");
-      const url = `https://sepolia.etherscan.io/address/0xa2F53106B3dFdf23b6b158022646d231A21e49cb`;
-      QRCode.toCanvas(canvas, url, { width: 76, margin: 1 }, function (error) {
-        if (error) console.error(error);
-      });
+      if (canvas && typeof QRCode !== "undefined" && QRCode.toCanvas) {
+        QRCode.toCanvas(canvas, url, { width: 76, margin: 1 }, function (error) {
+          if (error) console.warn("Lỗi QR Canvas fallback:", error);
+        });
+      }
     }
 
     function copyDeedHash() {
@@ -2955,6 +3028,8 @@
     // Khởi tạo mặc định ban đầu
     setAuthorType("single");
     generateNewArchiveCode(true);
+    populateDeedRecordPicker();
+    renderDeedQr();
   </script>
 </body>
 </html>
