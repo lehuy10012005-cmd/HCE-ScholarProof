@@ -772,50 +772,24 @@
       border-color: #f87171;
     }
 
-    /* Tiêu chuẩn Đăng ký Quyền tác giả HCE Card (Thay thế Mẫu nạp nhanh) */
-    .standards-info-card {
-      margin-top: 18px;
-      border: 1px solid var(--border-color);
-      border-radius: var(--radius-md);
-      background: var(--bg-surface);
-      padding: 16px;
-      box-shadow: var(--shadow-sm);
-    }
-    .standards-header {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 12.5px;
-      color: var(--text-primary);
-      margin-bottom: 10px;
-    }
-    .standards-icon { font-size: 16px; }
-    .standards-list {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-    .standards-list li {
-      font-size: 11.5px;
-      line-height: 1.5;
-      color: var(--text-secondary);
-      position: relative;
-      padding-left: 16px;
-    }
-    .standards-list li::before {
-      content: "•";
-      position: absolute;
-      left: 2px;
-      top: 0;
+    /* Nút Đổi mã hồ sơ ngẫu nhiên */
+    .btn-refresh-code {
+      background: transparent;
+      border: none;
       color: var(--primary);
-      font-size: 14px;
-      font-weight: bold;
+      font-size: 11.5px;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 2px 6px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      border-radius: 4px;
+      transition: all 0.2s;
     }
-    .standards-list li strong {
-      color: var(--text-primary);
+    .btn-refresh-code:hover {
+      background: var(--primary-subtle);
+      text-decoration: underline;
     }
 
     /* Author Form Styling */
@@ -1627,11 +1601,6 @@
             <img src="hce-logo.png" alt="Biểu trưng Đại học Kinh tế Huế" class="hero-crest-img">
             <h3>HCE-SCHOLARPROOF</h3>
             <p>Bảo chứng quyền tác giả sơ khởi bằng hàm băm mật mã và mốc thời gian khối trên mạng Ethereum Sepolia.</p>
-            <div style="margin-top: 18px; text-align: left; display: flex; flex-direction: column; gap: 8px; font-size: 12px; background: rgba(255,255,255,0.1); padding: 12px 14px; border-radius: 8px;">
-              <div>⚡ <strong>Băm RAM (Zero-Knowledge):</strong> Không tải tệp thô lên mạng</div>
-              <div>🔒 <strong>Bất biến On-Chain:</strong> Chống sửa lùi ngày đăng ký</div>
-              <div>📜 <strong>Chứng thư số A4:</strong> Có dấu mộc đỏ & mã QR đối soát</div>
-            </div>
           </div>
         </div>
       </div>
@@ -1722,17 +1691,6 @@
             </div>
           </div>
 
-          <!-- Khối Tiêu chuẩn Đăng ký Bản quyền HCE (Thay thế Mẫu thử nghiệm cũ) -->
-          <div class="standards-info-card">
-            <div class="standards-header">
-              <span class="standards-icon">🛡️</span>
-              <strong>Tiêu chuẩn Xác lập Bản quyền HCE:</strong>
-            </div>
-            <ul class="standards-list">
-              <li><strong>Nguyên tắc First-to-File:</strong> Xác lập quyền ưu tiên nghiên cứu sơ khởi bất biến theo mốc khối Sepolia Blockchain.</li>
-              <li><strong>Bảo mật Zero-Knowledge:</strong> Dấu vân tay số (Keccak-256) trích xuất hoàn toàn trong RAM máy tính của bạn; cam kết không rò rỉ đề cương.</li>
-              <li><strong>Giá trị Học thuật:</strong> Mã băm được in trực tiếp lên Chứng thư số A4 và dùng để đối soát tính độc bản, chống đạo văn.</li>
-            </ul>
           </div>
         </div>
 
@@ -1759,8 +1717,13 @@
 
           <div class="f-row">
             <div class="f-group">
-              <label>Mã hồ sơ lưu trữ HCE</label>
-              <input type="text" id="regArchiveCodeInput" class="f-input" readonly value="HCE-IP-2026-K57-010">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                <label style="margin-bottom: 0;">Mã hồ sơ lưu trữ HCE</label>
+                <button type="button" class="btn-refresh-code" onclick="generateNewArchiveCode()" title="Tạo mã hồ sơ ngẫu nhiên mới">
+                  🔄 Đổi mã mới
+                </button>
+              </div>
+              <input type="text" id="regArchiveCodeInput" class="f-input" placeholder="VD: HCE-IP-2026-K57-010">
             </div>
             <div class="f-group">
               <label>Loại hình công trình</label>
@@ -1852,10 +1815,6 @@
             <div class="upload-icon">🔍</div>
             <h4>Kéo tệp đề cương cần đối soát vào đây</h4>
             <p>Hệ thống tự động băm Keccak-256 và so khớp với Sổ cái On-Chain</p>
-          </div>
-
-          <div class="abstract-box" id="appraisalAbstractText" style="max-height: none; line-height: 1.6;">
-            💡 <strong>Quy tắc thẩm định On-Chain:</strong> Hệ thống tự động so khớp dấu vân tay số của tệp với các bản ghi trên sổ cái Sepolia theo nguyên tắc ai nộp trước (First-to-File). Nếu phát hiện trùng lặp, hệ thống sẽ trích xuất ngay địa chỉ ví tác giả đầu tiên và số khối đã đăng ký.
           </div>
         </div>
 
@@ -2687,6 +2646,20 @@
       regFileInput.click();
     }
 
+    // Tự động sinh mã hồ sơ lưu trữ ngẫu nhiên duy nhất (Phương án A)
+    function generateNewArchiveCode(silent = false) {
+      const randomNum = Math.floor(100 + Math.random() * 900);
+      const newCode = `HCE-IP-2026-K57-${randomNum}`;
+      const input = document.getElementById("regArchiveCodeInput");
+      if (input) {
+        input.value = newCode;
+        if (!silent) {
+          toast(`Đã cấp mã hồ sơ lưu trữ mới: ${newCode}`, "info");
+        }
+      }
+      return newCode;
+    }
+
     function copyCurrentHash() {
       if (!currentHash) {
         toast("Chưa có vân tay số Keccak-256 để sao chép. Vui lòng nạp tệp trước!", "error");
@@ -2718,7 +2691,7 @@
       const faculty = document.getElementById("regFacultySelect").value;
       const advisor = document.getElementById("regAdvisorInput").value.trim() || "Chưa cập nhật";
       const type = document.getElementById("regTypeSelect").value;
-      const code = document.getElementById("regArchiveCodeInput").value;
+      const code = document.getElementById("regArchiveCodeInput").value.trim() || generateNewArchiveCode(true);
 
       toast("Đang phát giao dịch lên Sepolia Testnet...", "info");
       setTimeout(() => {
@@ -2754,7 +2727,7 @@
         renderLedgerTable();
 
         // Tự động tạo mã hồ sơ mới cho lần đăng ký tiếp theo
-        document.getElementById("regArchiveCodeInput").value = `HCE-IP-2026-K57-${String(SAMPLE_RECORDS.length + 10).padStart(3, '0')}`;
+        generateNewArchiveCode(true);
 
         toast("Đăng ký On-Chain thành công! Đang chuyển đến Chứng thư số...", "success");
         switchNavTab("tab-certificate");
@@ -2886,6 +2859,7 @@
 
     // Khởi tạo mặc định ban đầu
     setAuthorType("single");
+    generateNewArchiveCode(true);
   </script>
 </body>
 </html>
