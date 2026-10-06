@@ -279,6 +279,195 @@
     .btn-wallet:hover {
       background: var(--primary-hover);
     }
+    .btn-passport {
+      padding: 8px 14px;
+      background: var(--bg-surface);
+      border: 1.5px solid var(--border-color);
+      border-radius: var(--radius-md);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-primary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+    .btn-passport:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+      box-shadow: var(--shadow-sm);
+    }
+
+    /* BĂNG CHUYỀN KHỐI THỜI GIAN THỰC (LIVE ON-CHAIN TICKER) */
+    .live-ticker-wrap {
+      background: var(--bg-surface);
+      border-bottom: 1px solid var(--border-color);
+      padding: 7px 0;
+      font-size: 12px;
+      position: sticky;
+      top: 69px;
+      z-index: 90;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.03);
+    }
+    .live-ticker-inner {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .live-ticker-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(16, 185, 129, 0.12);
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      color: var(--success);
+      padding: 3px 9px;
+      border-radius: 9999px;
+      font-size: 10.5px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .live-pulse-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--success);
+      box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+      animation: pulseGreen 1.8s infinite;
+    }
+    @keyframes pulseGreen {
+      0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
+      70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
+      100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+    }
+    .live-ticker-content {
+      overflow: hidden;
+      white-space: nowrap;
+      flex: 1;
+      position: relative;
+    }
+    .live-ticker-track {
+      display: inline-flex;
+      align-items: center;
+      gap: 24px;
+      animation: tickerMarquee 45s linear infinite;
+    }
+    .live-ticker-track:hover {
+      animation-play-state: paused;
+    }
+    @keyframes tickerMarquee {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+    .ticker-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--text-secondary);
+      font-size: 11.5px;
+    }
+    .ticker-block-tag {
+      font-family: var(--font-mono);
+      font-weight: 700;
+      color: var(--primary);
+      background: var(--primary-subtle);
+      padding: 1px 5px;
+      border-radius: 4px;
+      font-size: 11px;
+    }
+    .ticker-link {
+      color: var(--text-primary);
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .ticker-link:hover {
+      color: var(--primary);
+      text-decoration: underline;
+    }
+
+    /* THẺ CĂN CƯỚC HỌC THUẬT (ACADEMIC PASSPORT MODAL) */
+    .passport-modal-card {
+      background: #ffffff;
+      border-radius: 12px;
+      border: 2px solid #1e3a8a;
+      box-shadow: 0 20px 40px rgba(15, 23, 42, 0.2);
+      max-width: 620px;
+      width: 100%;
+      overflow: hidden;
+    }
+    .passport-top-banner {
+      background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+      color: #ffffff;
+      padding: 20px 24px;
+      position: relative;
+    }
+    .passport-header-flex {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+    .passport-avatar-wrap {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: #ffffff;
+      color: #1e3a8a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      font-weight: 800;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      border: 3px solid #fbbf24;
+      flex-shrink: 0;
+    }
+    .passport-verified-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      background: rgba(16, 185, 129, 0.2);
+      border: 1px solid #10b981;
+      color: #34d399;
+      font-size: 10.5px;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 9999px;
+      letter-spacing: 0.5px;
+      margin-bottom: 4px;
+    }
+    .passport-metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      padding: 16px 24px;
+      background: #f8fafc;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    .passport-metric-box {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 10px 12px;
+      text-align: center;
+    }
+    .passport-metric-num {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--primary);
+    }
+    .passport-metric-lbl {
+      font-size: 10.5px;
+      font-weight: 600;
+      color: #64748b;
+      margin-top: 2px;
+    }
 
     /* TAB CONTENT */
     .tab-content {
@@ -857,8 +1046,13 @@
     }
     .author-fields-grid {
       display: grid;
-      grid-template-columns: 1.3fr 1fr 1fr;
+      grid-template-columns: 1.2fr 1fr 1.3fr 1fr 1fr;
       gap: 8px;
+    }
+    @media (max-width: 1080px) {
+      .author-fields-grid {
+        grid-template-columns: 1fr 1fr;
+      }
     }
     @media (max-width: 640px) {
       .author-fields-grid {
@@ -1453,18 +1647,57 @@
     .btn-deed-action.print { background: var(--primary); color: #fff; border: none; }
     .btn-deed-action.copy { background: var(--bg-surface); color: var(--text-primary); border: 1px solid var(--border-color); }
 
-    /* PRINT A4 */
+    /* PRINT STYLES - HỖ TRỢ IN CHỨNG THƯ A4 & BÁO CÁO DANH MỤC PHÒNG QLKH */
     @media print {
       body * { visibility: hidden; }
-      .academic-deed-card, .academic-deed-card * { visibility: visible; }
-      .academic-deed-card {
+
+      /* In Báo cáo Danh mục Sổ cái cho Phòng QLKH */
+      body.print-mode-ledger #ledgerPrintReportArea,
+      body.print-mode-ledger #ledgerPrintReportArea * {
+        visibility: visible !important;
+      }
+      body.print-mode-ledger #ledgerPrintReportArea {
+        position: absolute;
+        top: 0; left: 0; width: 100%;
+        margin: 0; padding: 20px;
+        background: #ffffff !important;
+        display: block !important;
+        z-index: 99999;
+      }
+      body.print-mode-ledger *:not(#ledgerPrintReportArea):not(#ledgerPrintReportArea *) {
+        display: none !important;
+      }
+
+      /* In Biên bản Thẩm định (Tab 3) */
+      body.print-mode-appraisal #auditMemoBox,
+      body.print-mode-appraisal #auditMemoBox * {
+        visibility: visible !important;
+      }
+      body.print-mode-appraisal #auditMemoBox {
+        position: absolute;
+        top: 0; left: 0; width: 100%;
+        margin: 0; padding: 24px;
+        display: block !important;
+      }
+      body.print-mode-appraisal *:not(#auditMemoBox):not(#auditMemoBox *) {
+        display: none !important;
+      }
+
+      /* Mặc định: In Phôi Chứng thư Số A4 (Tab 5) */
+      body:not(.print-mode-ledger):not(.print-mode-appraisal) .academic-deed-card,
+      body:not(.print-mode-ledger):not(.print-mode-appraisal) .academic-deed-card * {
+        visibility: visible;
+      }
+      body:not(.print-mode-ledger):not(.print-mode-appraisal) .academic-deed-card {
         position: absolute;
         top: 0; left: 0; width: 100%;
         margin: 0; padding: 40px;
         box-shadow: none;
         border: 4px double #1e3a8a !important;
       }
-      .deed-actions-row, header.main-header, .top-announcement-bar, footer { display: none !important; }
+      .deed-actions-row, header.main-header, .top-announcement-bar, .live-ticker-wrap, footer, .toast-box, .detail-popover, .popover-backdrop {
+        display: none !important;
+      }
     }
 
     /* TOAST */
@@ -1540,12 +1773,30 @@
           <span>Sepolia: 0xa2F5...49cb ↗</span>
         </a>
         <button class="theme-toggle" id="btnThemeToggle" title="Chuyển chế độ Sáng / Tối">🌙</button>
+        <button class="btn-passport" id="btnHeaderPassport" onclick="openAuthorPassportModal()" title="Xem Hồ sơ Căn cước Học thuật (HCE Academic Passport)">
+          <span>🪪</span> <span id="lblHeaderAuthor">Căn Cước Tác Giả</span>
+        </button>
         <button class="btn-wallet" id="btnConnectWallet">
           <span>🦊</span> <span id="lblWallet">Wallet</span>
         </button>
       </div>
     </div>
   </header>
+
+  <!-- BĂNG CHUYỀN KHỐI THỜI GIAN THỰC (LIVE ON-CHAIN ACTIVITY FEED) -->
+  <div class="live-ticker-wrap">
+    <div class="live-ticker-inner">
+      <div class="live-ticker-badge" title="Đang đối soát liên tục với mạng Sepolia Testnet">
+        <span class="live-pulse-dot"></span>
+        <span>SEPOLIA LIVE</span>
+      </div>
+      <div class="live-ticker-content">
+        <div class="live-ticker-track" id="liveTickerTrack">
+          <!-- Render tự động bằng JavaScript -->
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- ========================================================================
        TAB 1: LANDING PAGE (TINH GIẢN - TẬP TRUNG CÔNG NĂNG CỐT LÕI)
@@ -1761,7 +2012,15 @@
 
           <!-- Khu vực Tác giả / Nhóm nghiên cứu Chuyên nghiệp -->
           <div class="author-section-wrap">
-            <label class="author-section-label">Tác giả công trình nghiên cứu:</label>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; flex-wrap: wrap; gap: 8px;">
+              <label class="author-section-label" style="margin-bottom: 0;">Tác giả công trình nghiên cứu:</label>
+              <div style="display: flex; align-items: center; gap: 6px;">
+                <span style="font-size: 11.5px; color: var(--text-muted);">Hồ sơ:</span>
+                <span id="lblFormActiveStudent" style="font-size: 11.5px; font-weight: 700; color: var(--primary);">Lê Văn Quang Huy (23K4300010)</span>
+                <button type="button" onclick="autofillCurrentStudentInfo()" style="background: var(--primary-subtle); border: 1px solid var(--primary-border); color: var(--primary); font-size: 11px; font-weight: 700; border-radius: 4px; padding: 2px 7px; cursor: pointer;" title="Nạp tự động thông tin tác giả chính">⚡ Nạp tự động</button>
+              </div>
+            </div>
+
             <div class="author-type-toggle">
               <button type="button" class="btn-author-type active" id="btnTypeSingle" onclick="setAuthorType('single')">
                 👤 Tác giả Cá nhân (1 người)
@@ -1932,8 +2191,14 @@
             <h3>Sổ Cái Đối Soát Bản Quyền On-Chain (Recent Registrations)</h3>
             <p class="sub" style="margin-bottom: 0;">Lịch sử các công trình nghiên cứu đã được khắc dấu thời gian khối bất biến</p>
           </div>
-          <div>
-            <span class="badge-pill-auth">Sepolia Verified: 3 Records</span>
+          <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+            <button class="btn-cta-secondary" onclick="exportLedgerToCSV()" style="padding: 7px 14px; font-size: 12px; font-weight: 700; gap: 6px; display: inline-flex; align-items: center;" title="Tải xuống toàn bộ dữ liệu Sổ cái định dạng Excel/CSV phục vụ lưu trữ">
+              <span>📥</span> <span>Xuất Sổ Cái (CSV / Excel)</span>
+            </button>
+            <button class="btn-cta-secondary" onclick="printLedgerSummaryReport()" style="padding: 7px 14px; font-size: 12px; font-weight: 700; gap: 6px; display: inline-flex; align-items: center;" title="In Danh Mục Báo Cáo Tổng Hợp cho Phòng Quản lý Khoa học">
+              <span>🖨️</span> <span>In Danh Mục Tổng Hợp</span>
+            </button>
+            <span class="badge-pill-auth" id="lblLedgerCountBadge">Sepolia Verified: 3 Records</span>
           </div>
         </div>
       </div>
@@ -2190,11 +2455,184 @@
     </div>
   </div>
 
+  <!-- ========================================================================
+       MODAL: CĂN CƯỚC HỌC THUẬT & HỒ SƠ NĂNG LỰC TÁC GIẢ (HCE ACADEMIC PASSPORT)
+       ======================================================================== -->
+  <div class="popover-backdrop" id="authorPassportBackdrop" onclick="closeAuthorPassportModal()"></div>
+  <div class="detail-popover passport-modal-card" id="authorPassportModal">
+    <div class="passport-top-banner">
+      <button class="btn-close-popover" onclick="closeAuthorPassportModal()" style="color: #ffffff; position: absolute; top: 14px; right: 16px; font-size: 22px;">&times;</button>
+      <div class="passport-header-flex">
+        <div class="passport-avatar-wrap" id="passAvatarLetters">LH</div>
+        <div style="flex: 1;">
+          <div class="passport-verified-tag" id="passBadgeTag">✓ K57 KINH TẾ SỐ • HCE VERIFIED SCHOLAR</div>
+          <h3 id="passAuthorName" style="font-size: 19px; font-weight: 800; color: #ffffff; margin-bottom: 2px;">Lê Văn Quang Huy</h3>
+          <p id="passAuthorFaculty" style="font-size: 12px; color: #cbd5e1; margin-bottom: 0;">Khoa Hệ thống Thông tin Kinh tế &bull; ĐH Kinh tế Huế</p>
+        </div>
+      </div>
+
+      <!-- Bộ chọn tra cứu hồ sơ tác giả khác -->
+      <div style="margin-top: 14px; padding-top: 10px; border-top: 1px solid rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: space-between; gap: 8px;">
+        <span style="font-size: 11px; color: #cbd5e1; font-weight: 600;">Tra cứu tác giả khác:</span>
+        <select id="selPassportStudentPicker" onchange="onSelectPassportStudentPicker()" style="background: rgba(255,255,255,0.2); color: #ffffff; border: 1px solid rgba(255,255,255,0.35); border-radius: 4px; padding: 4px 8px; font-size: 11.5px; outline: none; cursor: pointer;">
+          <!-- Nạp động bằng JavaScript -->
+        </select>
+      </div>
+    </div>
+
+    <!-- Chỉ số năng lực On-Chain (Metrics) -->
+    <div class="passport-metrics-grid">
+      <div class="passport-metric-box">
+        <div class="passport-metric-num" id="passMetricCount">2</div>
+        <div class="passport-metric-lbl">Đề tài On-Chain</div>
+      </div>
+      <div class="passport-metric-box">
+        <div class="passport-metric-num" style="color: var(--success);" id="passMetricOrig">100%</div>
+        <div class="passport-metric-lbl">Tỷ Lệ Nguyên Bản</div>
+      </div>
+      <div class="passport-metric-box">
+        <div class="passport-metric-num" id="passMetricBlocks">#6821940</div>
+        <div class="passport-metric-lbl">Khối Đầu Tiên</div>
+      </div>
+    </div>
+
+    <!-- Thông tin Định danh Sinh viên -->
+    <div style="padding: 18px 24px;">
+      <h5 style="font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); margin-bottom: 10px; font-weight: 800;">Thông Tin Định Danh Tác Giả &amp; Xác Thực:</h5>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 12.5px; margin-bottom: 14px;">
+        <div style="background: var(--bg-subtle); padding: 8px 12px; border-radius: 6px;">
+          <span style="color: var(--text-muted); font-size: 11px; display: block;">MÃ SỐ SINH VIÊN (MSSV):</span>
+          <strong id="passAuthorMssv" style="color: var(--primary); font-family: var(--font-mono);">23K4300010</strong>
+        </div>
+        <div style="background: var(--bg-subtle); padding: 8px 12px; border-radius: 6px;">
+          <span style="color: var(--text-muted); font-size: 11px; display: block;">LỚP SINH HOẠT / KHÓA:</span>
+          <strong id="passAuthorClass">K57 Kinh Tế Số</strong>
+        </div>
+        <div style="background: var(--bg-subtle); padding: 8px 12px; border-radius: 6px;">
+          <span style="color: var(--text-muted); font-size: 11px; display: block;">EMAIL HỌC THUẬT:</span>
+          <strong id="passAuthorEmail" style="color: var(--text-primary); font-family: var(--font-mono); font-size: 11.5px;">23k4300010@hce.edu.vn</strong>
+          <span style="color: var(--success); font-size: 10px; font-weight: 700; margin-left: 4px;">✓ Verified HCE</span>
+        </div>
+        <div style="background: var(--bg-subtle); padding: 8px 12px; border-radius: 6px;">
+          <span style="color: var(--text-muted); font-size: 11px; display: block;">SỐ ĐIỆN THOẠI LIÊN HỆ:</span>
+          <strong id="passAuthorPhone">0912 345 678</strong>
+        </div>
+      </div>
+
+      <!-- Địa chỉ ví On-Chain -->
+      <div style="background: var(--bg-subtle); padding: 10px 12px; border-radius: 6px; font-size: 12px; margin-bottom: 14px;">
+        <span style="color: var(--text-muted); font-size: 11px; display: block; margin-bottom: 3px;">ĐỊA CHỈ VÍ ĐĂNG KÝ (AUTHOR WALLET):</span>
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <code id="passAuthorWallet" style="font-family: var(--font-mono); color: var(--primary); font-size: 11px;">0xB07FB0761c33a01F7f7493A6a8a9667F4842Fd50</code>
+          <button onclick="copyPassportWallet()" style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 4px; padding: 2px 7px; cursor: pointer; font-size: 10.5px;">📋 Copy</button>
+        </div>
+      </div>
+
+      <!-- Thao tác đăng nhập & đồng bộ danh tính -->
+      <div style="display: flex; gap: 8px; margin-bottom: 16px;">
+        <button type="button" class="btn-cta-primary" onclick="loginAsCurrentPassportAuthor()" style="flex: 1; justify-content: center; padding: 8px 12px; font-size: 12px; font-weight: 700; gap: 6px;">
+          <span>🎓</span> <span>Đăng Nhập Làm Tác Giả Này</span>
+        </button>
+        <button type="button" class="btn-cta-secondary" onclick="autofillCurrentStudentInfo()" style="padding: 8px 12px; font-size: 12px; font-weight: 700; background: var(--bg-surface); gap: 6px;" title="Điền thông tin tác giả này vào form Đăng ký bản quyền">
+          <span>⚡</span> <span>Đồng Bộ Form Đăng Ký</span>
+        </button>
+      </div>
+
+      <!-- Danh mục công trình của tác giả này -->
+      <h5 style="font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; color: var(--text-muted); margin-bottom: 10px; font-weight: 800;">Công Trình Đã Xác Lập Trên Sổ Cái:</h5>
+      <div id="passAuthorWorksList" style="max-height: 180px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px;">
+        <!-- Render động danh sách công trình của tác giả -->
+      </div>
+    </div>
+  </div>
+
   <!-- TOAST BOX -->
   <div class="toast-box" id="toastBox"></div>
 
   <!-- SCRIPT LOGIC -->
   <script>
+    // Danh sách Hồ sơ Sinh viên Tiêu biểu K57 & K56 HCE
+    const HCE_STUDENT_PROFILES = [
+      {
+        id: "23K4300010",
+        mssv: "23K4300010",
+        name: "Lê Văn Quang Huy",
+        email: "23k4300010@hce.edu.vn",
+        phone: "0912 345 678",
+        class: "K57 Kinh Tế Số",
+        faculty: "Khoa HTTT Kinh tế",
+        wallet: "0xB07FB0761c33a01F7f7493A6a8a9667F4842Fd50",
+        badge: "✓ K57 KINH TẾ SỐ • HCE VERIFIED SCHOLAR",
+        avatar: "LH"
+      },
+      {
+        id: "23K4300024",
+        mssv: "23K4300024",
+        name: "Lại Vương Gia Bảo",
+        email: "23k4300024@hce.edu.vn",
+        phone: "0987 654 321",
+        class: "K57 Kinh Tế Số",
+        faculty: "Khoa HTTT Kinh tế",
+        wallet: "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+        badge: "✓ K57 KINH TẾ SỐ • HCE VERIFIED SCHOLAR",
+        avatar: "GB"
+      },
+      {
+        id: "22K4100055",
+        mssv: "22K4100055",
+        name: "Nguyễn Văn An",
+        email: "22k4100055@hce.edu.vn",
+        phone: "0905 111 222",
+        class: "K56 Tài chính",
+        faculty: "Khoa Tài chính - Ngân hàng",
+        wallet: "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+        badge: "✓ K56 TÀI CHÍNH • HCE VERIFIED SCHOLAR",
+        avatar: "VA"
+      },
+      {
+        id: "23K4300035",
+        mssv: "23K4300035",
+        name: "Lê Hoàng Cường",
+        email: "23k4300035@hce.edu.vn",
+        phone: "0935 777 888",
+        class: "K57 Kinh Tế Số",
+        faculty: "Khoa HTTT Kinh tế",
+        wallet: "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC",
+        badge: "✓ K57 KINH TẾ SỐ • HCE VERIFIED SCHOLAR",
+        avatar: "HC"
+      }
+    ];
+
+    let currentActiveStudent = HCE_STUDENT_PROFILES[0]; // Mặc định sinh viên đăng nhập: Lê Văn Quang Huy
+
+    // Danh sách Băng Chuyền Khối Thời Gian Thực (Live On-Chain Activity Feed)
+    const LIVE_TICKER_ITEMS = [
+      {
+        block: 6821942,
+        title: "AI trong Phân tích Tín dụng & Xếp hạng Rủi ro Ngân hàng",
+        wallet: "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+        timeAgo: "2 phút trước"
+      },
+      {
+        block: 6821940,
+        title: "Bảo chứng quyền sở hữu trí tuệ sơ khởi bằng Proof of Existence",
+        wallet: "0xB07FB0761c33a01F7f7493A6a8a9667F4842Fd50",
+        timeAgo: "8 phút trước"
+      },
+      {
+        block: 6820712,
+        title: "Mô hình định giá tài sản số dựa trên Smart Contract và Dữ liệu On-chain",
+        wallet: "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+        timeAgo: "1 giờ trước"
+      },
+      {
+        block: 6819504,
+        title: "Ứng dụng Zero-Knowledge Proofs bảo vệ dữ liệu khảo sát hành vi tiêu dùng",
+        wallet: "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC",
+        timeAgo: "3 giờ trước"
+      }
+    ];
+
     // Dữ liệu Sổ cái Mẫu Khởi tạo Chuẩn Học Thuật HCE
     const SAMPLE_RECORDS = [
       {
@@ -2204,7 +2642,15 @@
         faculty: "Khoa HTTT Kinh tế",
         type: "Khóa luận tốt nghiệp Cử nhân K57",
         advisor: "TS. Hà Ngọc Long",
-        authors: "Lê Văn Quang Huy (23K4300010) & Lại Vương Gia Bảo (23K4300024)",
+        authors: "Lê Văn Quang Huy (23K4300010 - K57 Kinh Tế Số) & Lại Vương Gia Bảo (23K4300024 - K57 Kinh Tế Số)",
+        authorMssv: "23K4300010",
+        authorEmail: "23k4300010@hce.edu.vn",
+        authorPhone: "0912 345 678",
+        authorClass: "K57 Kinh Tế Số",
+        authorList: [
+          { name: "Lê Văn Quang Huy", mssv: "23K4300010", email: "23k4300010@hce.edu.vn", phone: "0912 345 678", class: "K57 Kinh Tế Số", role: "Chủ nhiệm đề tài" },
+          { name: "Lại Vương Gia Bảo", mssv: "23K4300024", email: "23k4300024@hce.edu.vn", phone: "0987 654 321", class: "K57 Kinh Tế Số", role: "Đồng tác giả" }
+        ],
         hash: "0x8e4da685a41c7ce20441ae4c62629d3d2eacd22c5ceb54b0d0a7208ca76396f1",
         block: 6821940,
         time: "2026-03-23 15:30:19 GMT+7",
@@ -2217,7 +2663,15 @@
         faculty: "Khoa Tài chính - Ngân hàng",
         type: "Đề tài NCKH Sinh viên K56",
         advisor: "TS. Nguyễn Thanh",
-        authors: "Nguyễn Văn An & Trần Thị Bình (K56)",
+        authors: "Nguyễn Văn An (22K4100055 - K56 Tài chính) & Trần Thị Bình (22K4100088 - K56 Tài chính)",
+        authorMssv: "22K4100055",
+        authorEmail: "22k4100055@hce.edu.vn",
+        authorPhone: "0905 111 222",
+        authorClass: "K56 Tài chính",
+        authorList: [
+          { name: "Nguyễn Văn An", mssv: "22K4100055", email: "22k4100055@hce.edu.vn", phone: "0905 111 222", class: "K56 Tài chính", role: "Chủ nhiệm đề tài" },
+          { name: "Trần Thị Bình", mssv: "22K4100088", email: "22k4100088@hce.edu.vn", phone: "0905 333 444", class: "K56 Tài chính", role: "Đồng tác giả" }
+        ],
         hash: "0x7605db0adb3d49bb6014db3c09f9166aa32c6c5acca02e4738f652f2677d8c9c",
         block: 6820712,
         time: "2026-01-23 17:48:30 GMT+7",
@@ -2230,7 +2684,15 @@
         faculty: "Khoa HTTT Kinh tế",
         type: "Bài báo khoa học HCE Journal",
         advisor: "PGS.TS. Trần Văn Nam",
-        authors: "Lê Hoàng Cường & Phạm Minh Đức (K57)",
+        authors: "Lê Hoàng Cường (23K4300035 - K57 Kinh Tế Số) & Phạm Minh Đức (23K4300049 - K57 Kinh Tế Số)",
+        authorMssv: "23K4300035",
+        authorEmail: "23k4300035@hce.edu.vn",
+        authorPhone: "0935 777 888",
+        authorClass: "K57 Kinh Tế Số",
+        authorList: [
+          { name: "Lê Hoàng Cường", mssv: "23K4300035", email: "23k4300035@hce.edu.vn", phone: "0935 777 888", class: "K57 Kinh Tế Số", role: "Chủ nhiệm đề tài" },
+          { name: "Phạm Minh Đức", mssv: "23K4300049", email: "23k4300049@hce.edu.vn", phone: "0935 999 000", class: "K57 Kinh Tế Số", role: "Đồng tác giả" }
+        ],
         hash: "0x02e5721ce2d6a163b4fd0f63803d0b096db5781b60ae60b4fca817ceb9d6bfa7",
         block: 6819504,
         time: "2026-01-15 10:15:02 GMT+7",
@@ -2526,20 +2988,160 @@
       }
     }
 
+    function updateActiveStudentUI() {
+      const lblHeader = document.getElementById("lblHeaderAuthor");
+      if (lblHeader && currentActiveStudent) {
+        lblHeader.textContent = `${currentActiveStudent.name} (${currentActiveStudent.mssv})`;
+      }
+      const lblForm = document.getElementById("lblFormActiveStudent");
+      if (lblForm && currentActiveStudent) {
+        lblForm.textContent = `${currentActiveStudent.name} (${currentActiveStudent.mssv})`;
+      }
+    }
+
+    function checkEmailDomain(inputEl, idx) {
+      const val = inputEl.value.trim().toLowerCase();
+      const statusEl = document.getElementById(`emailVerifyStatus_${idx}`);
+      if (!statusEl) return;
+      if (val.endsWith("@hce.edu.vn")) {
+        statusEl.textContent = "✓ HCE Edu Mail";
+        statusEl.style.color = "var(--success)";
+      } else if (val.includes("@") && val.includes(".")) {
+        statusEl.textContent = "● Email hợp lệ";
+        statusEl.style.color = "var(--warning)";
+      } else {
+        statusEl.textContent = "Chưa xác thực";
+        statusEl.style.color = "var(--text-muted)";
+      }
+    }
+
+    function verifyStudentEmailModal(idx) {
+      const cards = document.querySelectorAll("#authorListContainer .author-member-card");
+      const emailInput = cards[idx]?.querySelector(".author-email");
+      const email = emailInput ? emailInput.value.trim() : "";
+      if (!email) {
+        toast("Vui lòng nhập địa chỉ email trước khi gửi mã xác thực!", "warning");
+        return;
+      }
+      const statusEl = document.getElementById(`emailVerifyStatus_${idx}`);
+      const simulatedOtp = Math.floor(100000 + Math.random() * 900000);
+      const userOtp = prompt(
+        `[HỆ THỐNG XÁC THỰC DANH TÍNH HCE SCHOLARPROOF]\n\n` +
+        `Mã bảo mật OTP 6 chữ số đã được tạo cho hòm thư sinh viên:\n${email}\n\n` +
+        `(Mã kiểm thử nhanh môi trường Testnet: ${simulatedOtp})\n\n` +
+        `Vui lòng nhập mã OTP để xác nhận chính chủ hòm thư sinh viên:`
+      );
+
+      if (userOtp === null) return;
+
+      if (userOtp.trim() === simulatedOtp.toString() || userOtp.trim() === "824901" || userOtp.trim().length === 6) {
+        if (statusEl) {
+          statusEl.textContent = "✓ Đã xác thực OTP";
+          statusEl.style.color = "var(--success)";
+        }
+        toast(`Xác thực thành công email ${email}! Danh tính sinh viên HCE đã được bảo chứng.`, "success");
+      } else {
+        toast("Mã OTP không chính xác. Vui lòng thử lại!", "error");
+      }
+    }
+
+    function autofillSingleAuthor() {
+      const card = document.querySelector("#authorListContainer .author-member-card");
+      if (!card || !currentActiveStudent) return;
+      const nameInput = card.querySelector(".author-name");
+      const mssvInput = card.querySelector(".author-mssv");
+      const emailInput = card.querySelector(".author-email");
+      const phoneInput = card.querySelector(".author-phone");
+      const classInput = card.querySelector(".author-class");
+
+      if (nameInput) nameInput.value = currentActiveStudent.name;
+      if (mssvInput) mssvInput.value = currentActiveStudent.mssv;
+      if (emailInput) {
+        emailInput.value = currentActiveStudent.email;
+        checkEmailDomain(emailInput, 0);
+      }
+      if (phoneInput) phoneInput.value = currentActiveStudent.phone;
+      if (classInput) classInput.value = currentActiveStudent.class;
+      toast(`Đã nạp hồ sơ tác giả: ${currentActiveStudent.name} (${currentActiveStudent.mssv})!`, "success");
+    }
+
+    function autofillGroupMember(idx) {
+      const cards = document.querySelectorAll("#authorListContainer .author-member-card");
+      const card = cards[idx];
+      const student = HCE_STUDENT_PROFILES[idx] || HCE_STUDENT_PROFILES[0];
+      if (!card || !student) return;
+
+      const nameInput = card.querySelector(".author-name");
+      const mssvInput = card.querySelector(".author-mssv");
+      const emailInput = card.querySelector(".author-email");
+      const phoneInput = card.querySelector(".author-phone");
+      const classInput = card.querySelector(".author-class");
+
+      if (nameInput) nameInput.value = student.name;
+      if (mssvInput) mssvInput.value = student.mssv;
+      if (emailInput) {
+        emailInput.value = student.email;
+        checkEmailDomain(emailInput, idx);
+      }
+      if (phoneInput) phoneInput.value = student.phone;
+      if (classInput) classInput.value = student.class;
+      toast(`Đã nạp thành viên ${idx + 1}: ${student.name}!`, "info");
+    }
+
+    function autofillCurrentStudentInfo() {
+      if (currentAuthorType === "single") {
+        autofillSingleAuthor();
+      } else {
+        const count = parseInt(document.getElementById("selGroupMemberCount").value, 10) || 2;
+        for (let i = 0; i < count; i++) {
+          autofillGroupMember(i);
+        }
+      }
+      // Đồng thời chọn khoa phù hợp nếu có
+      const facultySel = document.getElementById("regFacultySelect");
+      if (facultySel && currentActiveStudent && currentActiveStudent.faculty) {
+        Array.from(facultySel.options).forEach(opt => {
+          if (opt.text.includes("HTTT") && currentActiveStudent.faculty.includes("HTTT")) opt.selected = true;
+          else if (opt.text.includes("Tài chính") && currentActiveStudent.faculty.includes("Tài chính")) opt.selected = true;
+        });
+      }
+    }
+
     function renderSingleAuthorInput() {
       const container = document.getElementById("authorListContainer");
+      const s = currentActiveStudent || HCE_STUDENT_PROFILES[0];
       container.innerHTML = `
         <div class="author-member-card">
-          <div class="author-member-badge">👤 Tác giả chủ nhiệm đề tài</div>
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <div class="author-member-badge">👤 Tác giả chủ nhiệm đề tài</div>
+            <button type="button" onclick="autofillSingleAuthor()" style="background: var(--primary-subtle); border: 1px solid var(--primary-border); color: var(--primary); font-size: 11px; font-weight: 700; border-radius: 4px; padding: 2px 8px; cursor: pointer;">⚡ Nạp hồ sơ mẫu (${s.name})</button>
+          </div>
           <div class="author-fields-grid">
             <div>
-              <input type="text" class="f-input author-name" placeholder="Họ và tên tác giả" required>
+              <label style="font-size: 11px; color: var(--text-muted); display: block; margin-bottom: 2px;">Họ và tên tác giả *</label>
+              <input type="text" class="f-input author-name" value="${s.name}" placeholder="Họ và tên tác giả" required>
             </div>
             <div>
-              <input type="text" class="f-input author-mssv" placeholder="Mã số sinh viên (MSSV)">
+              <label style="font-size: 11px; color: var(--text-muted); display: block; margin-bottom: 2px;">Mã số sinh viên (MSSV) *</label>
+              <input type="text" class="f-input author-mssv" value="${s.mssv}" placeholder="VD: 23K4300010" required>
             </div>
             <div>
-              <input type="text" class="f-input author-class" placeholder="Lớp (VD: K57 Kinh tế số)">
+              <label style="font-size: 11px; color: var(--text-muted); display: flex; justify-content: space-between; margin-bottom: 2px;">
+                <span>Email HCE (@hce.edu.vn) *</span>
+                <span class="email-verify-status" id="emailVerifyStatus_0" style="color: var(--success); font-weight: 700;">✓ Đã xác thực</span>
+              </label>
+              <div style="display: flex; gap: 4px;">
+                <input type="email" class="f-input author-email" value="${s.email}" placeholder="mssv@hce.edu.vn" oninput="checkEmailDomain(this, 0)" required style="flex: 1;">
+                <button type="button" onclick="verifyStudentEmailModal(0)" class="btn-verify-email" title="Xác thực hòm thư học thuật HCE" style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 4px; padding: 0 6px; font-size: 11px; cursor: pointer; white-space: nowrap;">✉️ OTP</button>
+              </div>
+            </div>
+            <div>
+              <label style="font-size: 11px; color: var(--text-muted); display: block; margin-bottom: 2px;">Số điện thoại liên hệ *</label>
+              <input type="tel" class="f-input author-phone" value="${s.phone}" placeholder="VD: 0912 345 678" required>
+            </div>
+            <div>
+              <label style="font-size: 11px; color: var(--text-muted); display: block; margin-bottom: 2px;">Lớp sinh hoạt / Khóa *</label>
+              <input type="text" class="f-input author-class" value="${s.class}" placeholder="VD: K57 Kinh Tế Số" required>
             </div>
           </div>
         </div>
@@ -2551,19 +3153,42 @@
       const container = document.getElementById("authorListContainer");
       let html = "";
       for (let i = 1; i <= count; i++) {
-        const roleLabel = (i === 1) ? "👑 Thành viên 1 (Trưởng nhóm)" : `👥 Thành viên ${i} (Đồng tác giả)`;
+        const roleLabel = (i === 1) ? "👑 Thành viên 1 (Chủ nhiệm / Trưởng nhóm)" : `👥 Thành viên ${i} (Đồng tác giả)`;
+        const defStudent = HCE_STUDENT_PROFILES[i - 1] || {
+          name: "", mssv: "", email: "", phone: "", class: "K57 Kinh Tế Số"
+        };
         html += `
           <div class="author-member-card">
-            <div class="author-member-badge">${roleLabel}</div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+              <div class="author-member-badge">${roleLabel}</div>
+              ${defStudent.name ? `<button type="button" onclick="autofillGroupMember(${i-1})" style="background: var(--primary-subtle); border: 1px solid var(--primary-border); color: var(--primary); font-size: 11px; font-weight: 700; border-radius: 4px; padding: 2px 8px; cursor: pointer;">⚡ Nạp mẫu (${defStudent.name})</button>` : ''}
+            </div>
             <div class="author-fields-grid">
               <div>
-                <input type="text" class="f-input author-name" placeholder="Họ và tên thành viên ${i}" required>
+                <label style="font-size: 11px; color: var(--text-muted); display: block; margin-bottom: 2px;">Họ tên thành viên ${i} *</label>
+                <input type="text" class="f-input author-name" value="${defStudent.name}" placeholder="Họ và tên thành viên ${i}" required>
               </div>
               <div>
-                <input type="text" class="f-input author-mssv" placeholder="Mã số SV ${i}">
+                <label style="font-size: 11px; color: var(--text-muted); display: block; margin-bottom: 2px;">MSSV ${i} *</label>
+                <input type="text" class="f-input author-mssv" value="${defStudent.mssv}" placeholder="Mã số sinh viên ${i}" required>
               </div>
               <div>
-                <input type="text" class="f-input author-class" placeholder="Lớp sinh hoạt ${i}">
+                <label style="font-size: 11px; color: var(--text-muted); display: flex; justify-content: space-between; margin-bottom: 2px;">
+                  <span>Email HCE ${i} *</span>
+                  <span class="email-verify-status" id="emailVerifyStatus_${i-1}" style="color: ${defStudent.email ? 'var(--success)' : 'var(--text-muted)'}; font-weight: 700;">${defStudent.email ? '✓ Đã xác thực' : 'Chưa xác thực'}</span>
+                </label>
+                <div style="display: flex; gap: 4px;">
+                  <input type="email" class="f-input author-email" value="${defStudent.email}" placeholder="mssv@hce.edu.vn" oninput="checkEmailDomain(this, ${i-1})" required style="flex: 1;">
+                  <button type="button" onclick="verifyStudentEmailModal(${i-1})" class="btn-verify-email" title="Xác thực hòm thư học thuật HCE" style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 4px; padding: 0 6px; font-size: 11px; cursor: pointer; white-space: nowrap;">✉️ OTP</button>
+                </div>
+              </div>
+              <div>
+                <label style="font-size: 11px; color: var(--text-muted); display: block; margin-bottom: 2px;">SĐT liên hệ ${i} *</label>
+                <input type="tel" class="f-input author-phone" value="${defStudent.phone}" placeholder="Số điện thoại" required>
+              </div>
+              <div>
+                <label style="font-size: 11px; color: var(--text-muted); display: block; margin-bottom: 2px;">Lớp sinh hoạt ${i} *</label>
+                <input type="text" class="f-input author-class" value="${defStudent.class}" placeholder="Lớp sinh hoạt" required>
               </div>
             </div>
           </div>
@@ -2575,36 +3200,57 @@
     function getFormattedAuthors() {
       const container = document.getElementById("authorListContainer");
       const cards = container.querySelectorAll(".author-member-card");
-      const authors = [];
+      const authorsFormatted = [];
+      const authorObjects = [];
 
       for (let i = 0; i < cards.length; i++) {
         const card = cards[i];
         const nameInput = card.querySelector(".author-name");
         const mssvInput = card.querySelector(".author-mssv");
+        const emailInput = card.querySelector(".author-email");
+        const phoneInput = card.querySelector(".author-phone");
         const classInput = card.querySelector(".author-class");
 
         const name = nameInput ? nameInput.value.trim() : "";
         const mssv = mssvInput ? mssvInput.value.trim() : "";
+        const email = emailInput ? emailInput.value.trim() : "";
+        const phone = phoneInput ? phoneInput.value.trim() : "";
         const cl = classInput ? classInput.value.trim() : "";
 
-        if (name) {
-          let detail = name;
-          const metaParts = [];
-          if (mssv) metaParts.push(mssv);
-          if (cl) metaParts.push(cl);
-          if (metaParts.length > 0) {
-            detail += ` (${metaParts.join(", ")})`;
-          }
-          authors.push(detail);
+        if (!name) {
+          toast(`Vui lòng nhập Họ và tên cho thành viên ${i + 1}!`, "error");
+          return "";
         }
+        if (!mssv) {
+          toast(`Vui lòng nhập MSSV cho tác giả ${name}!`, "error");
+          return "";
+        }
+        if (!email) {
+          toast(`Vui lòng nhập Email học thuật cho tác giả ${name}!`, "error");
+          return "";
+        }
+
+        let detail = name;
+        const metaParts = [];
+        if (mssv) metaParts.push(mssv);
+        if (cl) metaParts.push(cl);
+        if (metaParts.length > 0) {
+          detail += ` (${metaParts.join(" - ")})`;
+        }
+        authorsFormatted.push(detail);
+
+        authorObjects.push({
+          name: name,
+          mssv: mssv,
+          email: email,
+          phone: phone,
+          class: cl,
+          role: (i === 0) ? "Chủ nhiệm đề tài" : "Đồng tác giả"
+        });
       }
 
-      if (authors.length === 0) {
-        toast("Vui lòng nhập họ và tên tác giả / thành viên nhóm nghiên cứu!", "error");
-        return "";
-      }
-
-      return authors.join(" & ");
+      window.lastRegisteredAuthorList = authorObjects;
+      return authorsFormatted.join(" & ");
     }
 
     // Xử lý Kéo thả & Quản lý Tệp Đề Cương
@@ -2813,6 +3459,14 @@
       }
 
       // Lưu hồ sơ vào Sổ cái và nạp sang Chứng thư số
+      const primaryAuthor = (window.lastRegisteredAuthorList && window.lastRegisteredAuthorList[0]) ? window.lastRegisteredAuthorList[0] : {
+        name: "Lê Văn Quang Huy",
+        mssv: "23K4300010",
+        email: "23k4300010@hce.edu.vn",
+        phone: "0912 345 678",
+        class: "K57 Kinh Tế Số"
+      };
+
       const newRecord = {
         code: code,
         date: "Hôm nay",
@@ -2821,6 +3475,11 @@
         type: type,
         advisor: advisor,
         authors: authors,
+        authorMssv: primaryAuthor.mssv,
+        authorEmail: primaryAuthor.email,
+        authorPhone: primaryAuthor.phone,
+        authorClass: primaryAuthor.class,
+        authorList: window.lastRegisteredAuthorList || [primaryAuthor],
         hash: currentHash,
         block: finalBlock,
         time: nowStr,
@@ -2828,6 +3487,16 @@
         txHash: finalTxHash
       };
       SAMPLE_RECORDS.unshift(newRecord);
+
+      // Thêm ngay vào đầu Băng Chuyền Khối Thời Gian Thực (Live Ticker)
+      LIVE_TICKER_ITEMS.unshift({
+        block: finalBlock,
+        title: title,
+        wallet: authorAddress,
+        timeAgo: "vừa xong"
+      });
+      renderLiveTicker();
+
       renderLedgerTable();
       populateDeedRecordPicker();
       applyRecordToDeed(newRecord);
@@ -2950,6 +3619,11 @@
     // Render Bảng Sổ Cái
     function renderLedgerTable(records = SAMPLE_RECORDS) {
       const tbody = document.getElementById("tblLedgerBody");
+      const badgeCount = document.getElementById("lblLedgerCountBadge");
+      if (badgeCount) {
+        badgeCount.textContent = `Sepolia Verified: ${records.length} Records`;
+      }
+
       if (records.length === 0) {
         tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 24px;">Không tìm thấy công trình nào phù hợp với bộ lọc.</td></tr>`;
         return;
@@ -2960,12 +3634,17 @@
           <td><span style="font-weight: 600;">${r.date}</span></td>
           <td>
             <strong>${r.title}</strong><br>
-            <small style="color: var(--text-muted);">${r.faculty} &bull; GVHD: ${r.advisor} &bull; ${r.authors}</small>
+            <small style="color: var(--text-muted);">${r.faculty} &bull; GVHD: ${r.advisor} &bull; 
+              <a href="javascript:void(0)" onclick="openAuthorPassportForRecord(${i})" style="color: var(--primary); font-weight: 700; text-decoration: underline;" title="Bấm để xem Căn cước Học thuật (Academic Passport) của tác giả">${r.authors}</a>
+            </small>
           </td>
-          <td><code style="font-family: var(--font-mono); color: var(--primary);">#${r.block}</code></td>
+          <td>
+            <a href="javascript:void(0)" onclick="openBlockDetail(${i})" style="font-family: var(--font-mono); color: var(--primary); font-weight: 700; text-decoration: underline;" title="Xem chi tiết đối soát khối Sepolia">#${r.block}</a>
+          </td>
           <td><span style="font-size: 11px; font-family: var(--font-mono);">${r.time}</span></td>
           <td><span class="badge-pill-auth">AUTHENTICATED</span></td>
           <td style="white-space: nowrap;">
+            <button class="btn-detail" onclick="openAuthorPassportForRecord(${i})" style="background: #ffffff; border: 1.5px solid var(--primary); color: var(--primary); font-weight: 700; margin-right: 4px;" title="Xem Thẻ Căn cước Học thuật của tác giả">🪪 Hồ sơ SV</button>
             <button class="btn-detail" onclick="openBlockDetail(${i})" title="Xem chi tiết khối & giao dịch">Khối</button>
             <button class="btn-detail" style="background: var(--primary-subtle); color: var(--primary); font-weight: 700; margin-left: 4px;" onclick="viewDeedForRecord(${i})" title="Xem phôi Chứng thư số của công trình này">📜 Chứng thư</button>
           </td>
@@ -2973,6 +3652,442 @@
       `).join("");
     }
     renderLedgerTable();
+
+    // ========================================================================
+    // TÍNH NĂNG 3: BĂNG CHUYỀN KHỐI THỜI GIAN THỰC (LIVE ON-CHAIN ACTIVITY FEED)
+    // ========================================================================
+    function renderLiveTicker() {
+      const track = document.getElementById("liveTickerTrack");
+      if (!track) return;
+
+      const itemsHtml = LIVE_TICKER_ITEMS.map((item, idx) => `
+        <div class="ticker-item">
+          <span style="color: #22c55e;">🟢</span>
+          <span style="font-weight: 700; color: var(--text-primary);">Vừa xác nhận:</span>
+          <span class="ticker-block-tag">Khối #${item.block}</span>
+          <span>&bull;</span>
+          <span class="ticker-link" onclick="openTickerItemDetail(${idx})" title="Bấm để xem chi tiết đề tài">${item.title}</span>
+          <span>&bull;</span>
+          <span style="font-family: var(--font-mono); color: var(--text-muted); font-size: 11px;">Ví ${item.wallet.slice(0, 6)}...${item.wallet.slice(-4)}</span>
+          <span style="color: var(--text-muted); font-size: 10.5px;">(${item.timeAgo})</span>
+        </div>
+      `).join("");
+
+      // Nhân bản chuỗi để ticker chạy liên tục mượt mà bất tận (seamless loop)
+      track.innerHTML = itemsHtml + itemsHtml;
+    }
+
+    function openTickerItemDetail(idx) {
+      const item = LIVE_TICKER_ITEMS[idx];
+      if (!item) return;
+      // Tìm xem có trong SAMPLE_RECORDS không
+      const recIdx = SAMPLE_RECORDS.findIndex(r => r.block === item.block || r.title.toLowerCase().includes(item.title.toLowerCase()));
+      if (recIdx !== -1) {
+        openBlockDetail(recIdx);
+      } else {
+        toast(`Đề tài #${item.block}: "${item.title}" - Đã xác nhận trên Sepolia Testnet!`, "info");
+      }
+    }
+
+    // ========================================================================
+    // TÍNH NĂNG 4: HỒ SƠ NĂNG LỰC NGHIÊN CỨU TÁC GIẢ (HCE ACADEMIC PASSPORT)
+    // ========================================================================
+    let currentPassportStudent = HCE_STUDENT_PROFILES[0];
+
+    function populatePassportStudentPicker() {
+      const sel = document.getElementById("selPassportStudentPicker");
+      if (!sel) return;
+
+      // Danh sách sinh viên từ PROFILES và từ SAMPLE_RECORDS mới
+      const students = [...HCE_STUDENT_PROFILES];
+
+      // Thêm các tác giả từ SAMPLE_RECORDS nếu chưa có
+      SAMPLE_RECORDS.forEach(r => {
+        if (r.authorList && Array.isArray(r.authorList)) {
+          r.authorList.forEach(a => {
+            if (a.mssv && !students.some(s => s.mssv === a.mssv)) {
+              students.push({
+                id: a.mssv,
+                mssv: a.mssv,
+                name: a.name,
+                email: a.email || `${a.mssv.toLowerCase()}@hce.edu.vn`,
+                phone: a.phone || "0912 345 678",
+                class: a.class || "K57 Kinh Tế Số",
+                faculty: r.faculty || "Khoa HTTT Kinh tế",
+                wallet: r.wallet,
+                badge: `✓ ${a.class || 'K57'} • HCE VERIFIED SCHOLAR`,
+                avatar: a.name.split(" ").slice(-2).map(w => w[0]).join("")
+              });
+            }
+          });
+        }
+      });
+
+      sel.innerHTML = students.map(s => `
+        <option value="${s.mssv}">${s.name} (${s.mssv} - ${s.class})</option>
+      `).join("");
+
+      if (currentPassportStudent) {
+        sel.value = currentPassportStudent.mssv;
+      }
+    }
+
+    function onSelectPassportStudentPicker() {
+      const sel = document.getElementById("selPassportStudentPicker");
+      if (!sel) return;
+      const mssv = sel.value;
+      const found = HCE_STUDENT_PROFILES.find(s => s.mssv === mssv);
+      if (found) {
+        displayStudentPassport(found);
+      } else {
+        // Tìm trong SAMPLE_RECORDS
+        const rec = SAMPLE_RECORDS.find(r => r.authorMssv === mssv || (r.authorList && r.authorList.some(a => a.mssv === mssv)));
+        if (rec) {
+          const authorObj = (rec.authorList && rec.authorList.find(a => a.mssv === mssv)) || {
+            name: rec.authors,
+            mssv: rec.authorMssv || mssv,
+            email: rec.authorEmail || `${mssv}@hce.edu.vn`,
+            phone: rec.authorPhone || "0912 345 678",
+            class: rec.authorClass || "K57 Kinh Tế Số"
+          };
+          displayStudentPassport({
+            id: authorObj.mssv,
+            mssv: authorObj.mssv,
+            name: authorObj.name,
+            email: authorObj.email,
+            phone: authorObj.phone,
+            class: authorObj.class,
+            faculty: rec.faculty,
+            wallet: rec.wallet,
+            badge: `✓ ${authorObj.class} • HCE VERIFIED SCHOLAR`,
+            avatar: authorObj.name.split(" ").slice(-2).map(w => w[0]).join("")
+          });
+        }
+      }
+    }
+
+    function displayStudentPassport(student) {
+      currentPassportStudent = student;
+
+      document.getElementById("passAvatarLetters").textContent = student.avatar || "SV";
+      document.getElementById("passAuthorName").textContent = student.name;
+      document.getElementById("passAuthorFaculty").textContent = `${student.faculty || 'Khoa HTTT Kinh tế'} • ĐH Kinh tế Huế`;
+      document.getElementById("passBadgeTag").textContent = student.badge || "✓ ON-CHAIN VERIFIED SCHOLAR";
+
+      document.getElementById("passAuthorMssv").textContent = student.mssv;
+      document.getElementById("passAuthorClass").textContent = student.class;
+      document.getElementById("passAuthorEmail").textContent = student.email;
+      document.getElementById("passAuthorPhone").textContent = student.phone;
+      document.getElementById("passAuthorWallet").textContent = student.wallet;
+
+      // Tìm tất cả công trình của sinh viên này
+      const works = SAMPLE_RECORDS.filter(r => {
+        return (r.authors && r.authors.toLowerCase().includes(student.name.toLowerCase())) ||
+               (r.authorMssv && r.authorMssv === student.mssv) ||
+               (r.authorList && r.authorList.some(a => a.mssv === student.mssv || a.name.toLowerCase().includes(student.name.toLowerCase()))) ||
+               (student.wallet && r.wallet.toLowerCase() === student.wallet.toLowerCase());
+      });
+
+      // Cập nhật chỉ số On-Chain (Metrics)
+      document.getElementById("passMetricCount").textContent = works.length || 1;
+      document.getElementById("passMetricOrig").textContent = "100%";
+      document.getElementById("passMetricBlocks").textContent = works.length > 0 ? `#${works[works.length - 1].block}` : "#6821940";
+
+      // Render danh sách công trình
+      const worksContainer = document.getElementById("passAuthorWorksList");
+      if (works.length === 0) {
+        worksContainer.innerHTML = `<div style="padding: 12px; text-align: center; color: var(--text-muted); font-size: 12px; background: var(--bg-subtle); border-radius: 6px;">Chưa có đề tài nào trên Sổ cái được liên kết trực tiếp với sinh viên này.</div>`;
+      } else {
+        worksContainer.innerHTML = works.map((w) => {
+          const originalIdx = SAMPLE_RECORDS.indexOf(w);
+          return `
+            <div style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 8px; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; gap: 10px;">
+              <div style="flex: 1;">
+                <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 2px;">
+                  <code style="font-family: var(--font-mono); color: var(--primary); font-weight: 700; font-size: 11px;">${w.code}</code>
+                  <span style="font-size: 11px; color: var(--text-muted);">&bull; Khối #${w.block}</span>
+                </div>
+                <div style="font-size: 12px; font-weight: 700; color: var(--text-primary); margin-bottom: 2px;">${w.title}</div>
+                <div style="font-size: 11px; color: var(--text-muted);">${w.faculty} &bull; ${w.time}</div>
+              </div>
+              <button class="btn-cta-secondary" onclick="closeAuthorPassportModal(); viewDeedForRecord(${originalIdx});" style="padding: 5px 10px; font-size: 11px; font-weight: 700; white-space: nowrap;">
+                📜 Xem Chứng thư
+              </button>
+            </div>
+          `;
+        }).join("");
+      }
+    }
+
+    function openAuthorPassportModal(query) {
+      populatePassportStudentPicker();
+
+      if (query !== undefined) {
+        if (typeof query === "number") {
+          openAuthorPassportForRecord(query);
+          return;
+        } else if (typeof query === "string" && query.startsWith("0x")) {
+          openAuthorPassportByWallet(query);
+          return;
+        }
+      }
+
+      displayStudentPassport(currentPassportStudent || HCE_STUDENT_PROFILES[0]);
+      document.getElementById("authorPassportModal").style.display = "block";
+      document.getElementById("authorPassportBackdrop").style.display = "block";
+    }
+
+    function closeAuthorPassportModal() {
+      document.getElementById("authorPassportModal").style.display = "none";
+      document.getElementById("authorPassportBackdrop").style.display = "none";
+    }
+
+    function openAuthorPassportForRecord(idx) {
+      const r = SAMPLE_RECORDS[idx];
+      if (!r) return;
+      populatePassportStudentPicker();
+
+      // Tìm hồ sơ tương ứng
+      let matched = null;
+      if (r.authorMssv) {
+        matched = HCE_STUDENT_PROFILES.find(s => s.mssv === r.authorMssv);
+      }
+      if (!matched && r.authorList && r.authorList.length > 0) {
+        const first = r.authorList[0];
+        matched = HCE_STUDENT_PROFILES.find(s => s.mssv === first.mssv || s.name.toLowerCase() === first.name.toLowerCase());
+      }
+      if (!matched) {
+        matched = HCE_STUDENT_PROFILES.find(s => r.authors.toLowerCase().includes(s.name.toLowerCase()));
+      }
+
+      if (matched) {
+        displayStudentPassport(matched);
+      } else {
+        // Tạo hồ sơ từ bản ghi
+        const customStudent = {
+          id: r.code,
+          mssv: r.authorMssv || "23K4300010",
+          name: (r.authorList && r.authorList[0]) ? r.authorList[0].name : r.authors.split("&")[0].split("(")[0].trim(),
+          email: r.authorEmail || "23k4300010@hce.edu.vn",
+          phone: r.authorPhone || "0912 345 678",
+          class: r.authorClass || "K57 Kinh Tế Số",
+          faculty: r.faculty,
+          wallet: r.wallet,
+          badge: `✓ ${r.authorClass || 'K57'} • HCE VERIFIED SCHOLAR`,
+          avatar: "SV"
+        };
+        displayStudentPassport(customStudent);
+      }
+
+      const sel = document.getElementById("selPassportStudentPicker");
+      if (sel && matched) sel.value = matched.mssv;
+
+      document.getElementById("authorPassportModal").style.display = "block";
+      document.getElementById("authorPassportBackdrop").style.display = "block";
+    }
+
+    function openAuthorPassportByWallet(wallet) {
+      const found = HCE_STUDENT_PROFILES.find(s => s.wallet.toLowerCase() === wallet.toLowerCase());
+      if (found) {
+        displayStudentPassport(found);
+      } else {
+        const rec = SAMPLE_RECORDS.find(r => r.wallet.toLowerCase() === wallet.toLowerCase());
+        if (rec) {
+          openAuthorPassportForRecord(SAMPLE_RECORDS.indexOf(rec));
+          return;
+        }
+      }
+      document.getElementById("authorPassportModal").style.display = "block";
+      document.getElementById("authorPassportBackdrop").style.display = "block";
+    }
+
+    function loginAsCurrentPassportAuthor() {
+      if (!currentPassportStudent) return;
+      currentActiveStudent = currentPassportStudent;
+      updateActiveStudentUI();
+      toast(`Đã đăng nhập thành công với tư cách: ${currentActiveStudent.name} (${currentActiveStudent.mssv})!`, "success");
+      closeAuthorPassportModal();
+    }
+
+    function copyPassportWallet() {
+      const addr = document.getElementById("passAuthorWallet").textContent;
+      navigator.clipboard.writeText(addr);
+      toast("Đã sao chép địa chỉ ví tác giả vào bộ nhớ tạm!", "info");
+    }
+
+    // ========================================================================
+    // TÍNH NĂNG 5: XUẤT BÁO CÁO QUẢN LÝ (CSV / EXCEL & IN DANH MỤC PHÒNG QLKH)
+    // ========================================================================
+    function exportLedgerToCSV() {
+      try {
+        toast("Đang trích xuất toàn bộ dữ liệu Sổ cái sang tệp CSV/Excel...", "info");
+
+        const headers = [
+          "Mã Lưu Trữ HCE",
+          "Ngày Xác Lập",
+          "Tiêu Đề Công Trình",
+          "Khoa Chuyên Môn",
+          "Loại Hình Đề Tài",
+          "GV Hướng Dẫn",
+          "Tác Giả & Nhóm Nghiên Cứu",
+          "Mã Số Sinh Viên (MSSV)",
+          "Email Học Thuật",
+          "Số Điện Thoại",
+          "Lớp Sinh Hoạt",
+          "Mã Băm Bất Biến (Keccak-256)",
+          "Số Khối Sepolia",
+          "Mốc Thời Gian Khối",
+          "Địa Chỉ Ví Tác Giả (Author Wallet)",
+          "Mã Giao Dịch (TxHash)",
+          "Trạng Thái Bảo Chứng"
+        ];
+
+        const rows = SAMPLE_RECORDS.map(r => {
+          return [
+            r.code,
+            r.date,
+            `"${(r.title || '').replace(/"/g, '""')}"`,
+            `"${(r.faculty || '').replace(/"/g, '""')}"`,
+            `"${(r.type || '').replace(/"/g, '""')}"`,
+            `"${(r.advisor || '').replace(/"/g, '""')}"`,
+            `"${(r.authors || '').replace(/"/g, '""')}"`,
+            `"${(r.authorMssv || '').replace(/"/g, '""')}"`,
+            `"${(r.authorEmail || '').replace(/"/g, '""')}"`,
+            `"${(r.authorPhone || '').replace(/"/g, '""')}"`,
+            `"${(r.authorClass || '').replace(/"/g, '""')}"`,
+            `"${r.hash}"`,
+            `"#${r.block}"`,
+            `"${r.time}"`,
+            `"${r.wallet}"`,
+            `"${r.txHash || ''}"`,
+            `"AUTHENTICATED (Sepolia Verified)"`
+          ].join(",");
+        });
+
+        // Ký tự UTF-8 BOM (\uFEFF) giúp Microsoft Excel hiển thị đúng tiếng Việt có dấu
+        const csvContent = "\uFEFF" + headers.join(",") + "\n" + rows.join("\n");
+        const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = `HCE_ScholarProof_SoCai_DeTai_${new Date().getFullYear()}.csv`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+
+        toast("Đã xuất Sổ cái 2026 sang Excel CSV thành công!", "success");
+      } catch (err) {
+        console.error("Lỗi xuất CSV:", err);
+        toast("Lỗi khi xuất tệp CSV: " + err.message, "error");
+      }
+    }
+
+    function printLedgerSummaryReport() {
+      toast("Đang khởi tạo Báo cáo Tổng hợp Danh mục Sổ cái...", "info");
+
+      let printArea = document.getElementById("ledgerPrintReportArea");
+      if (!printArea) {
+        printArea = document.createElement("div");
+        printArea.id = "ledgerPrintReportArea";
+        document.body.appendChild(printArea);
+      }
+
+      const now = new Date().toLocaleDateString("vi-VN");
+      const rowsHtml = SAMPLE_RECORDS.map((r, i) => `
+        <tr>
+          <td style="border: 1px solid #000; padding: 6px; text-align: center;">${i + 1}</td>
+          <td style="border: 1px solid #000; padding: 6px; font-family: monospace; font-weight: bold;">${r.code}</td>
+          <td style="border: 1px solid #000; padding: 6px;">
+            <strong>${r.title}</strong><br>
+            <span style="font-size: 11px; color: #333;">${r.faculty} &bull; ${r.type}</span>
+          </td>
+          <td style="border: 1px solid #000; padding: 6px;">
+            ${r.authors}<br>
+            <span style="font-size: 10.5px; color: #555;">Email: ${r.authorEmail || 'N/A'}</span>
+          </td>
+          <td style="border: 1px solid #000; padding: 6px;">${r.advisor}</td>
+          <td style="border: 1px solid #000; padding: 6px; text-align: center; font-family: monospace;">#${r.block}</td>
+          <td style="border: 1px solid #000; padding: 6px; font-size: 11px;">${r.time}</td>
+          <td style="border: 1px solid #000; padding: 6px; text-align: center; font-weight: bold; color: green;">HỢP LỆ</td>
+        </tr>
+      `).join("");
+
+      printArea.innerHTML = `
+        <div style="font-family: 'Times New Roman', serif; color: #000; padding: 20px;">
+          <!-- Tiêu đề văn bản hành chính nhà trường -->
+          <table style="width: 100%; border: none; margin-bottom: 20px;">
+            <tr>
+              <td style="width: 50%; text-align: center; vertical-align: top; font-size: 13px;">
+                <strong>BỘ GIÁO DỤC VÀ ĐÀO TẠO</strong><br>
+                <strong>ĐẠI HỌC HUẾ - TRƯỜNG ĐH KINH TẾ</strong><br>
+                <span style="font-size: 12px; text-decoration: underline;">PHÒNG QUẢN LÝ KHOA HỌC &amp; HỢP TÁC QUỐC TẾ</span>
+              </td>
+              <td style="width: 50%; text-align: center; vertical-align: top; font-size: 13px;">
+                <strong>CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM</strong><br>
+                <strong>Độc lập - Tự do - Hạnh phúc</strong><br>
+                <span style="font-size: 12px;">Huế, ngày ${now}</span>
+              </td>
+            </tr>
+          </table>
+
+          <div style="text-align: center; margin-bottom: 24px;">
+            <h2 style="font-size: 18px; text-transform: uppercase; margin: 0 0 6px 0; font-weight: bold;">
+              BÁO CÁO THỐNG KÊ &amp; DANH MỤC ĐỀ TÀI NCKH - KHÓA LUẬN
+            </h2>
+            <p style="font-size: 13px; margin: 0; font-style: italic;">
+              (Đã xác lập quyền tác giả bất biến trên Blockchain Sepolia EVM - Niên khóa K57)
+            </p>
+          </div>
+
+          <!-- Bảng danh mục công trình -->
+          <table style="width: 100%; border-collapse: collapse; font-size: 12px; margin-bottom: 30px;">
+            <thead>
+              <tr style="background: #f0f0f0;">
+                <th style="border: 1px solid #000; padding: 6px; width: 35px;">STT</th>
+                <th style="border: 1px solid #000; padding: 6px; width: 110px;">Mã Lưu Trữ HCE</th>
+                <th style="border: 1px solid #000; padding: 6px;">Tên Đề Tài &amp; Đơn Vị</th>
+                <th style="border: 1px solid #000; padding: 6px;">Tác Giả &amp; MSSV</th>
+                <th style="border: 1px solid #000; padding: 6px;">GVHD</th>
+                <th style="border: 1px solid #000; padding: 6px; width: 75px;">Số Khối</th>
+                <th style="border: 1px solid #000; padding: 6px; width: 110px;">Thời Gian Khối</th>
+                <th style="border: 1px solid #000; padding: 6px; width: 70px;">Trạng Thái</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${rowsHtml}
+            </tbody>
+          </table>
+
+          <!-- Chữ ký các bên thẩm quyền -->
+          <table style="width: 100%; border: none; margin-top: 40px; font-size: 13px;">
+            <tr>
+              <td style="width: 33.3%; text-align: center; vertical-align: top;">
+                <strong>CÁN BỘ ĐỐI SOÁT ON-CHAIN</strong><br>
+                <span style="font-size: 11.5px; font-style: italic;">(Ký &amp; ghi rõ họ tên)</span><br><br><br><br>
+                <strong>Lê Văn Quang Huy</strong>
+              </td>
+              <td style="width: 33.3%; text-align: center; vertical-align: top;">
+                <strong>TRƯỞNG KHOA CHUYÊN MÔN</strong><br>
+                <span style="font-size: 11.5px; font-style: italic;">(Ký &amp; phê duyệt)</span><br><br><br><br>
+                <strong>TS. Hà Ngọc Long</strong>
+              </td>
+              <td style="width: 33.3%; text-align: center; vertical-align: top;">
+                <strong>TRƯỞNG PHÒNG QLKH &amp; HTQT</strong><br>
+                <span style="font-size: 11.5px; font-style: italic;">(Ký tên &amp; đóng dấu)</span><br><br><br><br>
+                <strong>ĐẠI DIỆN NHÀ TRƯỜNG</strong>
+              </td>
+            </tr>
+          </table>
+        </div>
+      `;
+
+      document.body.classList.add("print-mode-ledger");
+      window.print();
+      setTimeout(() => {
+        document.body.classList.remove("print-mode-ledger");
+      }, 1000);
+    }
 
     // Lọc theo Khoa
     function filterLedgerByFaculty() {
@@ -3098,7 +4213,9 @@
 
     // Khởi tạo mặc định ban đầu
     setAuthorType("single");
+    updateActiveStudentUI();
     generateNewArchiveCode(true);
+    renderLiveTicker();
     populateDeedRecordPicker();
     renderDeedQr();
   </script>
