@@ -1,114 +1,96 @@
-# BÁO CÁO THỰC HÀNH LAB 15: HỒ SƠ TRIỂN KHAI VÀ NGHIỆM THU ĐỒ ÁN CAPSTONE (DEPLOYMENT & DEFENSE)
+# TÀI LIỆU HƯỚNG DẪN TRIỂN KHAI & VẬN HÀNH HỆ THỐNG (DEPLOYMENT & OPERATION MANUAL)
 ## ĐỒ ÁN CAPSTONE: NỀN TẢNG BẢO CHỨNG QUYỀN TÁC GIẢ Ý TƯỞNG NGHIÊN CỨU (HCE-SCHOLARPROOF)
 
 * **Học phần:** Tiền điện tử và Hợp đồng thông minh (ECO2432)
 * **Giảng viên phụ trách:** TS. Hà Ngọc Long
 * **Khoa:** Hệ thống Thông tin Kinh tế — Trường Đại học Kinh tế, Đại học Huế
 * **Nhóm sinh viên thực hiện:**
-  1. **Lê Văn Quang Huy** — MSSV: `23K4300010` (Trưởng nhóm / Phụ trách Triển khai & Báo cáo Nghiệm thu)
-  2. **Lại Vương Gia Bảo** — MSSV: `23K4300024` (Thành viên cặp / Phụ trách DApp Hosting & Kịch bản Demo Hội đồng)
+  1. **Lê Văn Quang Huy** — MSSV: `23K4300010` (Trưởng nhóm / Kỹ sư Hợp đồng & Đặc tả)
+  2. **Lại Vương Gia Bảo** — MSSV: `23K4300024` (Thành viên cặp / Kỹ sư Kiểm thử & Giao diện DApp)
 * **Kho lưu trữ GitHub chính thức:** [https://github.com/lehuy10012005-cmd/HCE-ScholarProof](https://github.com/lehuy10012005-cmd/HCE-ScholarProof)
-* **Website DApp trực tuyến:** [https://lehuy10012005-cmd.github.io/HCE-ScholarProof/](https://lehuy10012005-cmd.github.io/HCE-ScholarProof/)
-* **Hợp đồng thông minh Sepolia:** [`0xa2F53106B3dFdf23b6b158022646d231A21e49cb`](https://sepolia.etherscan.io/address/0xa2F53106B3dFdf23b6b158022646d231A21e49cb)
+* **Cổng DApp trực tuyến:** [https://lehuy10012005-cmd.github.io/HCE-ScholarProof/](https://lehuy10012005-cmd.github.io/HCE-ScholarProof/)
 
 ---
 
-## 1. Thông số Kỹ thuật Triển khai Thực tế (Production Deployment Parameters)
+## 1. Tổng quan Kiến trúc Triển khai (Deployment Architecture)
 
-Hợp đồng thông minh lõi của đồ án đã được biên dịch bằng trình biên dịch Solidity `v0.8.20+commit.a1b79de6` (bật tối ưu hóa optimizer 200 runs) và triển khai thành công lên mạng thử nghiệm công khai Ethereum Sepolia:
+Hệ thống **HCE-ScholarProof** được thiết kế theo mô hình Web3 phi tập trung 3 lớp (3-Tier Decentralized Architecture):
 
-### 1.1. Bảng Thông số Triển khai:
-* **Mạng lưới (Network):** Ethereum Sepolia Testnet (Chain ID: `11155111`).
-* **Địa chỉ Hợp đồng (Contract Address):** `0xa2F53106B3dFdf23b6b158022646d231A21e49cb`
-* **Trạng thái Xác minh Mã nguồn (Etherscan Verification):** **Exact Match Verified** (Mã nguồn mở công khai 100%).
-* **Số khối triển khai (Deployment Block):** `#6820514`
-* **Giao dịch triển khai (Creation Tx):** `0x3a4b7c8d9e0f1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b`
-* **Ví nhà phát triển (Deployer Wallet):** `0xB07FB0761c33a01F7f7493A6a8a9667F4842Fd50`
-* **Trình khám phá khối (Block Explorer):** [https://sepolia.etherscan.io/address/0xa2F53106B3dFdf23b6b158022646d231A21e49cb](https://sepolia.etherscan.io/address/0xa2F53106B3dFdf23b6b158022646d231A21e49cb)
-
----
-
-## 2. Giao diện Lập trình Ứng dụng (Application Binary Interface - ABI)
-
-Tập tin giao tiếp ABI trích xuất của hàm ghi nhận và tra cứu cốt lõi phục vụ tích hợp Web3 DApp:
-
-```json
-[
-  {
-    "anonymous": false,
-    "inputs": [
-      { "indexed": true, "internalType": "bytes32", "name": "docHash", "type": "bytes32" },
-      { "indexed": true, "internalType": "address", "name": "author", "type": "address" },
-      { "indexed": false, "internalType": "string", "name": "title", "type": "string" },
-      { "indexed": false, "internalType": "string", "name": "category", "type": "string" },
-      { "indexed": false, "internalType": "uint256", "name": "timestamp", "type": "uint256" }
-    ],
-    "name": "IdeaRegistered",
-    "type": "event"
-  },
-  {
-    "inputs": [
-      { "internalType": "bytes32", "name": "docHash", "type": "bytes32" },
-      { "internalType": "string", "name": "title", "type": "string" },
-      { "internalType": "string", "name": "category", "type": "string" }
-    ],
-    "name": "registerIdea",
-    "outputs": [],
-    "stateMutability": "nonpayable",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      { "internalType": "bytes32", "name": "docHash", "type": "bytes32" }
-    ],
-    "name": "getIdeaByHash",
-    "outputs": [
-      { "internalType": "address", "name": "author", "type": "address" },
-      { "internalType": "string", "name": "title", "type": "string" },
-      { "internalType": "string", "name": "category", "type": "string" },
-      { "internalType": "uint256", "name": "timestamp", "type": "uint256" },
-      { "internalType": "uint256", "name": "blockNumber", "type": "uint256" },
-      { "internalType": "bool", "name": "exists", "type": "bool" }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  }
-]
+```mermaid
+graph TD
+    A[Trình duyệt Người dùng / Client Browser] -->|1. Băm Keccak-256 trong RAM| B[Client-Side Hash Buffer]
+    A -->|2. Ký giao dịch Web3| C[MetaMask / Injected Web3 Provider]
+    C -->|3. JSON-RPC eth_sendRawTransaction| D[Sepolia Testnet / Layer 2 Base RPC]
+    D -->|4. Lưu trữ trạng thái bất biến| E[ScholarProof.sol v2 Contract]
+    E -->|5. Phát sự kiện IdeaRegistered| F[On-chain Event Logs / Subgraph]
+    F -->|6. Lắng nghe và hiển thị| G[Giao diện Sổ cái & Chứng thư số A4]
 ```
 
 ---
 
-## 3. Hệ sinh thái Sản phẩm Bàn giao Nghiệm thu
+## 2. Thông số Hợp đồng Thông minh trên Mạng Blockchain
 
-Nhóm sinh viên bàn giao trọn vẹn gói sản phẩm Capstone đạt tiêu chuẩn học phần ECO2432 gồm **4 cấu phần cốt lõi**:
+### 2.1. Mạng Sepolia Testnet (Mạng thử nghiệm chính thức)
+- **Tên hợp đồng:** `ScholarProof` (kế thừa bởi `ProjectCore`)
+- **Trình biên dịch:** Solidity `0.8.20+commit.a1b79de6`
+- **Tối ưu hóa (Optimization):** `Yes (200 runs)`
+- **Địa chỉ hợp đồng chính thức (Contract Address):**  
+  `0xa2F53106B3dFdf23b6b158022646d231A21e49cb`
+- **Địa chỉ ví triển khai (Deployer / Owner):**  
+  `0xB07FB0761c33a01F7f7493A6a8a9667F4842Fd50`
+- **Đường dẫn Etherscan:**  
+  [https://sepolia.etherscan.io/address/0xa2F53106B3dFdf23b6b158022646d231A21e49cb](https://sepolia.etherscan.io/address/0xa2F53106B3dFdf23b6b158022646d231A21e49cb)
+- **Trạng thái mã nguồn:** ✅ **Verified Source Code (MIT License)**
 
-1. **Hợp đồng thông minh lõi (Smart Contract Core):**
-   - [`contracts/capstone/ScholarProof.sol`](./contracts/capstone/ScholarProof.sol) v2 tuân thủ tiêu chuẩn bảo mật CEI, không backdoor.
-2. **Cổng DApp Web3 Trực tuyến (Production Web3 DApp):**
-   - Đã đóng gói và lưu trữ trên máy chủ GitHub Pages tại: [https://lehuy10012005-cmd.github.io/HCE-ScholarProof/](https://lehuy10012005-cmd.github.io/HCE-ScholarProof/).
-   - Tích hợp 5 phân hệ chuyên sâu theo chuẩn nhận diện Trường ĐH Kinh tế - ĐH Huế (Trang chủ, Đăng ký, Thẩm định, Sổ cái, Chứng thư A4).
-3. **Bộ kiểm thử tự động toàn diện (Automated Test Suite):**
-   - [`test/ScholarProof.test.js`](./test/ScholarProof.test.js) bao phủ 100% các nhánh rẽ nghiệp vụ, kiểm tra ca gian lận nộp đè mã băm đạt kết quả 5/5 PASS.
-4. **Hồ sơ Thuyết minh và Báo cáo Kiểm toán Đầy đủ:**
-   - Đầy đủ báo cáo từ Lab 8 đến Lab 15, Bản đặc tả nghiệp vụ [`SPEC.md`](./SPEC.md), Báo cáo kiểm toán [`audit_report.md`](./audit_report.md) và Kịch bản bảo vệ 5 slide.
-
----
-
-## 4. Kịch bản Nghiệm thu Thực tế trước Hội đồng (Demonstration Flow)
-
-Nhóm xây dựng kịch bản nghiệm thu 3 phút trực tiếp trên máy chiếu dành cho buổi bảo vệ đồ án:
-
-1. **Mở đầu:** Truy cập vào trang web trực tuyến và kết nối ví MetaMask qua chuẩn EIP-2255.
-2. **Xác lập quyền tác giả:** Nạp đề tài mẫu K57, tính toán băm Keccak-256 an toàn trong RAM, phát giao dịch on-chain lên Sepolia.
-3. **Xuất chứng thư:** Trình chiếu Chứng thư A4 có mộc đỏ **ON-CHAIN VERIFIED HCE** và quét mã QR đối soát trên điện thoại thông minh.
-4. **Kiểm thử hành vi gian lận:** Kéo thả lại đúng tệp đề cương đó vào phân hệ "Thẩm định" $\rightarrow$ Hội đồng quan sát hệ thống bật **Thẻ Cảnh Báo Đỏ Trùng Lặp (DUPLICATE FOUND)** và trích xuất đúng địa chỉ ví tác giả nộp trước.
+### 2.2. Lộ trình mở rộng sang Layer 2 (Production Ready)
+Theo kết quả nghiên cứu kinh tế học vi mô tại [`lab14.md`](./lab14.md), hệ thống đã sẵn sàng triển khai trên:
+- **Base Sepolia (Testnet):** Chain ID `84532` | RPC: `https://sepolia.base.org`
+- **Arbitrum Sepolia (Testnet):** Chain ID `421614` | RPC: `https://sepolia-rollup.arbitrum.io/rpc`
 
 ---
 
-## 5. Kết luận Nghiệm thu Đồ án Capstone
+## 3. Hướng dẫn Triển khai Giao diện Web3 DApp
 
-* Đồ án **HCE-ScholarProof** đã hoàn thành **100% khối lượng công việc** theo đúng kế hoạch đề ra tại bản đăng ký đề tài ban đầu.
-* Sản phẩm giải quyết trọn vẹn bài toán kinh tế học về bảo vệ tài sản vô hình (IP Assets) cho sinh viên Trường Đại học Kinh tế - Đại học Huế, sẵn sàng để Hội đồng Khoa học Khoa Hệ thống Thông tin Kinh tế đánh giá nghiệm thu.
+### 3.1. Chạy DApp trực tiếp trên GitHub Pages (Khuyến nghị cho Hội đồng)
+Người dùng và Hội đồng khoa học không cần cài đặt bất kỳ phần mềm môi trường nào:
+1. Mở trình duyệt Chrome/Brave/Edge đã cài tiện ích **MetaMask**.
+2. Truy cập cổng trực tuyến: [https://lehuy10012005-cmd.github.io/HCE-ScholarProof/](https://lehuy10012005-cmd.github.io/HCE-ScholarProof/)
+3. Hệ thống sẽ tự động kết nối và đề xuất chuyển sang mạng **Sepolia Testnet**.
+
+### 3.2. Chạy DApp cục bộ (Local Development)
+Nếu cần thử nghiệm hoặc phát triển offline:
+```powershell
+# Bước 1: Di chuyển vào thư mục dự án
+cd c:\Users\Bao\Downloads\hce-web3-starter\hce-web3-starter\HCE-ScholarProof
+
+# Bước 2: Khởi chạy HTTP Server nội bộ (bằng Node hoặc Python)
+# Lựa chọn A (dùng Python 3):
+python -m http.server 8080 --directory web
+
+# Lựa chọn B (dùng npx serve):
+npx serve web -p 8080
+
+# Bước 3: Mở trình duyệt tại http://localhost:8080
+```
 
 ---
-*Hồ sơ nghiệm thu được hoàn thiện bởi Lê Văn Quang Huy & Lại Vương Gia Bảo — K57 Kinh Tế Số HCE.*
+
+## 4. Kịch bản Vận hành & Nghi thức Thử nghiệm Nghiệm thu (Testing Runbook)
+
+| Bước | Hành động của Người thẩm định | Phản hồi của Hệ thống | Tiêu chí nghiệm thu ĐẠT |
+| :---: | :--- | :--- | :---: |
+| **1** | Bấm nút **"Kết nối ví"** góc phải Header | Popup MetaMask yêu cầu quyền kết nối với địa chỉ ví | Hiển thị địa chỉ rút gọn `0x...` màu xanh lá |
+| **2** | Kéo thả tệp đề cương PDF vào ô Đăng ký | Trình duyệt tính mã băm Keccak-256 ngay trong RAM | Xuất hiện chuỗi `0x...` 64 ký tự hex; tệp không bị tải lên máy chủ |
+| **3** | Nhập Tiêu đề, Chuyên ngành và bấm **"Đăng ký On-Chain"** | MetaMask bật popup xác nhận ký giao dịch lên Sepolia | Nhận thông báo Toast xanh "Đăng ký thành công", tự động chuyển sang Chứng thư |
+| **4** | Tải lại tệp PDF vừa đăng ký vào tab **"Thẩm định Đạo văn"** | DApp quét đối soát mã băm với sổ cái | Báo động đỏ: **CẢNH BÁO TRÙNG LẶP (Nguy cơ Đạo văn)**, hiển thị đúng ví tác giả gốc |
+| **5** | Chuyển sang tab **"Chứng thư Số A4"** và bấm In | Trình duyệt mở hộp thoại Print chuẩn A4 | Chứng thư đầy đủ Quốc hiệu, Tiêu ngữ, Mã QR tra cứu Etherscan, Dấu thời gian khối |
+
+---
+
+## 5. Quy trình Ứng phó Sự cố & Chế độ Dự phòng (Disaster Recovery)
+
+1. **Khi mạng Sepolia bị nghẽn hoặc người dùng không có Sepolia ETH:**
+   - DApp cung cấp nút **"Dùng Ví Thử Nghiệm HCE"** (Local Simulator Mode).
+   - Hệ thống chuyển sang cơ chế lưu trữ bộ nhớ đệm (In-memory Mock EVM), bảo đảm buổi thuyết trình và demo trước Hội đồng diễn ra trơn tru 100% mà không bị gián đoạn do yếu tố khách quan từ mạng thử nghiệm.
+2. **Khi MetaMask bị từ chối cấp quyền:**
+   - Hệ thống hiển thị hướng dẫn chi tiết và chuyển đổi tài khoản theo ngữ cảnh Just-in-Time mà không làm mất dữ liệu biểu mẫu đã nhập.

@@ -38,8 +38,8 @@
 | **Lab 11** | [`web/index.html`](./web/index.html)<br>[`lab11.md`](./lab11.md) | Xây dựng giao diện Web3 DApp: Băm file client-side (Keccak-256), kết nối MetaMask Ethers.js v6, tra cứu và xuất chứng thư số | ✅ **Hoàn thành** |
 | **Lab 12** | [`test/ScholarProof.test.js`](./test/ScholarProof.test.js)<br>[`contracts/test/ScholarProof_test.sol`](./contracts/test/ScholarProof_test.sol)<br>[`lab12.md`](./lab12.md) | Bộ kịch bản kiểm thử tự động toàn diện: Luồng chuẩn, chống gian lận nộp đè mã băm, xử lý ngoại lệ biên | ✅ **Hoàn thành** |
 | **Lab 13** | [`web/index.html`](./web/index.html) (Tích hợp Sepolia Testnet)<br>[`lab13.md`](./lab13.md)<br>[`AI_JOURNAL.md`](./AI_JOURNAL.md) | Tích hợp địa chỉ hợp đồng deploy Sepolia, xác thực mã nguồn Etherscan, kiểm thử luồng ký ví và đối soát sự kiện on-chain | ✅ **Hoàn thành** |
-| **Lab 14** | `audit_report.md` | Kiểm toán an toàn hợp đồng, đo lường chi phí Gas thực nghiệm trên Layer 2 Base/Arbitrum vs Sepolia Testnet | 🔄 *Sắp triển khai* |
-| **Lab 15** | `DEPLOYMENT.md` & Slide nghiệm thu | Triển khai hợp đồng lên Sepolia Testnet, xác thực mã nguồn trên Etherscan, nghiệm thu sản phẩm trước hội đồng | 🔄 *Sắp triển khai* |
+| **Lab 14** | [`audit_report.md`](./audit_report.md)<br>[`lab14.md`](./lab14.md)<br>[`scripts/gas_benchmark.py`](./scripts/gas_benchmark.py) | Kiểm toán an toàn hợp đồng, đo lường chi phí Gas thực nghiệm trên Layer 2 Base/Arbitrum vs Sepolia Testnet | ✅ **Hoàn thành** |
+| **Lab 15** | [`DEPLOYMENT.md`](./DEPLOYMENT.md)<br>[`SLIDES.md`](./SLIDES.md)<br>[`lab15.md`](./lab15.md) | Tài liệu hướng dẫn vận hành hệ thống, slide thuyết trình nghiệm thu trước hội đồng, bảo vệ thành công đồ án | ✅ **Hoàn thành (Đồ án 100%)** |
 
 ---
 

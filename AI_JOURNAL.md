@@ -277,3 +277,40 @@ Nếu chỉ mô tả chung chung "viết tool phân tích ví", AI thường b�
 2. **Lỗi 2 (Bỏ sót kiểm tra chain ID trước khi gửi giao dịch):** AI ban đầu không đề cập đến việc kiểm tra mạng trước khi gọi `registerIdea`. Sinh viên chấn chỉnh: Nếu người dùng quên chuyển sang Sepolia và đang ở Ethereum Mainnet, họ sẽ gửi giao dịch tốn hàng chục USD phí gas vào một hợp đồng không tồn tại. Giao diện DApp chuẩn mực Web3 bắt buộc phải kiểm tra `network.chainId === 11155111` (Sepolia) và cảnh báo người dùng chuyển mạng trước khi cho phép gửi giao dịch.
 
 **Ai phát hiện:** Sinh viên phát hiện cả hai lỗi và yêu cầu AI giải thích sâu về sự khác biệt giữa Keccak-256 và SHA-256 trong hệ sinh thái Ethereum.
+
+## Lần 14 (Lab 14: Kiểm toán An toàn & Đo lường Chi phí Gas Thực nghiệm Layer 2 vs Sepolia)
+
+**Prompt:**
+> "Bạn là chuyên gia kiểm toán bảo mật Web3 và kỹ sư hạ tầng Layer 2. Hãy đánh giá an toàn của ScholarProof.sol v2 theo chuẩn SWC/OWASP, so sánh chi phí gas thực nghiệm khi chạy trên Ethereum L1 so với các giải pháp Optimistic Rollup (Base, Arbitrum One) sau nâng cấp EIP-4844, và phân tích bài toán kinh tế khi áp dụng tại trường đại học."
+
+**AI trả về:**
+- Báo cáo kiểm toán 10 hạng mục theo danh mục SWC.
+- Công thức tính phí gas trên Layer 2 chỉ lấy `GasUsed * L2_GasPrice`.
+- Đề xuất loại bỏ giới hạn độ dài `MAX_TITLE_LENGTH` trên Layer 2 với lập luận rằng "Phí gas trên L2 rẻ gấp hàng trăm lần nên không cần bận tâm về Storage Bloat nữa".
+- Bảng so sánh chi phí đăng ký đề tài.
+
+**Đánh giá:** Dùng được khung báo cáo kiểm toán, nhưng tính toán kinh tế Layer 2 và quan điểm bảo mật có 2 sai sót nghiêm trọng.
+
+**Chỗ sai & Phản biện sắc bén của sinh viên:**
+1. **Lỗi 1 (Bỏ quên L1 Data Availability Fee trong cấu trúc phí Rollup):** AI chỉ nhân đơn thuần `GasUsed * L2_GasPrice` và tuyên bố phí trên L2 là "siêu rẻ chỉ 0.000001 USD". Sinh viên phản biện sắc bén: Trong kiến trúc Optimistic Rollup (cả Arbitrum Nitro lẫn OP Stack của Base), một giao dịch luôn có 2 cấu phần chi phí: **L2 Execution Fee** và **L1 Data Availability (DA) Fee** (chi phí nén calldata và xuất bản blob xuống Ethereum L1). Dù EIP-4844 đã giảm mạnh phí blob, nhưng nếu bỏ qua phí L1 DA thì mô hình dự toán chi phí sẽ bị sai lệch nghiêm trọng khi mạng Ethereum L1 bị nghẽn. Sinh viên yêu cầu đưa công thức chuẩn hóa gồm cả `L1_Data_Scalar` vào kịch bản đo lường `scripts/gas_benchmark.py`.
+2. **Lỗi 2 (Tư duy buông lỏng bảo mật vì lý do "L2 phí rẻ"):** AI gợi ý bỏ kiểm tra giới hạn độ dài chuỗi ký tự tiêu đề và chuyên ngành khi chuyển sang L2. Sinh viên chấn chỉnh gay gắt: Khái niệm "phí rẻ" không bao giờ là cái cớ để hủy hoại nguyên tắc bất biến của lập trình an toàn. Trạng thái của Rollup vẫn phải được lưu trữ trong State Trie của các nút mạng Sequencer và Full Nodes. Nếu không có chặn trên (`MAX_TITLE_LENGTH = 200`), kẻ xấu có thể spam các xâu dữ liệu khổng lồ nhằm làm phình dữ liệu lưu trữ (State Bloat Attack) và làm suy giảm hiệu năng xác thực của mạng lưới. Giới hạn phòng vệ này phải được duy trì vĩnh viễn trên bất kỳ chuỗi EVM nào theo đúng tôn chỉ của `AGENTS.md`.
+
+**Ai phát hiện:** Sinh viên phát hiện cả 2 lỗ hổng tư duy của AI và trực tiếp thiết lập công thức tính toán L1 DA Fee chuẩn xác trong chương trình đo lường.
+
+## Lần 15 (Lab 15: Nghiệm thu Đồ án Capstone & Bảo vệ Sản phẩm Trước Hội đồng)
+
+**Prompt:**
+> "Bạn là chuyên gia tư vấn pháp lý Web3 và kỹ sư giải pháp blockchain. Hãy chuẩn bị kịch bản nghiệm thu đồ án HCE-ScholarProof trước Hội đồng khoa học của TS. Hà Ngọc Long. Phân tích giá trị chứng cứ của Proof of Existence theo Luật Sở hữu Trí tuệ Việt Nam 2022 và hướng dẫn cách trả lời các câu hỏi phản biện khó của Hội đồng."
+
+**AI trả về:**
+- Kịch bản bảo vệ 12 slide tóm tắt toàn bộ 8 lab.
+- Nhận định pháp lý: AI cho rằng "Chứng thư blockchain thay thế hoàn toàn Giấy chứng nhận đăng ký quyền tác giả của Cục Bản quyền tác giả Bộ VHTTDL và có giá trị pháp lý tuyệt đối trước tòa án Việt Nam".
+- Đề xuất câu trả lời cho câu hỏi phản biện về việc nếu hai người cùng nộp một tệp nhưng một người nộp trước trên blockchain thì người đó nghiễm nhiên là tác giả thực sự.
+
+**Đánh giá:** Khung thuyết trình tốt, nhưng luận điểm pháp lý và triết lý công nghệ có 2 sai lầm nghiêm trọng về mặt bản chất khoa học.
+
+**Chỗ sai & Phản biện sắc bén của sinh viên:**
+1. **Lỗi 1 (Hiểu sai bản chất pháp lý của Blockchain so với Luật Quốc gia):** AI khẳng định một cách ngây thơ rằng chứng thư số blockchain "thay thế hoàn toàn Cục Bản quyền tác giả". Sinh viên chấn chỉnh kiến thức pháp lý: Theo Luật Sở hữu trí tuệ Việt Nam (sửa đổi 2022), quyền tác giả phát sinh **ngay khi tác phẩm được sáng tạo và thể hiện dưới một hình thức vật chất nhất định**, không bắt buộc phải đăng ký. Blockchain không phải là cơ quan nhà nước cấp quyền, mà đóng vai trò là **Nguồn chứng cứ kỹ thuật số độc lập, bất biến (Digital Evidentiary Source)** chứng minh tác phẩm đã tồn tại tại thời điểm $T_0$ với tác giả gắn liền với chữ ký số của ví đó (Proof of Existence). Trong tố tụng, đây là bằng chứng phản bác đanh thép đối với hành vi ăn cắp ý tưởng (Prior-art Defense), chứ không phải là văn bản hành chính thay thế cơ quan nhà nước.
+2. **Lỗi 2 (Nhầm lẫn giữa Bằng chứng ưu tiên và Thẩm định nội dung gốc):** AI cho rằng ai băm file lên trước thì người đó đương nhiên là chủ sở hữu trí tuệ duy nhất. Sinh viên phản biện: Hợp đồng chỉ chứng minh được tính ưu tiên thời gian (Timestamping) và tính toàn vẹn (Integrity). Nếu kẻ gian đánh cắp bản thảo của người khác rồi băm lên trước, blockchain chỉ ghi nhận kẻ gian nộp trước tại thời điểm đó, nhưng nếu tác giả thực sự đưa ra các bằng chứng lịch sử commit git, email trao đổi với giảng viên hướng dẫn có mốc thời gian sớm hơn thì quyền tác giả vẫn thuộc về người sáng tạo ban đầu. Tính năng của HCE-ScholarProof là công cụ hỗ trợ phòng chống tranh chấp và thẩm định đạo văn sơ bộ, không phải thẩm phán tự động.
+
+**Ai phát hiện:** Sinh viên phát hiện cả 2 lỗ hổng nhận thức pháp lý của AI và trực tiếp hoàn thiện phần cơ sở lý luận trong slide bảo vệ đồ án `SLIDES.md`.
