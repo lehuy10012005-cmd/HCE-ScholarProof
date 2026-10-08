@@ -3423,13 +3423,20 @@
       <!-- Mã OTP ẩn hỗ trợ kỹ thuật -->
       <span id="lblSimulatedOtpCode" style="display: none;"></span>
 
-      <div class="otp-inputs-wrapper">
-        <input type="text" maxlength="1" class="otp-input-field" id="otpDigit1" oninput="handleOtpInput(this, 'otpDigit2')" autofocus>
-        <input type="text" maxlength="1" class="otp-input-field" id="otpDigit2" oninput="handleOtpInput(this, 'otpDigit3')">
-        <input type="text" maxlength="1" class="otp-input-field" id="otpDigit3" oninput="handleOtpInput(this, 'otpDigit4')">
-        <input type="text" maxlength="1" class="otp-input-field" id="otpDigit4" oninput="handleOtpInput(this, 'otpDigit5')">
-        <input type="text" maxlength="1" class="otp-input-field" id="otpDigit5" oninput="handleOtpInput(this, 'otpDigit6')">
-        <input type="text" maxlength="1" class="otp-input-field" id="otpDigit6" oninput="handleOtpInput(this, null)">
+      <div class="otp-inputs-wrapper" id="otpInputsContainer">
+        <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="otp-input-field" id="otpDigit1" autofocus autocomplete="one-time-code">
+        <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="otp-input-field" id="otpDigit2" autocomplete="one-time-code">
+        <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="otp-input-field" id="otpDigit3" autocomplete="one-time-code">
+        <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="otp-input-field" id="otpDigit4" autocomplete="one-time-code">
+        <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="otp-input-field" id="otpDigit5" autocomplete="one-time-code">
+        <input type="text" inputmode="numeric" pattern="[0-9]*" maxlength="1" class="otp-input-field" id="otpDigit6" autocomplete="one-time-code">
+      </div>
+
+      <!-- Nút tiện ích Dán mã OTP nhanh -->
+      <div style="margin: -8px 0 16px; text-align: center;">
+        <button type="button" onclick="pasteOtpFromClipboard()" style="background: rgba(37,99,235,0.08); border: 1px dashed #3b82f6; color: var(--primary); padding: 5px 14px; font-size: 12px; font-weight: 700; border-radius: 6px; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: all 0.2s;">
+          <span>📋</span> <span>Dán mã OTP (Paste)</span>
+        </button>
       </div>
 
       <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 20px;">
@@ -3844,6 +3851,7 @@
       // Chuyển sang màn hình OTP
       document.getElementById("regStep1Form").style.display = "none";
       document.getElementById("regStep2Otp").style.display = "block";
+      setupOtpInputListeners();
 
       // Reset các ô OTP
       for (let i = 1; i <= 6; i++) {
@@ -3851,7 +3859,10 @@
         if (inp) inp.value = "";
       }
       const firstInp = document.getElementById("otpDigit1");
-      if (firstInp) firstInp.focus();
+      if (firstInp) {
+        firstInp.focus();
+        firstInp.select();
+      }
 
       startOtpCountdown();
 
@@ -3877,20 +3888,102 @@
       }
     }
 
-    function handleOtpInput(currInp, nextId) {
-      if (currInp.value && nextId) {
-        const nextInp = document.getElementById(nextId);
-        if (nextInp) nextInp.focus();
-      }
+    // Cài đặt bộ lắng nghe sự kiện cho 6 ô OTP: Chống trùng lặp Unikey & Hỗ trợ Paste
+    let otpListenersInitialized = false;
+    function setupOtpInputListeners() {
+      const container = document.getElementById("otpInputsContainer");
+      if (!container) return;
+      const inputs = container.querySelectorAll(".otp-input-field");
+
+      inputs.forEach((input, index) => {
+        // Tránh gắn trùng lặp sự kiện
+        input.oninput = null;
+        input.onkeydown = null;
+        input.onpaste = null;
+
+        // 1. Xử lý gõ phím: Chỉ lấy duy nhất 1 số cuối cùng, giải quyết triệt để lỗi Unikey lặp số
+        input.addEventListener("input", function(e) {
+          let val = this.value.replace(/\D/g, "");
+          if (val.length > 1) {
+            val = val.slice(-1); // Lấy duy nhất số vừa gõ cuối cùng
+          }
+          this.value = val;
+
+          // Nếu có số hợp lệ, chuyển focus mượt mà sang ô kế tiếp
+          if (val && index < inputs.length - 1) {
+            setTimeout(() => {
+              inputs[index + 1].focus();
+              inputs[index + 1].select();
+            }, 15);
+          }
+        });
+
+        // 2. Xử lý Backspace & Mũi tên điều hướng
+        input.addEventListener("keydown", function(e) {
+          if (e.key === "Backspace") {
+            if (!this.value && index > 0) {
+              inputs[index - 1].focus();
+              inputs[index - 1].value = "";
+              e.preventDefault();
+            }
+          } else if (e.key === "ArrowLeft" && index > 0) {
+            inputs[index - 1].focus();
+          } else if (e.key === "ArrowRight" && index < inputs.length - 1) {
+            inputs[index + 1].focus();
+          }
+        });
+
+        // 3. Xử lý Paste (Dán mã 6 số từ bất kỳ ô nào bằng Ctrl + V)
+        input.addEventListener("paste", function(e) {
+          e.preventDefault();
+          const pasteText = (e.clipboardData || window.clipboardData).getData("text") || "";
+          fillOtpBoxes(pasteText);
+        });
+
+        // Tự động bôi đen khi click để gõ đè không bị cộng dồn số
+        input.addEventListener("focus", function() {
+          this.select();
+        });
+      });
     }
 
-    function autofillSimulatedOtp() {
-      if (!simulatedOtpCode) return;
+    // Hàm điền mã vào 6 ô OTP
+    function fillOtpBoxes(rawText) {
+      if (!rawText) return;
+      const digits = rawText.replace(/\D/g, "").slice(0, 6);
+      if (!digits) return;
+
       for (let i = 1; i <= 6; i++) {
         const inp = document.getElementById("otpDigit" + i);
-        if (inp) inp.value = simulatedOtpCode[i - 1] || "";
+        if (inp) {
+          inp.value = digits[i - 1] || "";
+        }
       }
-      toast("Đã nạp mã OTP mẫu: " + simulatedOtpCode, "success");
+
+      const lastFilledIndex = Math.min(digits.length, 6);
+      const targetInp = document.getElementById("otpDigit" + lastFilledIndex);
+      if (targetInp) targetInp.focus();
+
+      toast("✓ Đã dán mã OTP: " + digits, "info");
+    }
+
+    // Hàm đọc bộ nhớ tạm từ nút bấm
+    async function pasteOtpFromClipboard() {
+      try {
+        if (navigator.clipboard && navigator.clipboard.readText) {
+          const text = await navigator.clipboard.readText();
+          if (text) {
+            fillOtpBoxes(text);
+            return;
+          }
+        }
+      } catch (err) {
+        console.warn("Clipboard access denied or unsupported:", err);
+      }
+      const code = prompt("Dán (Ctrl + V) mã OTP 6 số từ email của bạn vào đây:");
+      if (code) {
+        fillOtpBoxes(code);
+      }
     }
 
     function startOtpCountdown() {
