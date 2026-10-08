@@ -2241,34 +2241,7 @@
             Xác lập Bằng chứng Tồn tại (Proof of Existence) bất biến cho đề cương NCKH & Khóa luận tốt nghiệp của sinh viên Trường ĐH Kinh tế - ĐH Huế.
           </p>
 
-          <!-- Thống kê nhanh theo 5 Khoa chuyên môn -->
-          <div class="faculty-stats-section">
-            <div class="stats-label-row">
-              <span class="stats-headline">Đề cương đã xác lập On-Chain theo Khoa:</span>
-              <span class="stats-sync-badge">⚡ Sepolia Synced</span>
-            </div>
-            <div class="faculty-stats-grid">
-              <div class="faculty-card">
-                <div class="fac-name">HTTT Kinh tế</div>
-                <div class="fac-num">42 <span>đề tài</span></div>
-              </div>
-              <div class="faculty-card">
-                <div class="fac-name">Tài chính - NH</div>
-                <div class="fac-num">56 <span>đề tài</span></div>
-              </div>
-              <div class="faculty-card">
-                <div class="fac-name">Quản trị KD</div>
-                <div class="fac-num">61 <span>đề tài</span></div>
-              </div>
-              <div class="faculty-card">
-                <div class="fac-name">Kế toán - KT</div>
-                <div class="fac-num">34 <span>đề tài</span></div>
-              </div>
-              <div class="faculty-card">
-                <div class="fac-name">Kinh tế & PT</div>
-                <div class="fac-num">28 <span>đề tài</span></div>
-              </div>
-            </div>
+          
           </div>
 
           <div class="hero-cta-group">
@@ -3202,16 +3175,10 @@
             </div>
           </div>
 
-          <h3 id="passAuthorName" style="font-size: 18px; font-weight: 800; color: #ffffff; margin-bottom: 2px;">Lê Văn Quang Huy</h3>
-          <p id="passAuthorFaculty" style="font-size: 12px; color: #cbd5e1; margin-bottom: 14px;">Khoa Hệ thống Thông tin Kinh tế &bull; ĐH Kinh tế Huế</p>
+          <h3 id="passAuthorName" style="font-size: 18px; font-weight: 800; color: #ffffff; margin-bottom: 2px;">--</h3>
+          <p id="passAuthorFaculty" style="font-size: 12px; color: #cbd5e1; margin-bottom: 14px;">Trường ĐH Kinh tế &bull; ĐH Huế</p>
 
-          <!-- Bộ chọn chuyển đổi tài khoản -->
-          <div style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.18); border-radius: 8px; padding: 10px 12px; margin-bottom: 16px;">
-            <label style="font-size: 11px; color: #94a3b8; display: block; margin-bottom: 4px; font-weight: 600;">🔄 Chuyển sang tài khoản khác:</label>
-            <select id="selPassportStudentPicker" onchange="onSelectPassportStudentPicker()" style="width: 100%; background: rgba(15, 23, 42, 0.6); color: #ffffff; border: 1px solid rgba(255,255,255,0.25); border-radius: 6px; padding: 6px 8px; font-size: 12px; outline: none; cursor: pointer;">
-              <!-- Nạp động -->
-            </select>
-          </div>
+          
 
           <!-- Địa chỉ ví On-Chain -->
           <div style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 8px; padding: 10px 12px; margin-bottom: 16px;">
@@ -3240,7 +3207,7 @@
         </div>
 
         <!-- Nút Đăng xuất & Đồng bộ ở chân cột trái -->
-        <div style="display: flex; flex-direction: column; gap: 8px; margin-top: 10px;">
+        <div id="passAuthOwnerActions" style="display: none; flex-direction: column; gap: 8px; margin-top: 10px;">
           <button type="button" onclick="autofillCurrentStudentInfo()" class="btn-profile-act primary" style="width: 100%; padding: 9px; font-size: 12px; background: #2563eb;">
             <span>⚡</span> <span>Đồng Bộ Vào Form Đăng Ký</span>
           </button>
@@ -3264,30 +3231,30 @@
         <div class="author-info-horizontal-list">
           <div class="info-strip-row">
             <div class="strip-label"><span class="strip-icon">👤</span><span>Họ và tên tác giả:</span></div>
-            <div class="strip-value" id="passAuthorFullName">Lê Văn Quang Huy</div>
+            <div class="strip-value" id="passAuthorFullName">--</div>
           </div>
           <div class="info-strip-row">
             <div class="strip-label"><span class="strip-icon">🆔</span><span>Số CCCD / CMND:</span></div>
-            <div class="strip-value mono" id="passAuthorIdCard">046205001234</div>
+            <div class="strip-value mono" id="passAuthorIdCard">--</div>
           </div>
           <div class="info-strip-row">
             <div class="strip-label"><span class="strip-icon">📧</span><span>Email liên hệ:</span></div>
             <div class="strip-value" style="display: flex; align-items: center; justify-content: flex-end;">
-              <span class="mono" id="passAuthorEmail">23k4300010@hce.edu.vn</span>
+              <span class="mono" id="passAuthorEmail">--</span>
               <span class="badge-verified-pill">✓ Verified</span>
             </div>
           </div>
           <div class="info-strip-row">
             <div class="strip-label"><span class="strip-icon">📱</span><span>Số điện thoại:</span></div>
-            <div class="strip-value" id="passAuthorPhone">0912 345 678</div>
+            <div class="strip-value" id="passAuthorPhone">--</div>
           </div>
           <div class="info-strip-row">
             <div class="strip-label"><span class="strip-icon">📍</span><span>Địa chỉ liên lạc:</span></div>
-            <div class="strip-value" id="passAuthorAddress">TP. Huế, Thừa Thiên Huế</div>
+            <div class="strip-value" id="passAuthorAddress">--</div>
           </div>
           <div class="info-strip-row">
             <div class="strip-label"><span class="strip-icon">🎓</span><span>Mã định danh / Đơn vị:</span></div>
-            <div class="strip-value" id="passAuthorAcademicInfo"><span id="passAuthorMssv" class="mono">23K4300010</span> &bull; <span id="passAuthorClass">K57 Kinh Tế Số</span></div>
+            <div class="strip-value" id="passAuthorAcademicInfo"><span id="passAuthorMssv" class="mono">--</span> &bull; <span id="passAuthorClass">--</span></div>
           </div>
         </div>
 
@@ -3574,16 +3541,19 @@
     let ALL_USERS = getStoredUsers();
     let currentWalletAddress = null;
     let currentActiveStudent = null; // Mặc định chế độ Khách vãng lai
-    let currentAuthUser = currentActiveStudent;
-    let currentPassportStudent = currentActiveStudent; // Mặc định tác giả
+    let currentAuthUser = null;
+    let currentPassportStudent = null;
     try {
       const storedActiveUser = localStorage.getItem("COPYCHAIN_CURRENT_USER");
       if (storedActiveUser) {
         const u = JSON.parse(storedActiveUser);
-        if (u && u.id) {
+        // Chỉ khôi phục phiên nếu là tài khoản thật người dùng đã đăng ký (không tự động gán tài khoản mẫu)
+        if (u && u.id && u.id !== "23K4300010" && u.id !== "23K4300024" && u.id !== "22K4100055" && !u.id.startsWith("USR-ADMIN")) {
           currentActiveStudent = u;
           currentAuthUser = u;
           currentPassportStudent = u;
+        } else {
+          localStorage.removeItem("COPYCHAIN_CURRENT_USER");
         }
       }
     } catch (e) {}
@@ -6052,33 +6022,25 @@
     // ========================================================================
     // TÍNH NĂNG 4: HỒ SƠ TÁC GIẢ & QUẢN LÝ TÀI KHOẢN (THEO CÁC Ô NGANG)
     // ========================================================================
-    function populatePassportStudentPicker() {
-      const picker = document.getElementById("selPassportStudentPicker");
-      if (!picker) return;
-      picker.innerHTML = ALL_USERS.map(u => {
-        const isSelected = (currentPassportStudent && currentPassportStudent.id === u.id) ? "selected" : "";
-        return `<option value="${u.id}" ${isSelected}>${u.fullName || u.name} (${u.idCard || u.mssv || u.email})</option>`;
-      }).join("");
-    }
-
-    function onSelectPassportStudentPicker() {
-      const picker = document.getElementById("selPassportStudentPicker");
-      if (!picker) return;
-      const selectedId = picker.value;
-      const found = ALL_USERS.find(u => u.id === selectedId);
-      if (found) {
-        currentActiveStudent = found;
-        currentAuthUser = found;
-        currentPassportStudent = found;
-        displayStudentPassport(found);
-        updateAuthUI();
-        toast("Đã chuyển sang tài khoản: " + (found.fullName || found.name), "info");
-      }
-    }
-
     function displayStudentPassport(student) {
-      if (!student) student = ALL_USERS[0];
+      if (!student) {
+        student = currentAuthUser || {
+          name: "Chưa xác thực",
+          fullName: "Chưa xác thực",
+          faculty: "ĐH Kinh tế Huế",
+          badge: "TÁC GIẢ TỰ DO",
+          avatar: "TG",
+          email: "chua-cap-nhat@hce.edu.vn",
+          wallet: ""
+        };
+      }
       currentPassportStudent = student;
+
+      // Kiểm tra xem người đang xem có phải là CHÍNH CHỦ tài khoản này không
+      const isOwner = currentAuthUser && (
+        (currentAuthUser.id && currentAuthUser.id === student.id) ||
+        (currentAuthUser.email && currentAuthUser.email.toLowerCase() === (student.email || "").toLowerCase())
+      );
 
       // Banner trên cùng
       const avatarLetters = student.avatar || (student.name ? student.name.split(" ").slice(-1)[0].substring(0, 2).toUpperCase() : "TG");
@@ -6094,21 +6056,12 @@
       const badgeEl = document.getElementById("passBadgeTag");
       if (badgeEl) badgeEl.textContent = student.badge || "✓ COPYCHAIN VERIFIED AUTHOR";
 
-      // CÁC Ô NGANG (HORIZONTAL DATA STRIPS)
+      // CÁC Ô NGANG
       const fnEl = document.getElementById("passAuthorFullName");
       if (fnEl) fnEl.textContent = student.fullName || student.name;
 
-      const idEl = document.getElementById("passAuthorIdCard");
-      if (idEl) idEl.textContent = student.idCard || "046205001234";
-
       const emEl = document.getElementById("passAuthorEmail");
-      if (emEl) emEl.textContent = student.email || "tacgia@hce.edu.vn";
-
-      const phEl = document.getElementById("passAuthorPhone");
-      if (phEl) phEl.textContent = student.phone || "0912 345 678";
-
-      const addrEl = document.getElementById("passAuthorAddress");
-      if (addrEl) addrEl.textContent = student.address || "TP. Huế, Thừa Thiên Huế";
+      if (emEl) emEl.textContent = student.email || "--";
 
       const acadEl = document.getElementById("passAuthorAcademicInfo");
       if (acadEl) {
@@ -6118,7 +6071,29 @@
       }
 
       const walletEl = document.getElementById("passAuthorWallet");
-      if (walletEl) walletEl.textContent = student.wallet || (currentWallet || "Chưa kết nối ví");
+      if (walletEl) walletEl.textContent = student.wallet || "Chưa kết nối ví";
+
+      // Các trường thông tin nhạy cảm (CCCD, SĐT, Địa chỉ): Nếu là chính chủ thì hiện thật, nếu là tra cứu công khai thì ẩn để bảo vệ quyền riêng tư
+      const idEl = document.getElementById("passAuthorIdCard");
+      if (idEl) {
+        idEl.textContent = isOwner ? (student.idCard || "--") : "•••••••••••• (Bảo mật)";
+      }
+
+      const phEl = document.getElementById("passAuthorPhone");
+      if (phEl) {
+        phEl.textContent = isOwner ? (student.phone || "--") : "••••••• (Bảo mật)";
+      }
+
+      const addrEl = document.getElementById("passAuthorAddress");
+      if (addrEl) {
+        addrEl.textContent = isOwner ? (student.address || "--") : "Bảo mật thông tin cá nhân";
+      }
+
+      // Các nút hành động chính chủ (Đồng bộ, Đăng xuất): Chỉ hiện khi là chính chủ
+      const ownerActions = document.getElementById("passAuthOwnerActions");
+      if (ownerActions) {
+        ownerActions.style.display = isOwner ? "flex" : "none";
+      }
 
       // Chỉ số On-chain
       const myWorks = COPYCHAIN_WORKS.filter(w => 
@@ -6131,9 +6106,6 @@
 
       // Render danh sách công trình của tác giả trong modal
       renderAuthorWorksInModal(student, myWorks);
-
-      // Cập nhật bộ chọn chuyển tài khoản
-      populatePassportStudentPicker();
     }
 
     function renderAuthorWorksInModal(student, works) {
