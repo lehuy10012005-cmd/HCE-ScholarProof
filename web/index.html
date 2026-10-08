@@ -3564,9 +3564,21 @@
     }
 
     let ALL_USERS = getStoredUsers();
+    let currentWalletAddress = null;
     let currentActiveStudent = null; // Mặc định chế độ Khách vãng lai
     let currentAuthUser = currentActiveStudent;
-    let currentPassportStudent = currentActiveStudent; // Mặc định tác giả Lê Văn Quang Huy
+    let currentPassportStudent = currentActiveStudent; // Mặc định tác giả
+    try {
+      const storedActiveUser = localStorage.getItem("COPYCHAIN_CURRENT_USER");
+      if (storedActiveUser) {
+        const u = JSON.parse(storedActiveUser);
+        if (u && u.id) {
+          currentActiveStudent = u;
+          currentAuthUser = u;
+          currentPassportStudent = u;
+        }
+      }
+    } catch (e) {}
 
     // Danh sách Tác phẩm Toàn hệ thống COPYCHAIN
     let COPYCHAIN_WORKS = [
@@ -3698,87 +3710,101 @@
       const userVal = document.getElementById("loginUsername") ? document.getElementById("loginUsername").value.trim() : "";
       const passVal = document.getElementById("loginPassword") ? document.getElementById("loginPassword").value.trim() : "";
 
-      const found = COPYCHAIN_AUTH_USERS.find(u => u.email.toLowerCase() === userVal.toLowerCase() || u.idCard === userVal || u.phone === userVal);
+      if (!userVal) {
+        toast("Vui lòng nhập Email, CCCD hoặc Số điện thoại!", "warning");
+        return;
+      }
+
+      const found = ALL_USERS.find(u => 
+        (u.email && u.email.toLowerCase() === userVal.toLowerCase()) || 
+        (u.idCard && u.idCard === userVal) || 
+        (u.phone && u.phone === userVal) ||
+        (u.mssv && u.mssv.toLowerCase() === userVal.toLowerCase()) ||
+        (u.id && u.id.toLowerCase() === userVal.toLowerCase())
+      );
+
       if (found) {
-        if (found.password === passVal || passVal === "123456" || passVal === "123") {
+        if (found.password === passVal || passVal === "123456" || passVal === "123" || !found.password) {
           currentAuthUser = found;
+          currentActiveStudent = found;
+          currentPassportStudent = found;
+          try {
+            localStorage.setItem("COPYCHAIN_CURRENT_USER", JSON.stringify(found));
+          } catch (e) {}
           updateAuthUI();
           closeLoginAccountModal();
-          toast("Đăng nhập thành công! Xin chào " + currentAuthUser.fullName, "success");
+          toast("Đăng nhập thành công! Xin chào tác giả " + (found.fullName || found.name), "success");
         } else {
           toast("Mật khẩu không chính xác!", "error");
         }
       } else {
-        // Tài khoản tạm thời
-        currentAuthUser = {
+        // Tài khoản vãng lai tạo nhanh
+        const tempUser = {
           id: "USR-" + Date.now().toString().slice(-4),
+          mssv: "USR-" + Date.now().toString().slice(-4),
+          name: userVal.split("@")[0] || "Tác giả mới",
           fullName: userVal.split("@")[0] || "Tác giả mới",
-          email: userVal,
+          email: userVal.includes("@") ? userVal : userVal + "@copychain.edu.vn",
           phone: "0912 000 999",
           idCard: "046205009999",
           address: "Việt Nam",
           role: "AUTHOR",
           roleName: "Tác Giả Xác Thực",
-          password: passVal,
-          wallet: "0xB07FB0761c33a01F7f7493A6a8a9667F4842Fd50"
+          badge: "✓ COPYCHAIN VERIFIED AUTHOR",
+          avatar: "TG",
+          password: passVal || "123",
+          wallet: (typeof currentWallet !== "undefined" && currentWallet) ? currentWallet : "0xB07FB0761c33a01F7f7493A6a8a9667F4842Fd50"
         };
+        ALL_USERS.unshift(tempUser);
+        saveStoredUsers(ALL_USERS);
+        currentAuthUser = tempUser;
+        currentActiveStudent = tempUser;
+        currentPassportStudent = tempUser;
+        try {
+          localStorage.setItem("COPYCHAIN_CURRENT_USER", JSON.stringify(tempUser));
+        } catch (e) {}
         updateAuthUI();
         closeLoginAccountModal();
-        toast("Đăng nhập thành công với tài khoản: " + currentAuthUser.fullName, "success");
+        toast("Đăng nhập thành công với tài khoản: " + tempUser.fullName, "success");
       }
     }
 
     function quickLoginDemoAuthor() {
-      currentAuthUser = COPYCHAIN_AUTH_USERS[0];
+      const author = ALL_USERS.find(u => u.role === "AUTHOR") || ALL_USERS[0];
+      currentAuthUser = author;
+      currentActiveStudent = author;
+      currentPassportStudent = author;
+      try {
+        localStorage.setItem("COPYCHAIN_CURRENT_USER", JSON.stringify(author));
+      } catch (e) {}
       updateAuthUI();
       closeLoginAccountModal();
-      toast("Đã đăng nhập nhanh tài khoản Tác giả mẫu: " + currentAuthUser.fullName, "success");
+      toast("Đã đăng nhập nhanh tài khoản Tác giả: " + (author.fullName || author.name), "success");
     }
 
     function quickLoginDemoAdmin() {
-      currentAuthUser = COPYCHAIN_AUTH_USERS[1];
+      const admin = ALL_USERS.find(u => u.role === "ADMIN") || ALL_USERS[ALL_USERS.length - 1];
+      currentAuthUser = admin;
+      currentActiveStudent = admin;
+      currentPassportStudent = admin;
+      try {
+        localStorage.setItem("COPYCHAIN_CURRENT_USER", JSON.stringify(admin));
+      } catch (e) {}
       updateAuthUI();
       closeLoginAccountModal();
       toast("Đã đăng nhập quyền Quản Trị Viên (Admin)!", "success");
       switchNavTab("tab-admin");
     }
 
-    function handleAccountRegister() {
-      const name = document.getElementById("regAccFullName") ? document.getElementById("regAccFullName").value.trim() : "";
-      const idCard = document.getElementById("regAccIdCard") ? document.getElementById("regAccIdCard").value.trim() : "";
-      const email = document.getElementById("regAccEmail") ? document.getElementById("regAccEmail").value.trim() : "";
-      const phone = document.getElementById("regAccPhone") ? document.getElementById("regAccPhone").value.trim() : "";
-      const pass = document.getElementById("regAccPassword") ? document.getElementById("regAccPassword").value : "";
-      const passConf = document.getElementById("regAccPasswordConfirm") ? document.getElementById("regAccPasswordConfirm").value : "";
-
-      if (pass !== passConf) {
-        toast("Mật khẩu xác nhận không khớp!", "error");
-        return;
-      }
-
-      const newUser = {
-        id: "USR-" + (COPYCHAIN_AUTH_USERS.length + 1),
-        fullName: name,
-        email: email,
-        phone: phone,
-        idCard: idCard,
-        address: document.getElementById("regAccAddress") ? document.getElementById("regAccAddress").value.trim() : "Việt Nam",
-        role: "AUTHOR",
-        roleName: "Tác Giả Xác Thực",
-        password: pass,
-        wallet: "0xB07FB0761c33a01F7f7493A6a8a9667F4842Fd50"
-      };
-
-      COPYCHAIN_AUTH_USERS.push(newUser);
-      currentAuthUser = newUser;
-      updateAuthUI();
-      closeRegisterAccountModal();
-      toast("Tạo tài khoản thành công! Xin chào tác giả " + name, "success");
-    }
-
     function handleAccountLogout() {
+      currentActiveStudent = null;
       currentAuthUser = null;
+      currentPassportStudent = null;
+      try {
+        localStorage.removeItem("COPYCHAIN_CURRENT_USER");
+      } catch (e) {}
       updateAuthUI();
+      closeAuthorPassportModal();
       toast("Đã đăng xuất tài khoản an toàn.", "info");
     }
 
@@ -4030,88 +4056,127 @@
     }
 
     function verifyOtpAndCompleteRegister() {
-      let enteredOtp = "";
-      for (let i = 1; i <= 6; i++) {
-        const inp = document.getElementById("otpDigit" + i);
-        enteredOtp += (inp ? inp.value.trim() : "");
+      try {
+        let enteredOtp = "";
+        for (let i = 1; i <= 6; i++) {
+          const inp = document.getElementById("otpDigit" + i);
+          enteredOtp += (inp ? inp.value.trim() : "");
+        }
+
+        if (enteredOtp.length < 6) {
+          toast("Vui lòng nhập đủ 6 chữ số OTP!", "warning");
+          return;
+        }
+
+        if (enteredOtp !== simulatedOtpCode) {
+          toast("Mã OTP không chính xác, vui lòng thử lại!", "error");
+          return;
+        }
+
+        // XÁC NHẬN OTP THÀNH CÔNG: LƯU TÀI KHOẢN VÀ ĐĂNG NHẬP
+        if (!pendingRegisterData) {
+          toast("Không tìm thấy dữ liệu đăng ký, vui lòng quay lại bước 1!", "warning");
+          backToRegisterStep1();
+          return;
+        }
+
+        const rawName = (pendingRegisterData.name || "Tác Giả").trim();
+        const nameParts = rawName.split(" ");
+        const avatarLetters = nameParts.length >= 2 
+          ? (nameParts[0][0] + nameParts[nameParts.length - 1][0]).toUpperCase()
+          : rawName.substring(0, 2).toUpperCase();
+
+        const newId = "USR-" + (ALL_USERS.length + 1);
+        const resolvedWallet = (typeof currentWallet !== "undefined" && currentWallet) 
+          ? currentWallet 
+          : ((typeof currentWalletAddress !== "undefined" && currentWalletAddress) 
+              ? currentWalletAddress 
+              : "0xB07FB0761c33a01F7f7493A6a8a9667F4842Fd50");
+
+        const newUser = {
+          id: newId,
+          mssv: newId,
+          name: rawName,
+          fullName: rawName,
+          idCard: pendingRegisterData.idCard || "",
+          email: pendingRegisterData.email || "",
+          phone: pendingRegisterData.phone || "",
+          dob: pendingRegisterData.dob || "2005-01-01",
+          address: pendingRegisterData.address || "Việt Nam",
+          class: "Tác Giả Đăng Ký",
+          faculty: "Khoa HTTT Kinh tế &bull; HCE",
+          wallet: resolvedWallet,
+          role: "AUTHOR",
+          roleName: "Tác Giả Xác Thực",
+          badge: "✓ COPYCHAIN VERIFIED AUTHOR",
+          avatar: avatarLetters,
+          password: pendingRegisterData.pass || "123"
+        };
+
+        ALL_USERS.unshift(newUser);
+        saveStoredUsers(ALL_USERS);
+
+        // Đăng nhập luôn vào tài khoản mới và lưu session
+        currentActiveStudent = newUser;
+        currentAuthUser = newUser;
+        currentPassportStudent = newUser;
+        try {
+          localStorage.setItem("COPYCHAIN_CURRENT_USER", JSON.stringify(newUser));
+        } catch (e) {}
+
+        updateAuthUI();
+        closeRegisterAccountModal();
+        toast("✓ Xác thực OTP thành công! Xin chào tác giả " + newUser.name, "success");
+
+        // Mở ngay khung hồ sơ ngang để người dùng thấy tài khoản
+        setTimeout(() => {
+          openAuthorPassportModal();
+        }, 400);
+      } catch (err) {
+        console.error("Lỗi khi xác thực OTP và đăng ký:", err);
+        toast("Có lỗi xảy ra: " + (err.message || err), "error");
       }
-
-      if (enteredOtp.length < 6) {
-        toast("Vui lòng nhập đủ 6 chữ số OTP!", "warning");
-        return;
-      }
-
-      if (enteredOtp !== simulatedOtpCode) {
-        toast("Mã OTP không chính xác, vui lòng thử lại!", "error");
-        return;
-      }
-
-      // XÁC NHẬN OTP THÀNH CÔNG: LƯU TÀI KHOẢN VÀ ĐĂNG NHẬP
-      if (!pendingRegisterData) return;
-
-      const nameParts = pendingRegisterData.name.trim().split(" ");
-      const avatarLetters = nameParts.length >= 2 
-        ? (nameParts[0][0] + nameParts[nameParts.length - 1][0]).toUpperCase()
-        : pendingRegisterData.name.substring(0, 2).toUpperCase();
-
-      const newId = "USR-" + (ALL_USERS.length + 1);
-      const newUser = {
-        id: newId,
-        mssv: newId,
-        name: pendingRegisterData.name,
-        fullName: pendingRegisterData.name,
-        idCard: pendingRegisterData.idCard,
-        email: pendingRegisterData.email,
-        phone: pendingRegisterData.phone,
-        dob: pendingRegisterData.dob,
-        address: pendingRegisterData.address || "Việt Nam",
-        class: "Tác Giả Đăng Ký",
-        faculty: "Khoa HTTT Kinh tế &bull; HCE",
-        wallet: currentWalletAddress || "0xB07FB0761c33a01F7f7493A6a8a9667F4842Fd50",
-        role: "AUTHOR",
-        roleName: "Tác Giả Xác Thực",
-        badge: "✓ COPYCHAIN VERIFIED AUTHOR",
-        avatar: avatarLetters,
-        password: pendingRegisterData.pass || "123"
-      };
-
-      ALL_USERS.unshift(newUser);
-      saveStoredUsers(ALL_USERS);
-
-      // Đăng nhập luôn vào tài khoản mới
-      currentActiveStudent = newUser;
-      currentAuthUser = newUser;
-      currentPassportStudent = newUser;
-
-      updateAuthUI();
-      closeRegisterAccountModal();
-      toast("✓ Xác thực OTP thành công! Xin chào tác giả " + newUser.name, "success");
-
-      // Mở ngay khung hồ sơ ngang
-      setTimeout(() => {
-        openAuthorPassportModal();
-      }, 500);
     }
 
     function updateAuthUI() {
-      const lbl = document.getElementById("lblHeaderAuth");
-      const btn = document.getElementById("btnHeaderAuth");
+      const loggedInWrap = document.getElementById("headerAuthLoggedInWrap");
+      const loggedOutWrap = document.getElementById("headerAuthLoggedOutWrap");
+      const authorLbl = document.getElementById("lblHeaderAuthor");
+      const formActiveLbl = document.getElementById("lblFormActiveStudent");
       const dashGreeting = document.getElementById("dashUserGreetingName");
       const dashRole = document.getElementById("dashUserRoleBadge");
+      const lbl = document.getElementById("lblHeaderAuth");
+      const btn = document.getElementById("btnHeaderAuth");
 
-      if (currentAuthUser) {
-        if (lbl) lbl.textContent = currentAuthUser.fullName.split(" ").slice(-2).join(" ");
-        if (btn) btn.title = "Đang đăng nhập: " + currentAuthUser.fullName + " (" + currentAuthUser.roleName + ") - Bấm để đăng xuất";
-        if (dashGreeting) dashGreeting.textContent = currentAuthUser.fullName;
-        if (dashRole) dashRole.textContent = "✓ " + currentAuthUser.roleName;
+      const activeUser = currentAuthUser || currentActiveStudent;
+
+      if (activeUser) {
+        if (loggedInWrap) loggedInWrap.style.display = "flex";
+        if (loggedOutWrap) loggedOutWrap.style.display = "none";
+
+        const displayName = activeUser.fullName || activeUser.name || "Tác giả";
+        const displaySub = activeUser.mssv ? ` (${activeUser.mssv})` : "";
+        if (authorLbl) authorLbl.textContent = displayName;
+        if (formActiveLbl) formActiveLbl.textContent = displayName + displaySub;
+
+        if (lbl) lbl.textContent = displayName.split(" ").slice(-2).join(" ");
+        if (btn) btn.title = "Đang đăng nhập: " + displayName + " (" + (activeUser.roleName || "Tác Giả") + ") - Bấm để xem hồ sơ / đăng xuất";
+        if (dashGreeting) dashGreeting.textContent = displayName;
+        if (dashRole) dashRole.textContent = "✓ " + (activeUser.roleName || "Tác Giả Xác Thực");
       } else {
+        if (loggedInWrap) loggedInWrap.style.display = "none";
+        if (loggedOutWrap) loggedOutWrap.style.display = "flex";
+
+        if (authorLbl) authorLbl.textContent = "Khách vãng lai";
+        if (formActiveLbl) formActiveLbl.textContent = "Chưa đăng nhập";
         if (lbl) lbl.textContent = "Đăng nhập";
         if (btn) btn.title = "Đăng nhập tài khoản tác giả / người dùng";
         if (dashGreeting) dashGreeting.textContent = "Khách vãng lai";
         if (dashRole) dashRole.textContent = "Chưa xác thực";
       }
-      renderUserDashboard();
-      renderAdminDashboard();
+
+      if (typeof renderUserDashboard === "function") renderUserDashboard();
+      if (typeof renderAdminDashboard === "function") renderAdminDashboard();
     }
 
     // --- ĐIỀU HƯỚNG WIZARD 6 BƯỚC ---
@@ -4357,7 +4422,11 @@
       const mainEmail = document.getElementById("wizAuthorEmail").value.trim();
       const mainPhone = document.getElementById("wizAuthorPhone").value.trim();
       const mainShare = document.getElementById("wizAuthorShare").value || "100";
-      const signerWallet = currentWalletAddress || "0xB07FB0761c33a01F7f7493A6a8a9667F4842Fd50";
+      const signerWallet = (typeof currentWallet !== "undefined" && currentWallet) 
+        ? currentWallet 
+        : ((typeof currentWalletAddress !== "undefined" && currentWalletAddress) 
+            ? currentWalletAddress 
+            : "0xB07FB0761c33a01F7f7493A6a8a9667F4842Fd50");
 
       let authorsFormatted = mainName + " (" + mainShare + "%)";
       if (wizCoAuthors.length > 0) {
@@ -5915,6 +5984,9 @@
       currentActiveStudent = null;
       currentAuthUser = null;
       currentPassportStudent = null;
+      try {
+        localStorage.removeItem("COPYCHAIN_CURRENT_USER");
+      } catch (e) {}
       updateAuthUI();
       closeAuthorPassportModal();
       toast("Đã đăng xuất tài khoản thành công! Bạn đang ở chế độ Khách.", "info");
@@ -6229,6 +6301,7 @@
 
     // Khởi tạo mặc định ban đầu
     setAuthorType("single");
+    updateAuthUI();
     updateActiveStudentUI();
     generateNewArchiveCode(true);
     renderLiveTicker();
