@@ -179,19 +179,71 @@ class OtpRequestHandler(BaseHTTPRequestHandler):
         self.end_headers()
 
     def do_GET(self):
-        sender_email, app_password = get_gmail_credentials()
-        self.send_response(200)
-        self._send_cors_headers()
-        self.send_header("Content-Type", "application/json; charset=utf-8")
-        self.end_headers()
+        # 1. Tra cứu trạng thái API
+        if self.path == "/api/status":
+            sender_email, app_password = get_gmail_credentials()
+            self.send_response(200)
+            self._send_cors_headers()
+            self.send_header("Content-Type", "application/json; charset=utf-8")
+            self.end_headers()
+            response = {
+                "status": "online",
+                "service": "HCE Ledger Local OTP Server",
+                "sender_email": sender_email if sender_email else "CHƯA CẤU HÌNH",
+                "is_configured": bool(sender_email and app_password)
+            }
+            self.wfile.write(json.dumps(response, ensure_ascii=False).encode("utf-8"))
+            return
 
-        response = {
-            "status": "online",
-            "service": "HCE Ledger Local OTP Server",
-            "sender_email": sender_email if sender_email else "CHƯA CẤU HÌNH",
-            "is_configured": bool(sender_email and app_password)
-        }
-        self.wfile.write(json.dumps(response, ensure_ascii=False).encode("utf-8"))
+        # 2. Phục vụ giao diện Web DApp cục bộ (Same-Origin - giải quyết 100% lỗi Mixed Content HTTPS)
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+        clean_path = self.path.split("?")[0].split("#")[0]
+        
+        file_path = None
+        if clean_path in ["", "/", "/index.html"]:
+            candidates = [
+                os.path.join(base_dir, "web", "index.html"),
+                os.path.join(base_dir, "..", "web", "index.html")
+            ]
+            for c in candidates:
+                if os.path.isfile(c):
+                    file_path = c
+                    break
+        elif clean_path.startswith("/web/"):
+            rel = clean_path[5:]
+            file_path = os.path.join(base_dir, "web", rel)
+            if not os.path.isfile(file_path):
+                file_path = os.path.join(base_dir, "..", "web", rel)
+        else:
+            rel = clean_path.lstrip("/")
+            file_path = os.path.join(base_dir, "web", rel)
+            if not os.path.isfile(file_path):
+                file_path = os.path.join(base_dir, "..", "web", rel)
+
+        if file_path and os.path.isfile(file_path):
+            self.send_response(200)
+            self._send_cors_headers()
+            if file_path.endswith(".html"):
+                self.send_header("Content-Type", "text/html; charset=utf-8")
+            elif file_path.endswith(".png"):
+                self.send_header("Content-Type", "image/png")
+            elif file_path.endswith(".jpg") or file_path.endswith(".jpeg"):
+                self.send_header("Content-Type", "image/jpeg")
+            elif file_path.endswith(".css"):
+                self.send_header("Content-Type", "text/css; charset=utf-8")
+            elif file_path.endswith(".js"):
+                self.send_header("Content-Type", "application/javascript; charset=utf-8")
+            else:
+                self.send_header("Content-Type", "application/octet-stream")
+            self.end_headers()
+            with open(file_path, "rb") as fp:
+                self.wfile.write(fp.read())
+            return
+
+        self.send_response(404)
+        self._send_cors_headers()
+        self.end_headers()
+        self.wfile.write(b"404 Not Found")
 
     def do_POST(self):
         if self.path != "/send-otp":
@@ -256,7 +308,8 @@ def main():
     safe_print("=" * 68)
     safe_print("      🚀 HCE Ledger - MÁY CHỦ GỬI MÃ OTP GMAIL TRỰC TIẾP")
     safe_print("=" * 68)
-    safe_print(f" [✓] Cổng lắng nghe (Port)   : http://127.0.0.1:{port}")
+    safe_print(f" [✓] Giao diện Web DApp cục bộ: http://127.0.0.1:{port}/")
+    safe_print(f" [✓] Cổng lắng nghe API OTP : http://127.0.0.1:{port}/send-otp")
     if sender_email and app_password:
         masked_pwd = app_password[:2] + "****" + app_password[-2:] if len(app_password) >= 4 else "****"
         safe_print(f" [✓] Email người gửi         : {sender_email}")
@@ -278,6 +331,12 @@ def main():
             return
         safe_print(f" [✗] Không thể mở cổng {port}: {err}")
         return
+
+    try:
+        import webbrowser
+        webbrowser.open_new_tab(f"http://127.0.0.1:{port}/")
+    except Exception:
+        pass
 
     try:
         server.serve_forever()

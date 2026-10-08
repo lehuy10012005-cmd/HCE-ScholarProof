@@ -3880,7 +3880,7 @@
     async function requestSendOtpFromPythonBackend(targetEmail, targetName, otpCode) {
       try {
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 1500); // 1.5s timeout
+        const timeoutId = setTimeout(() => controller.abort(), 20000); // 1.5s timeout
         const res = await fetch("http://127.0.0.1:5000/send-otp", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -3942,23 +3942,38 @@
       const statusEl = document.getElementById("otpDeliveryStatus");
       const tagEl = document.getElementById("lblOtpDeliveryTag");
 
-      // Tự động điền mã OTP sau 400ms (Auto-fill mượt mà)
+      if (statusEl) {
+        statusEl.innerHTML = '<span style="color: var(--primary); font-weight: 600;">⏳ Đang kết nối máy chủ gửi mã OTP tới Gmail <strong>' + email + '</strong>...</span>';
+      }
+      if (tagEl) {
+        tagEl.textContent = "⏳ Đang gửi...";
+        tagEl.style.background = "rgba(37, 99, 235, 0.1)";
+        tagEl.style.color = "#2563eb";
+      }
+
+      // Tự động điền mã OTP sau 400ms để người dùng luôn có mã dự phòng
       setTimeout(() => {
         fillOtpBoxes(simulatedOtpCode);
-        if (statusEl) {
-          statusEl.innerHTML = '<span style="color: #16a34a; font-weight: 700;">✓ Mã OTP hợp lệ đã sẵn sàng & tự động điền. Bạn chỉ cần bấm "Xác Nhận & Đăng Ký"!</span>';
-        }
       }, 400);
 
-      // Thử kết nối máy chủ gửi Gmail nếu có (chạy ngầm, không làm phiền nếu offline)
+      // Gửi yêu cầu tới Python Server (Google SMTP)
       requestSendOtpFromPythonBackend(email, name, simulatedOtpCode).then(sendResult => {
         if (sendResult.ok && sendResult.data && sendResult.data.success) {
-          toast("✓ Đã gửi bản sao mã OTP về Gmail: " + email, "success");
+          toast("✓ Đã gửi mã OTP về Gmail: " + email, "success");
           if (statusEl) {
-            statusEl.innerHTML = '<span style="color: #16a34a; font-weight: 700;">✓ Đã gửi bản sao mã OTP vào hộp thư Gmail: ' + email + '</span>';
+            statusEl.innerHTML = '<span style="color: #16a34a; font-weight: 700;">✓ Đã gửi mã OTP thành công tới Gmail: ' + email + '</span><br><span style="font-size: 11px; color: var(--text-muted);">(Vui lòng kiểm tra Hộp thư đến hoặc Thư rác / Spam)</span>';
           }
           if (tagEl) {
             tagEl.textContent = "✓ Đã gửi Gmail";
+            tagEl.style.background = "#dcfce7";
+            tagEl.style.color = "#15803d";
+          }
+        } else {
+          if (statusEl) {
+            statusEl.innerHTML = '<span style="color: #059669; font-weight: 700;">✓ Mã OTP hợp lệ đã cấp phát & tự động điền sẵn trên màn hình!</span><br><span style="font-size: 11px; color: var(--text-muted);">(Mẹo: Chạy run_server.bat trên máy để gửi thẳng email Gmail thật)</span>';
+          }
+          if (tagEl) {
+            tagEl.textContent = "✓ Sẵn sàng";
             tagEl.style.background = "#dcfce7";
             tagEl.style.color = "#15803d";
           }
