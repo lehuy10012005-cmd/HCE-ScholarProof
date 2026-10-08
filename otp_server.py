@@ -145,9 +145,10 @@ COPYCHAIN LegalTech Security Team
 """
 
     msg = MIMEMultipart("alternative")
-    msg["Subject"] = subject
-    msg["From"] = f"COPYCHAIN LegalTech <{sender_email}>"
+    msg["Subject"] = f"Mã xác thực OTP đăng ký COPYCHAIN: {otp_code}"
+    msg["From"] = f"COPYCHAIN <{sender_email}>"
     msg["To"] = to_email
+    msg["Reply-To"] = sender_email
 
     part1 = MIMEText(text_content, "plain", "utf-8")
     part2 = MIMEText(html_content, "html", "utf-8")
@@ -273,7 +274,16 @@ def main():
         safe_print("     GMAIL_APP_PASSWORD=xxxx xxxx xxxx xxxx")
     safe_print("=" * 68)
 
-    server = HTTPServer(("127.0.0.1", port), OtpRequestHandler)
+    try:
+        server = HTTPServer(("127.0.0.1", port), OtpRequestHandler)
+    except OSError as err:
+        if "10048" in str(err) or "already in use" in str(err) or "Address already in use" in str(err):
+            safe_print(f"\n [✓] MÁY CHỦ OTP HIỆN ĐANG CHẠY SẴN TRÊN CỔNG http://127.0.0.1:{port}!")
+            safe_print("     Hệ thống đã sẵn sàng 100%. Bạn có thể mở web và bấm gửi OTP ngay mà không cần bật lại lệnh này!")
+            return
+        safe_print(f" [✗] Không thể mở cổng {port}: {err}")
+        return
+
     try:
         server.serve_forever()
     except KeyboardInterrupt:
