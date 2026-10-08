@@ -5166,6 +5166,11 @@
       }
     }
 
+    function disconnectWizardWallet() {
+      updateWalletUI(null);
+      toast("Đã ngắt kết nối ví. Bạn có thể chọn tài khoản MetaMask khác để kết nối lại.", "info");
+    }
+
     function syncWizardStep5Wallet() {
       const notConn = document.getElementById("wizWalletNotConnectedState");
       const conn = document.getElementById("wizWalletConnectedState");
@@ -5186,6 +5191,7 @@
         if (btnExec) {
           btnExec.disabled = false;
           btnExec.style.opacity = "1";
+          btnExec.style.cursor = "pointer";
           btnExec.innerHTML = `✍️ Ký & Ghi Nhận Lên Blockchain Sepolia`;
         }
       } else {
@@ -5193,9 +5199,10 @@
         if (conn) conn.style.display = "none";
         if (signerEl) signerEl.textContent = "Chưa kết nối ví";
         if (btnExec) {
-          btnExec.disabled = false;
-          btnExec.style.opacity = "1";
-          btnExec.innerHTML = `🦊 Kết Nối Ví MetaMask Để Ký Bản Quyền`;
+          btnExec.disabled = true;
+          btnExec.style.opacity = "0.5";
+          btnExec.style.cursor = "not-allowed";
+          btnExec.innerHTML = `🔒 Vui Lòng Kết Nối Ví MetaMask Để Ký`;
         }
       }
     }
@@ -5361,12 +5368,8 @@
         });
       }
 
-      // Tự động nhận diện nếu ví đã cấp quyền trước đó
-      initialEth.request({ method: 'eth_accounts' }).then(accs => {
-        if (accs && accs.length > 0) {
-          updateWalletUI(accs[0]);
-        }
-      }).catch(() => {});
+      // Không tự động nhận diện ví ngầm - Yêu cầu người dùng chủ động bấm 'Kết nối ví' để đảm bảo tính minh bạch
+      // initialEth.request({ method: 'eth_accounts' }) đã được tắt theo yêu cầu quản trị phiên
     }
 
     // Băm file Keccak-256
