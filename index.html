@@ -2178,7 +2178,21 @@
       </nav>
 
       <div class="header-right">
-        <!-- Khi ĐÃ ĐĂNG NHẬP: Chỉ hiển thị nút Avatar + Tên gọn gàng, bấm vào mở khung hồ sơ ngang -->
+        <!-- Nút mạng Sepolia On-chain Explorer -->
+        <a href="https://sepolia.etherscan.io/address/0xa2F53106B3dFdf23b6b158022646d231A21e49cb" target="_blank" class="net-pill" title="Mạng Sepolia Testnet - Bấm để xem Hợp đồng Thông minh">
+          <span class="net-dot"></span>
+          <span>Sepolia</span>
+        </a>
+
+        <!-- Nút chuyển chế độ Sáng / Tối -->
+        <button class="theme-toggle" id="btnThemeToggle" title="Chuyển chế độ Sáng / Tối">🌙</button>
+
+        <!-- NÚT QUẢN LÝ & KẾT NỐI VÍ WEB3 METAMASK -->
+        <button class="btn-wallet" id="btnConnectWallet" onclick="openWalletModal()" title="Quản lý & Kết nối Ví MetaMask (Sepolia Testnet)">
+          <span>🦊</span> <span id="lblWallet">Wallet</span>
+        </button>
+
+        <!-- Khi ĐÃ ĐĂNG NHẬP: Hiển thị Thẻ Hồ sơ Tác giả đã xác thực -->
         <div id="headerAuthLoggedInWrap" style="display: none; align-items: center; gap: 8px;">
           <button class="btn-passport" id="btnHeaderPassport" onclick="openAuthorPassportModal()" title="Xem Hồ sơ tác giả (Khung chiều ngang) & Đăng xuất" style="padding: 7px 14px; font-weight: 700; gap: 8px; border-radius: var(--radius-md);">
             <span>👤</span>
@@ -2187,7 +2201,7 @@
           </button>
         </div>
 
-        <!-- Khi CHƯA ĐĂNG NHẬP: Chỉ hiển thị 2 nút Đăng nhập & Đăng ký -->
+        <!-- Khi CHƯA ĐĂNG NHẬP: Hiển thị 2 nút Đăng nhập & Đăng ký -->
         <div id="headerAuthLoggedOutWrap" style="display: flex; align-items: center; gap: 8px;">
           <button class="btn-passport" onclick="openLoginAccountModal()" title="Đăng nhập tài khoản & Ví MetaMask" style="padding: 7px 14px; font-weight: 700;">
             <span>🔐</span> <span>Đăng nhập</span>
@@ -3311,16 +3325,19 @@
         </div>
         
         <!-- Khối kết nối ví MetaMask kèm theo -->
-        <div style="background: var(--bg-subtle); border: 1px solid var(--border-color); border-radius: 6px; padding: 10px 12px; margin-bottom: 16px;">
+        <div style="background: var(--bg-subtle); border: 1.5px solid var(--border-color); border-radius: 8px; padding: 12px 14px; margin-bottom: 16px;">
           <div style="display: flex; justify-content: space-between; align-items: center;">
-            <div style="display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; color: var(--text-primary);">
-              <span>🦊</span> <span>Ví MetaMask:</span>
+            <div style="display: flex; align-items: center; gap: 6px; font-size: 12.5px; font-weight: 700; color: var(--text-primary);">
+              <span>🦊</span> <span>Ví Web3 MetaMask:</span>
             </div>
-            <span id="lblLoginWalletStatus" style="font-size: 11px; color: var(--success); font-weight: 700;">✓ Sẵn sàng liên kết</span>
+            <button type="button" onclick="openWalletModal()" style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 4px; padding: 2px 8px; font-size: 11px; font-weight: 600; cursor: pointer; color: var(--primary);">⚙️ Đổi ví</button>
           </div>
-          <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px; font-family: var(--font-mono);" id="lblLoginWalletAddr">
+          <div style="font-size: 11.5px; color: var(--text-muted); margin: 6px 0 10px; font-family: var(--font-mono); word-break: break-all;" id="lblLoginWalletAddr">
             0xB07FB0761c33a01F7f7493A6a8a9667F4842Fd50
           </div>
+          <button type="button" onclick="loginWithMetaMaskWallet()" style="width: 100%; background: #fff7ed; border: 1.5px solid #fdba74; color: #ea580c; border-radius: 6px; padding: 8px; font-size: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.2s;">
+            <span>🦊</span> <span>Đăng Nhập Nhanh Bằng Ví MetaMask (1-Click)</span>
+          </button>
         </div>
 
         <button type="submit" class="btn-exec-register" style="margin-top: 0; width: 100%; padding: 12px; font-size: 14px;">
@@ -3766,6 +3783,75 @@
         updateAuthUI();
         closeLoginAccountModal();
         toast("Đăng nhập thành công với tài khoản: " + tempUser.fullName, "success");
+      }
+    }
+
+    // ĐĂNG NHẬP 1-CLICK BẰNG VÍ METAMASK (WEB3 AUTH)
+    async function loginWithMetaMaskWallet() {
+      const eth = getMetaMaskProvider();
+      if (!eth) {
+        if (window.location.protocol === "file:") {
+          toast("Trình duyệt chặn tiện ích trên file://. Hãy mở link online GitHub Pages hoặc bật quyền truy cập tệp cho MetaMask!", "error");
+        } else {
+          toast("Không tìm thấy tiện ích MetaMask! Vui lòng cài đặt tiện ích MetaMask trên trình duyệt.", "error");
+        }
+        return;
+      }
+
+      try {
+        toast("🦊 Đang yêu cầu kết nối ví MetaMask...", "info");
+        const accounts = await eth.request({ method: "eth_requestAccounts" });
+        if (!accounts || accounts.length === 0) {
+          toast("Chưa cấp quyền tài khoản ví MetaMask.", "warning");
+          return;
+        }
+
+        const walletAddr = accounts[0];
+        updateWalletUI(walletAddr);
+
+        // Tìm hồ sơ tác giả khớp với địa chỉ ví
+        let user = ALL_USERS.find(u => u.wallet && u.wallet.toLowerCase() === walletAddr.toLowerCase());
+        if (!user) {
+          const shortAddr = walletAddr.slice(0, 6) + "..." + walletAddr.slice(-4);
+          user = {
+            id: "USR-ETH-" + walletAddr.slice(2, 6).toUpperCase(),
+            mssv: "ETH-" + walletAddr.slice(-4).toUpperCase(),
+            name: "Tác Giả Web3 (" + shortAddr + ")",
+            fullName: "Tác Giả Web3 (" + shortAddr + ")",
+            email: "wallet." + walletAddr.slice(2, 8) + "@copychain.edu.vn",
+            phone: "0912 " + Math.floor(100000 + Math.random() * 900000),
+            idCard: "04620500" + Math.floor(1000 + Math.random() * 9000),
+            dob: "2005-01-10",
+            address: "Hệ sinh thái Ethereum Sepolia",
+            class: "Tác Giả Web3 On-Chain",
+            faculty: "Khoa HTTT Kinh tế &bull; HCE",
+            wallet: walletAddr,
+            role: "AUTHOR",
+            roleName: "Tác Giả Xác Thực Web3",
+            badge: "✓ METAMASK VERIFIED SIGNER",
+            avatar: "ETH",
+            password: "123"
+          };
+          ALL_USERS.unshift(user);
+          saveStoredUsers(ALL_USERS);
+        }
+
+        currentAuthUser = user;
+        currentActiveStudent = user;
+        currentPassportStudent = user;
+        try {
+          localStorage.setItem("COPYCHAIN_CURRENT_USER", JSON.stringify(user));
+        } catch (e) {}
+
+        updateAuthUI();
+        closeLoginAccountModal();
+        toast("✓ Đăng nhập Web3 thành công với ví: " + walletAddr.slice(0, 6) + "..." + walletAddr.slice(-4), "success");
+      } catch (err) {
+        if (err && err.code === 4001) {
+          toast("Bạn đã từ chối yêu cầu kết nối ví MetaMask.", "info");
+        } else {
+          toast("Lỗi kết nối MetaMask: " + ((err && err.message) || err), "error");
+        }
       }
     }
 
@@ -4821,7 +4907,7 @@
 
     // Bật tắt Dark/Light Mode
     const btnThemeToggle = document.getElementById("btnThemeToggle");
-    btnThemeToggle.addEventListener("click", () => {
+    if (btnThemeToggle) btnThemeToggle.addEventListener("click", () => {
       const current = document.documentElement.getAttribute("data-theme");
       const next = current === "dark" ? "light" : "dark";
       document.documentElement.setAttribute("data-theme", next);
@@ -4850,6 +4936,8 @@
       } else {
         lbl.textContent = "Wallet";
       }
+      const loginAddr = document.getElementById("lblLoginWalletAddr");
+      if (loginAddr) { loginAddr.textContent = currentWallet || "0xB07FB0761c33a01F7f7493A6a8a9667F4842Fd50"; }
       updateWalletModalInfo();
     }
 
@@ -4901,9 +4989,10 @@
     }
 
     // Bấm nút Wallet -> Mở Modal Chọn Ví
-    document.getElementById("btnConnectWallet").addEventListener("click", () => {
-      openWalletModal();
-    });
+    const btnConnectWallet = document.getElementById("btnConnectWallet");
+    if (btnConnectWallet) {
+      btnConnectWallet.addEventListener("click", () => { openWalletModal(); });
+    }
 
     // 1. Chọn / Đổi ví MetaMask khác (gọi wallet_requestPermissions để MetaMask bung popup cho chọn)
     document.getElementById("btnSelectMetaMaskAccount").addEventListener("click", async () => {
