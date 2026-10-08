@@ -1,8 +1,8 @@
 @echo off
 chcp 65001 >nul
-title COPYCHAIN OTP Server
+title HCE Ledger OTP Server
 echo ===================================================
-echo   Khoi dong May chu Gui OTP Gmail (COPYCHAIN)
+echo   Khoi dong May chu Gui OTP Gmail (HCE Ledger)
 echo ===================================================
 py otp_server.py
 pause

@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 """
 ================================================================================
-  COPYCHAIN - MÁY CHỦ GỬI MÃ OTP XÁC THỰC QUA GMAIL THẬT (SMTP GMAIL SERVICE)
+  HCE Ledger - MÁY CHỦ GỬI MÃ OTP XÁC THỰC QUA GMAIL THẬT (SMTP GMAIL SERVICE)
   Dự án: Hệ thống Quản trị & Xác thực Bản quyền Tác giả On-chain ECO2432
   Tác giả: Lê Huy (ECO2432)
 ================================================================================
@@ -10,7 +10,7 @@
   - Máy chủ cục bộ (Local Server) sử dụng thư viện chuẩn của Python.
   - Tự động đọc biến môi trường GMAIL_USER và GMAIL_APP_PASSWORD từ tệp .env (bảo mật theo chuẩn AGENTS.md).
   - Kết nối trực tiếp đến máy chủ Google (smtp.gmail.com:587 qua TLS) để gửi thư từ chính hộp thư Gmail của bạn.
-  - Hỗ trợ CORS đầy đủ để trang web COPYCHAIN (kể cả trên GitHub Pages hay localhost) gửi yêu cầu mượt mà.
+  - Hỗ trợ CORS đầy đủ để trang web HCE Ledger (kể cả trên GitHub Pages hay localhost) gửi yêu cầu mượt mà.
 ================================================================================
 """
 
@@ -85,18 +85,18 @@ def send_otp_email(to_email, to_name, otp_code):
     if not sender_email or not app_password:
         return False, "Chưa cấu hình GMAIL_USER hoặc GMAIL_APP_PASSWORD trong tệp .env!"
 
-    subject = f"[COPYCHAIN] Mã xác thực OTP đăng ký tài khoản: {otp_code}"
+    subject = f"[HCE Ledger] Mã xác thực OTP đăng ký tài khoản: {otp_code}"
     
     # Nội dung văn bản thuần tự nhiên
     text_content = f"""Xin chào {to_name or 'bạn'},
 
-Bạn vừa yêu cầu mã xác nhận đăng ký tài khoản trên hệ thống COPYCHAIN.
+Bạn vừa yêu cầu mã xác nhận đăng ký tài khoản trên hệ thống HCE Ledger.
 Mã xác nhận của bạn là: {otp_code}
 
 Mã có hiệu lực trong vòng 5 phút. Nếu bạn không gửi yêu cầu này, vui lòng bỏ qua email.
 
 Trân trọng,
-Lê Văn Quang Huy - Dự án COPYCHAIN (ĐH Kinh tế Huế)
+Lê Văn Quang Huy - Dự án HCE Ledger (ĐH Kinh tế Huế)
 """
 
     # Nội dung HTML tối giản chuẩn mực (không dùng emoji, không dùng màu đỏ cảnh báo)
@@ -108,13 +108,13 @@ Lê Văn Quang Huy - Dự án COPYCHAIN (ĐH Kinh tế Huế)
 <body style="margin: 0; padding: 24px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f9fafb; color: #111827;">
   <div style="max-width: 520px; margin: 0 auto; background: #ffffff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 32px 28px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
     <div style="border-bottom: 2px solid #2563eb; padding-bottom: 12px; margin-bottom: 20px;">
-      <h2 style="margin: 0; font-size: 18px; color: #1e3a8a; font-weight: 700;">Hệ thống Bản quyền Số COPYCHAIN</h2>
+      <h2 style="margin: 0; font-size: 18px; color: #1e3a8a; font-weight: 700;">Hệ thống Bản quyền Số HCE Ledger</h2>
       <p style="margin: 4px 0 0; font-size: 12px; color: #6b7280;">Trường Đại học Kinh tế - Đại học Huế</p>
     </div>
 
     <p style="font-size: 14.5px; line-height: 1.6; margin: 0 0 16px;">Xin chào <strong>{to_name or 'bạn'}</strong>,</p>
     <p style="font-size: 14px; line-height: 1.6; color: #374151; margin: 0 0 20px;">
-      Bạn vừa thực hiện đăng ký tài khoản trên cổng dịch vụ COPYCHAIN. Dưới đây là mã số xác nhận của bạn:
+      Bạn vừa thực hiện đăng ký tài khoản trên cổng dịch vụ HCE Ledger. Dưới đây là mã số xác nhận của bạn:
     </p>
 
     <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 6px; padding: 18px; text-align: center; margin: 0 0 24px;">
@@ -137,7 +137,7 @@ Lê Văn Quang Huy - Dự án COPYCHAIN (ĐH Kinh tế Huế)
 </html>"""
 
     msg = MIMEMultipart("alternative")
-    msg["Subject"] = f"Mã xác nhận tài khoản COPYCHAIN: {otp_code}"
+    msg["Subject"] = f"Mã xác nhận tài khoản HCE Ledger: {otp_code}"
     msg["From"] = f"Lê Văn Quang Huy <{sender_email}>"
     msg["To"] = to_email
     msg["Reply-To"] = sender_email
@@ -187,7 +187,7 @@ class OtpRequestHandler(BaseHTTPRequestHandler):
 
         response = {
             "status": "online",
-            "service": "COPYCHAIN Local OTP Server",
+            "service": "HCE Ledger Local OTP Server",
             "sender_email": sender_email if sender_email else "CHƯA CẤU HÌNH",
             "is_configured": bool(sender_email and app_password)
         }
@@ -254,14 +254,14 @@ def main():
     sender_email, app_password = get_gmail_credentials()
 
     safe_print("=" * 68)
-    safe_print("      🚀 COPYCHAIN - MÁY CHỦ GỬI MÃ OTP GMAIL TRỰC TIẾP")
+    safe_print("      🚀 HCE Ledger - MÁY CHỦ GỬI MÃ OTP GMAIL TRỰC TIẾP")
     safe_print("=" * 68)
     safe_print(f" [✓] Cổng lắng nghe (Port)   : http://127.0.0.1:{port}")
     if sender_email and app_password:
         masked_pwd = app_password[:2] + "****" + app_password[-2:] if len(app_password) >= 4 else "****"
         safe_print(f" [✓] Email người gửi         : {sender_email}")
         safe_print(f" [✓] Mật khẩu ứng dụng (App): {masked_pwd} (Đã sẵn sàng)")
-        safe_print("\n -> Trạng thái: ĐANG LẮNG NGHE YÊU CẦU TỪ TRANG WEB COPYCHAIN...")
+        safe_print("\n -> Trạng thái: ĐANG LẮNG NGHE YÊU CẦU TỪ TRANG WEB HCE Ledger...")
     else:
         safe_print(" [!] CẢNH BÁO: CHƯA CẤU HÌNH THÔNG TIN GMAIL TRONG TỆP .env!")
         safe_print("     Vui lòng mở tệp .env và thêm 2 dòng sau:")
