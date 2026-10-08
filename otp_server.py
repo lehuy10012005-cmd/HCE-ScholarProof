@@ -7,7 +7,7 @@
   Tác giả: Lê Huy (ECO2432)
 ================================================================================
   Mô tả:
-  - Máy chủ cục bộ (Local Server) sử dụng thư viện chuẩn của Python (không cần cài thêm thư viện ngoài).
+  - Máy chủ cục bộ (Local Server) sử dụng thư viện chuẩn của Python.
   - Tự động đọc biến môi trường GMAIL_USER và GMAIL_APP_PASSWORD từ tệp .env (bảo mật theo chuẩn AGENTS.md).
   - Kết nối trực tiếp đến máy chủ Google (smtp.gmail.com:587 qua TLS) để gửi thư từ chính hộp thư Gmail của bạn.
   - Hỗ trợ CORS đầy đủ để trang web COPYCHAIN (kể cả trên GitHub Pages hay localhost) gửi yêu cầu mượt mà.
@@ -23,11 +23,29 @@ from http.server import HTTPServer, BaseHTTPRequestHandler
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
+# Đảm bảo UTF-8 an toàn trên Windows Console
+if hasattr(sys.stdout, 'reconfigure'):
+    try:
+        sys.stdout.reconfigure(encoding='utf-8', errors='replace')
+    except Exception:
+        pass
+if hasattr(sys.stderr, 'reconfigure'):
+    try:
+        sys.stderr.reconfigure(encoding='utf-8', errors='replace')
+    except Exception:
+        pass
+
+def safe_print(*args, **kwargs):
+    try:
+        print(*args, **kwargs, flush=True)
+    except Exception:
+        pass
+
 # ==============================================================================
 # HÀM NẠP BIẾN MÔI TRƯỜNG TỪ TỆP .env (TUÂN THỦ AGENTS.md - KHÔNG LỘ MẬT KHẨU)
 # ==============================================================================
 def load_env_file(filepath=".env"):
-    """Đọc tệp .env và nạp vào os.environ nếu biến chưa tồn tại."""
+    """Đọc tệp .env và nạp vào os.environ."""
     candidates = [
         filepath,
         os.path.join(os.path.dirname(__file__), filepath),
@@ -43,18 +61,17 @@ def load_env_file(filepath=".env"):
                             k, v = line.split("=", 1)
                             k = k.strip()
                             v = v.strip().strip('"').strip("'")
-                            if k not in os.environ or not os.environ[k]:
-                                os.environ[k] = v
+                            os.environ[k] = v
                 break
             except Exception as e:
-                print(f"[CẢNH BÁO] Không đọc được tệp {p}: {e}")
+                safe_print(f"[CẢNH BÁO] Không đọc được tệp {p}: {e}")
 
 # Tải cấu hình
 load_env_file()
 
 def get_gmail_credentials():
+    load_env_file()
     email = os.environ.get("GMAIL_USER", "").strip()
-    # Mật khẩu ứng dụng có thể chứa khoảng trắng, xóa khoảng trắng thừa
     password = os.environ.get("GMAIL_APP_PASSWORD", "").replace(" ", "").strip()
     return email, password
 
@@ -139,7 +156,7 @@ COPYCHAIN LegalTech Security Team
 
     try:
         context = ssl.create_default_context()
-        with smtplib.SMTP("smtp.gmail.com", 587) as server:
+        with smtplib.SMTP("smtp.gmail.com", 587, timeout=15) as server:
             server.ehlo()
             server.starttls(context=context)
             server.ehlo()
@@ -188,10 +205,10 @@ class OtpRequestHandler(BaseHTTPRequestHandler):
             return
 
         content_length = int(self.headers.get("Content-Length", 0))
-        body = self.rfile.read(content_length)
+        raw_body = self.rfile.read(content_length)
 
         try:
-            data = json.loads(body.decode("utf-8"))
+            data = json.loads(raw_body.decode("utf-8"))
             to_email = data.get("email", "").strip()
             to_name = data.get("name", "Tác giả").strip()
             otp_code = str(data.get("otp", "")).strip()
@@ -204,25 +221,26 @@ class OtpRequestHandler(BaseHTTPRequestHandler):
                 self.wfile.write(json.dumps({"success": False, "error": "Thiếu email hoặc mã OTP"}, ensure_ascii=False).encode("utf-8"))
                 return
 
-            print(f"\n[YÊU CẦU GỬI OTP] Gửi tới: {to_email} | Tên: {to_name} | OTP: {otp_code}")
+            safe_print(f"\n[YÊU CẦU GỬI OTP] Gửi tới: {to_email} | OTP: {otp_code}")
             success, message = send_otp_email(to_email, to_name, otp_code)
 
+            status_code = 200 if success else 500
+            self.send_response(status_code)
+            self._send_cors_headers()
+            self.send_header("Content-Type", "application/json; charset=utf-8")
+            self.end_headers()
+
             if success:
-                print(f" -> ✓ Gửi email thành công tới {to_email}!")
-                self.send_response(200)
-                self._send_cors_headers()
-                self.send_header("Content-Type", "application/json; charset=utf-8")
-                self.end_headers()
-                self.wfile.write(json.dumps({"success": True, "message": f"Mã OTP đã được gửi thẳng tới Gmail: {to_email}"}, ensure_ascii=False).encode("utf-8"))
+                safe_print(f" -> ✓ Gửi email thành công tới {to_email}!")
+                res_payload = {"success": True, "message": f"Mã OTP đã được gửi thẳng tới Gmail: {to_email}"}
             else:
-                print(f" -> ✗ Thất bại: {message}")
-                self.send_response(500)
-                self._send_cors_headers()
-                self.send_header("Content-Type", "application/json; charset=utf-8")
-                self.end_headers()
-                self.wfile.write(json.dumps({"success": False, "error": message}, ensure_ascii=False).encode("utf-8"))
+                safe_print(f" -> ✗ Thất bại: {message}")
+                res_payload = {"success": False, "error": message}
+
+            self.wfile.write(json.dumps(res_payload, ensure_ascii=False).encode("utf-8"))
 
         except Exception as err:
+            safe_print(f" -> ✗ Ngoại lệ: {err}")
             self.send_response(500)
             self._send_cors_headers()
             self.send_header("Content-Type", "application/json; charset=utf-8")
@@ -230,7 +248,6 @@ class OtpRequestHandler(BaseHTTPRequestHandler):
             self.wfile.write(json.dumps({"success": False, "error": str(err)}, ensure_ascii=False).encode("utf-8"))
 
     def log_message(self, format, *args):
-        # Ẩn bớt log mặc định để console gọn đẹp
         return
 
 # ==============================================================================
@@ -240,29 +257,27 @@ def main():
     port = int(os.environ.get("OTP_PORT", 5000))
     sender_email, app_password = get_gmail_credentials()
 
-    print("=" * 68)
-    print("      🚀 COPYCHAIN - MÁY CHỦ GỬI MÃ OTP GMAIL TRỰC TIẾP")
-    print("=" * 68)
-    print(f" [✓] Cổng lắng nghe (Port)   : http://127.0.0.1:{port}")
+    safe_print("=" * 68)
+    safe_print("      🚀 COPYCHAIN - MÁY CHỦ GỬI MÃ OTP GMAIL TRỰC TIẾP")
+    safe_print("=" * 68)
+    safe_print(f" [✓] Cổng lắng nghe (Port)   : http://127.0.0.1:{port}")
     if sender_email and app_password:
         masked_pwd = app_password[:2] + "****" + app_password[-2:] if len(app_password) >= 4 else "****"
-        print(f" [✓] Email người gửi         : {sender_email}")
-        print(f" [✓] Mật khẩu ứng dụng (App): {masked_pwd} (Đã sẵn sàng)")
-        print("\n -> Trạng thái: ĐANG LẮNG NGHE YÊU CẦU TỪ TRANG WEB COPYCHAIN...")
+        safe_print(f" [✓] Email người gửi         : {sender_email}")
+        safe_print(f" [✓] Mật khẩu ứng dụng (App): {masked_pwd} (Đã sẵn sàng)")
+        safe_print("\n -> Trạng thái: ĐANG LẮNG NGHE YÊU CẦU TỪ TRANG WEB COPYCHAIN...")
     else:
-        print(" [!] CẢNH BÁO: CHƯA CẤU HÌNH THÔNG TIN GMAIL TRONG TỆP .env!")
-        print("     Vui lòng mở tệp .env và thêm 2 dòng sau:")
-        print("     GMAIL_USER=email_cua_ban@gmail.com")
-        print("     GMAIL_APP_PASSWORD=xxxx xxxx xxxx xxxx")
-        print("\n (Máy chủ vẫn chạy để nhận yêu cầu, sau khi cập nhật .env hãy khởi động lại)")
-    print("=" * 68)
-    print(" * Nhấn Ctrl+C để dừng máy chủ bất kỳ lúc nào.\n")
+        safe_print(" [!] CẢNH BÁO: CHƯA CẤU HÌNH THÔNG TIN GMAIL TRONG TỆP .env!")
+        safe_print("     Vui lòng mở tệp .env và thêm 2 dòng sau:")
+        safe_print("     GMAIL_USER=email_cua_ban@gmail.com")
+        safe_print("     GMAIL_APP_PASSWORD=xxxx xxxx xxxx xxxx")
+    safe_print("=" * 68)
 
     server = HTTPServer(("127.0.0.1", port), OtpRequestHandler)
     try:
         server.serve_forever()
     except KeyboardInterrupt:
-        print("\n[ĐÃ DỪNG] Máy chủ OTP đã tắt an toàn.")
+        safe_print("\n[ĐÃ DỪNG] Máy chủ OTP đã tắt an toàn.")
         server.server_close()
 
 if __name__ == "__main__":
