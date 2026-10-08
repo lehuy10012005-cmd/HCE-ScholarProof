@@ -3420,11 +3420,8 @@
         <span style="color: var(--primary);">⏳ Đang chuẩn bị chuyển mã OTP...</span>
       </div>
 
-      <!-- Badge mô phỏng mã OTP để người dùng tiện test -->
-      <div class="otp-simulated-badge" id="otpSimulatedBox">
-        🔔 <strong>Mã OTP kiểm thử nhanh:</strong> <span id="lblSimulatedOtpCode" style="font-family: var(--font-mono); font-size: 16px; font-weight: 800; letter-spacing: 2px;">864209</span>
-        <button type="button" onclick="autofillSimulatedOtp()" style="background: #2563eb; color: #fff; border: none; padding: 2px 7px; border-radius: 4px; font-size: 11px; margin-left: 8px; cursor: pointer;">Nạp nhanh</button>
-      </div>
+      <!-- Mã OTP ẩn hỗ trợ kỹ thuật -->
+      <span id="lblSimulatedOtpCode" style="display: none;"></span>
 
       <div class="otp-inputs-wrapper">
         <input type="text" maxlength="1" class="otp-input-field" id="otpDigit1" oninput="handleOtpInput(this, 'otpDigit2')" autofocus>
@@ -3868,14 +3865,14 @@
       if (sendResult.ok && sendResult.data && sendResult.data.success) {
         toast("✓ Đã gửi mã OTP thật về hộp thư Gmail: " + email, "success");
         if (statusEl) {
-          statusEl.innerHTML = `<span style="color: #16a34a; font-weight: 700;">✓ Đã gửi OTP thẳng vào hộp thư Gmail: ${email}</span>`;
+          statusEl.innerHTML = `<span style="color: #16a34a; font-weight: 700;">✓ Đã gửi OTP vào hộp thư Gmail: ${email}</span><br><span style="font-size: 11px; color: var(--text-muted); display: inline-block; margin-top: 2px;">(Nếu chưa thấy ở Hộp thư đến, bạn vui lòng kiểm tra thêm mục <strong>Thư rác / Spam</strong> nhé)</span>`;
         }
       } else {
         const reason = (sendResult.data && sendResult.data.error) || sendResult.error || "Chưa khởi động server Python";
         console.warn("OTP Service Notice:", reason);
         toast("ℹ️ " + reason, "info");
         if (statusEl) {
-          statusEl.innerHTML = `<span style="color: #b45309;">⚠️ Chưa mở máy chủ Python (lệnh: <code>py otp_server.py</code>). Bạn có thể bấm 'Nạp nhanh' để test ngay!</span>`;
+          statusEl.innerHTML = `<span style="color: #b45309;">⚠️ Chưa mở máy chủ Python (vui lòng mở file <code>run_server.bat</code> trên máy tính).</span>`;
         }
       }
     }
@@ -3929,7 +3926,7 @@
       } else {
         toast("Đã tạo mã OTP mới: " + simulatedOtpCode, "info");
         if (statusEl) {
-          statusEl.innerHTML = `<span style="color: #b45309;">⚠️ Chưa kết nối server Python. Dùng mã hiển thị bên dưới.</span>`;
+          statusEl.innerHTML = `<span style="color: #b45309;">⚠️ Chưa kết nối máy chủ Python (vui lòng mở file <code>run_server.bat</code>).</span>`;
         }
       }
     }
