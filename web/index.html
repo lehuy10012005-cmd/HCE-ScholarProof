@@ -3878,21 +3878,36 @@
 
     // Luồng kết nối Máy chủ OTP Python cục bộ (chạy ngầm - không chặn người dùng nếu offline)
     async function requestSendOtpFromPythonBackend(targetEmail, targetName, otpCode) {
-      try {
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 20000); // 1.5s timeout
-        const res = await fetch("http://127.0.0.1:5000/send-otp", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email: targetEmail, name: targetName, otp: otpCode }),
-          signal: controller.signal
-        });
-        clearTimeout(timeoutId);
-        const data = await res.json();
-        return { ok: res.ok, data };
-      } catch (err) {
-        return { ok: false, error: "Chế độ Trực tuyến Tự động (Cloud Auto Mode)" };
+      // Danh sách các cổng gửi OTP tự động (Vercel Cloud Serverless -> Local Server)
+      const endpoints = [
+        "/api/send-otp", // Tuyến Vercel cục bộ khi mở web trên Vercel
+        "https://hce-scholarproof.vercel.app/api/send-otp", // Tuyến Vercel Cloud công khai khi mở từ GitHub Pages hoặc máy khác
+        "http://127.0.0.1:5000/send-otp" // Tuyến máy chủ Python cục bộ
+      ];
+
+      for (const ep of endpoints) {
+        try {
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 12000); // 12s timeout
+          const res = await fetch(ep, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email: targetEmail, name: targetName, otp: otpCode }),
+            signal: controller.signal
+          });
+          clearTimeout(timeoutId);
+          if (res.ok) {
+            const data = await res.json();
+            if (data && data.success) {
+              return { ok: true, data };
+            }
+          }
+        } catch (err) {
+          // Bỏ qua thử tiếp endpoint kế tiếp
+        }
       }
+
+      return { ok: false, error: "Cloud Auto Mode" };
     }
 
     // Luồng OTP Đăng Ký Tự Động 100%

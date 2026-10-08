@@ -2,7 +2,8 @@
   "version": 2,
   "name": "hce-scholarproof",
   "rewrites": [
+    { "source": "/api/(.*)", "destination": "/api/$1" },
     { "source": "/", "destination": "/web/index.html" },
-    { "source": "/(.*)", "destination": "/web/$1" }
+    { "source": "/((?!api/).*)", "destination": "/web/$1" }
   ]
 }
