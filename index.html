@@ -3411,13 +3411,18 @@
     <div id="regStep2Otp" style="display: none; padding: 26px 24px; text-align: center;">
       <div style="width: 52px; height: 52px; border-radius: 50%; background: #eff6ff; color: #2563eb; display: flex; align-items: center; justify-content: center; font-size: 26px; margin: 0 auto 12px;">📲</div>
       <h4 style="margin: 0; font-size: 17px; font-weight: 800; color: var(--text-primary);">Xác Thực Mã OTP</h4>
-      <p style="margin: 4px 0 16px; font-size: 12.5px; color: var(--text-muted);">
+      <p style="margin: 4px 0 10px; font-size: 12.5px; color: var(--text-muted);">
         Mã OTP 6 số đã được gửi tới: <strong id="lblOtpTargetContact" style="color: var(--primary);">--</strong>
       </p>
 
+      <!-- Trạng thái kết nối máy chủ gửi OTP Gmail thật -->
+      <div id="otpDeliveryStatus" style="font-size: 12px; margin: 0 auto 12px; padding: 6px 12px; border-radius: 6px; background: rgba(37,99,235,0.06); min-height: 22px; display: inline-block; max-width: 90%;">
+        <span style="color: var(--primary);">⏳ Đang chuẩn bị chuyển mã OTP...</span>
+      </div>
+
       <!-- Badge mô phỏng mã OTP để người dùng tiện test -->
-      <div class="otp-simulated-badge">
-        🔔 <strong>Mã OTP thử nghiệm hệ thống:</strong> <span id="lblSimulatedOtpCode" style="font-family: var(--font-mono); font-size: 16px; font-weight: 800; letter-spacing: 2px;">864209</span>
+      <div class="otp-simulated-badge" id="otpSimulatedBox">
+        🔔 <strong>Mã OTP kiểm thử nhanh:</strong> <span id="lblSimulatedOtpCode" style="font-family: var(--font-mono); font-size: 16px; font-weight: 800; letter-spacing: 2px;">864209</span>
         <button type="button" onclick="autofillSimulatedOtp()" style="background: #2563eb; color: #fff; border: none; padding: 2px 7px; border-radius: 4px; font-size: 11px; margin-left: 8px; cursor: pointer;">Nạp nhanh</button>
       </div>
 
@@ -3793,8 +3798,27 @@
       switchNavTab(tabId);
     }
 
+    // Luồng kết nối Máy chủ OTP Python cục bộ (smtp.gmail.com)
+    async function requestSendOtpFromPythonBackend(targetEmail, targetName, otpCode) {
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 6000);
+        const res = await fetch("http://127.0.0.1:5000/send-otp", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email: targetEmail, name: targetName, otp: otpCode }),
+          signal: controller.signal
+        });
+        clearTimeout(timeoutId);
+        const data = await res.json();
+        return { ok: res.ok, data };
+      } catch (err) {
+        return { ok: false, error: "Không kết nối được server Python (http://127.0.0.1:5000)" };
+      }
+    }
+
     // Luồng OTP Đăng Ký
-    function goToOtpVerificationStep() {
+    async function goToOtpVerificationStep() {
       const name = document.getElementById("regAccFullName").value.trim();
       const idCard = document.getElementById("regAccIdCard").value.trim();
       const email = document.getElementById("regAccEmail").value.trim();
@@ -3818,7 +3842,7 @@
       // Tạo mã OTP ngẫu nhiên
       simulatedOtpCode = Math.floor(100000 + Math.random() * 900000).toString();
       document.getElementById("lblSimulatedOtpCode").textContent = simulatedOtpCode;
-      document.getElementById("lblOtpTargetContact").textContent = email + " / " + phone;
+      document.getElementById("lblOtpTargetContact").textContent = email;
 
       // Chuyển sang màn hình OTP
       document.getElementById("regStep1Form").style.display = "none";
@@ -3833,7 +3857,27 @@
       if (firstInp) firstInp.focus();
 
       startOtpCountdown();
-      toast("Đã gửi mã OTP 6 số xác thực!", "info");
+
+      const statusEl = document.getElementById("otpDeliveryStatus");
+      if (statusEl) {
+        statusEl.innerHTML = `<span style="color: var(--primary);">⏳ Đang kết nối Gmail gửi thư tới <strong>${email}</strong>...</span>`;
+      }
+
+      // Gọi server Python gửi Gmail thật
+      const sendResult = await requestSendOtpFromPythonBackend(email, name, simulatedOtpCode);
+      if (sendResult.ok && sendResult.data && sendResult.data.success) {
+        toast("✓ Đã gửi mã OTP thật về hộp thư Gmail: " + email, "success");
+        if (statusEl) {
+          statusEl.innerHTML = `<span style="color: #16a34a; font-weight: 700;">✓ Đã gửi OTP thẳng vào hộp thư Gmail: ${email}</span>`;
+        }
+      } else {
+        const reason = (sendResult.data && sendResult.data.error) || sendResult.error || "Chưa khởi động server Python";
+        console.warn("OTP Service Notice:", reason);
+        toast("ℹ️ " + reason, "info");
+        if (statusEl) {
+          statusEl.innerHTML = `<span style="color: #b45309;">⚠️ Chưa mở máy chủ Python (lệnh: <code>py otp_server.py</code>). Bạn có thể bấm 'Nạp nhanh' để test ngay!</span>`;
+        }
+      }
     }
 
     function handleOtpInput(currInp, nextId) {
@@ -3865,11 +3909,29 @@
       }, 1000);
     }
 
-    function resendOtpCode() {
+    async function resendOtpCode() {
+      if (!pendingRegisterData) return;
       simulatedOtpCode = Math.floor(100000 + Math.random() * 900000).toString();
       document.getElementById("lblSimulatedOtpCode").textContent = simulatedOtpCode;
       startOtpCountdown();
-      toast("Đã cấp lại mã OTP mới: " + simulatedOtpCode, "info");
+
+      const statusEl = document.getElementById("otpDeliveryStatus");
+      if (statusEl) {
+        statusEl.innerHTML = `<span style="color: var(--primary);">⏳ Đang gửi lại mã OTP tới <strong>${pendingRegisterData.email}</strong>...</span>`;
+      }
+
+      const sendResult = await requestSendOtpFromPythonBackend(pendingRegisterData.email, pendingRegisterData.name, simulatedOtpCode);
+      if (sendResult.ok && sendResult.data && sendResult.data.success) {
+        toast("✓ Đã gửi lại mã OTP mới về Gmail: " + pendingRegisterData.email, "success");
+        if (statusEl) {
+          statusEl.innerHTML = `<span style="color: #16a34a; font-weight: 700;">✓ Đã gửi lại mã OTP mới vào hộp thư Gmail: ${pendingRegisterData.email}</span>`;
+        }
+      } else {
+        toast("Đã tạo mã OTP mới: " + simulatedOtpCode, "info");
+        if (statusEl) {
+          statusEl.innerHTML = `<span style="color: #b45309;">⚠️ Chưa kết nối server Python. Dùng mã hiển thị bên dưới.</span>`;
+        }
+      }
     }
 
     function backToRegisterStep1() {
