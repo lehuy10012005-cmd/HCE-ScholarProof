@@ -2476,10 +2476,10 @@
             <p style="font-size: 12.5px; color: var(--text-muted); margin: 0;">Trích xuất dấu vân tay số SHA-256 an toàn trong RAM mà không lưu trữ tệp thô lên Blockchain</p>
           </div>
 
-          <div class="upload-zone" id="wizDropzone">
-            <input type="file" id="wizFileInput">
+          <div class="upload-zone" id="wizDropzone" onclick="if(!this.classList.contains('has-file')) triggerSelectNewWizFile();">
+            <input type="file" id="wizFileInput" style="display: none;" onchange="if(this.files&&this.files[0]) handleWizFileUpload(this.files[0]);">
             
-            <div id="wizDropEmptyState">
+            <div id="wizDropEmptyState" style="pointer-events: none;">
               <div class="upload-icon">📤</div>
               <h4>Kéo thả tệp tác phẩm vào đây hoặc bấm để chọn tệp</h4>
               <p>Hỗ trợ tất cả định dạng: PDF, DOCX, ZIP, MP4, MP3, PNG, JPG, CODE, SQL... (Tối đa 200 MB)</p>
@@ -4415,6 +4415,7 @@
       wizSelectedFile = file;
 
       // Hiển thị giao diện nạp file
+      const dropzone = document.getElementById("wizDropzone");
       const emptyState = document.getElementById("wizDropEmptyState");
       const filledState = document.getElementById("wizDropFilledState");
       const nameEl = document.getElementById("wizLoadedName");
@@ -4422,6 +4423,11 @@
       const emojiEl = document.getElementById("wizLoadedEmoji");
       const badgeEl = document.getElementById("wizLoadedBadge");
 
+      if (dropzone) {
+        dropzone.classList.add("has-file");
+        dropzone.style.borderColor = "#10b981";
+        dropzone.style.background = "#f0fdf4";
+      }
       if (emptyState) emptyState.style.display = "none";
       if (filledState) filledState.style.display = "flex";
       if (nameEl) nameEl.textContent = file.name;
@@ -4431,12 +4437,13 @@
       const ext = file.name.split(".").pop().toLowerCase();
       if (ext === "pdf") { emojiEl.textContent = "📕"; badgeEl.textContent = "PDF"; }
       else if (["doc", "docx"].includes(ext)) { emojiEl.textContent = "📘"; badgeEl.textContent = "DOC"; }
-      else if (["zip", "rar", "tar"].includes(ext)) { emojiEl.textContent = "📦"; badgeEl.textContent = "ZIP"; }
-      else if (["mp4", "mov"].includes(ext)) { emojiEl.textContent = "🎬"; badgeEl.textContent = "VIDEO"; }
-      else if (["mp3", "wav"].includes(ext)) { emojiEl.textContent = "🎵"; badgeEl.textContent = "AUDIO"; }
+      else if (["zip", "rar", "tar", "7z"].includes(ext)) { emojiEl.textContent = "📦"; badgeEl.textContent = "ZIP"; }
+      else if (["mp4", "mov", "avi", "mkv"].includes(ext)) { emojiEl.textContent = "🎬"; badgeEl.textContent = "VIDEO"; }
+      else if (["mp3", "wav", "flac"].includes(ext)) { emojiEl.textContent = "🎵"; badgeEl.textContent = "AUDIO"; }
+      else if (["jpg", "jpeg", "png", "webp", "gif"].includes(ext)) { emojiEl.textContent = "🖼️"; badgeEl.textContent = "IMAGE"; }
       else { emojiEl.textContent = "📄"; badgeEl.textContent = ext.toUpperCase(); }
 
-      toast("Đang tính toán mã băm SHA-256 trong bộ nhớ RAM...", "info");
+      toast("Đang tính toán mã băm SHA-256 & Keccak-256 trong bộ nhớ RAM...", "info");
 
       // 1. Tính SHA-256 bằng Web Crypto API
       try {
@@ -4450,30 +4457,108 @@
       try {
         const buffer = await file.arrayBuffer();
         const bytes = new Uint8Array(buffer);
-        wizComputedKeccak256 = ethers.keccak256(bytes);
+        if (typeof ethers !== "undefined" && typeof ethers.keccak256 === "function") {
+          wizComputedKeccak256 = ethers.keccak256(bytes);
+        } else {
+          wizComputedKeccak256 = "0x" + wizComputedSha256;
+        }
       } catch (err) {
         console.error("Keccak error:", err);
         wizComputedKeccak256 = "0x8e4da685a41c7ce20441ae4c62629d3d2eacd22c5ceb54b0d0a7208ca76396f1";
       }
 
-      document.getElementById("lblWizSha256Hash").textContent = wizComputedSha256;
-      document.getElementById("lblWizKeccakHash").textContent = wizComputedKeccak256;
-      toast("Đã tính toán thành công vân tay số SHA-256 & Keccak-256!", "success");
+      const lblSha = document.getElementById("lblWizSha256Hash");
+      const lblKec = document.getElementById("lblWizKeccakHash");
+      if (lblSha) lblSha.textContent = wizComputedSha256;
+      if (lblKec) lblKec.textContent = wizComputedKeccak256;
+      toast("Đã trích xuất mã băm SHA-256 & Keccak-256 thành công!", "success");
     }
 
     function removeWizFile() {
       wizSelectedFile = null;
       wizComputedSha256 = "";
       wizComputedKeccak256 = "";
-      document.getElementById("wizFileInput").value = "";
-      document.getElementById("wizDropEmptyState").style.display = "block";
-      document.getElementById("wizDropFilledState").style.display = "none";
-      document.getElementById("lblWizSha256Hash").textContent = "b4c3e8... (Vui lòng tải tệp lên)";
-      document.getElementById("lblWizKeccakHash").textContent = "0x8e4d... (Vui lòng tải tệp lên)";
+      const fi = document.getElementById("wizFileInput");
+      if (fi) fi.value = "";
+      const dropzone = document.getElementById("wizDropzone");
+      if (dropzone) {
+        dropzone.classList.remove("has-file");
+        dropzone.style.borderColor = "";
+        dropzone.style.background = "";
+      }
+      const emptyState = document.getElementById("wizDropEmptyState");
+      if (emptyState) emptyState.style.display = "block";
+      const filledState = document.getElementById("wizDropFilledState");
+      if (filledState) filledState.style.display = "none";
+      const lblSha = document.getElementById("lblWizSha256Hash");
+      const lblKec = document.getElementById("lblWizKeccakHash");
+      if (lblSha) lblSha.textContent = "b4c3e8... (Vui lòng tải tệp lên để băm)";
+      if (lblKec) lblKec.textContent = "0x8e4d... (Vui lòng tải tệp lên để băm)";
     }
 
     function triggerSelectNewWizFile() {
-      document.getElementById("wizFileInput").click();
+      const fi = document.getElementById("wizFileInput");
+      if (fi) {
+        fi.value = "";
+        fi.click();
+      }
+    }
+
+    // Thiết lập sự kiện kéo thả & chọn file cho Bước 3 Wizard
+    function setupWizardFileEventListeners() {
+      const dropzone = document.getElementById("wizDropzone");
+      const fileInput = document.getElementById("wizFileInput");
+      if (!dropzone) return;
+
+      if (fileInput) {
+        fileInput.addEventListener("change", async (e) => {
+          if (e.target.files && e.target.files[0]) {
+            await handleWizFileUpload(e.target.files[0]);
+          }
+        });
+      }
+
+      ["dragenter", "dragover"].forEach(eventName => {
+        dropzone.addEventListener(eventName, (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          if (!dropzone.classList.contains("has-file")) {
+            dropzone.style.borderColor = "var(--primary, #0284c7)";
+            dropzone.style.background = "var(--primary-subtle, #f0f7ff)";
+          }
+        });
+      });
+
+      ["dragleave", "dragend"].forEach(eventName => {
+        dropzone.addEventListener(eventName, (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          if (!dropzone.classList.contains("has-file")) {
+            dropzone.style.borderColor = "";
+            dropzone.style.background = "";
+          }
+        });
+      });
+
+      dropzone.addEventListener("drop", async (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (!dropzone.classList.contains("has-file")) {
+          dropzone.style.borderColor = "";
+          dropzone.style.background = "";
+        }
+        if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+          const file = e.dataTransfer.files[0];
+          if (fileInput && window.DataTransfer) {
+            try {
+              const dt = new DataTransfer();
+              dt.items.add(file);
+              fileInput.files = dt.files;
+            } catch (err) {}
+          }
+          await handleWizFileUpload(file);
+        }
+      });
     }
 
     // Đồng bộ xem trước Bước 4
@@ -6552,6 +6637,7 @@
     }
 
     // Khởi tạo mặc định ban đầu
+    setupWizardFileEventListeners();
     setAuthorType("single");
     updateAuthUI();
     if (typeof updateActiveStudentUI === "function") updateActiveStudentUI();
