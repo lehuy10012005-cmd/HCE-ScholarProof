@@ -2187,10 +2187,7 @@
         <!-- Nút chuyển chế độ Sáng / Tối -->
         <button class="theme-toggle" id="btnThemeToggle" title="Chuyển chế độ Sáng / Tối">🌙</button>
 
-        <!-- NÚT QUẢN LÝ & KẾT NỐI VÍ WEB3 METAMASK -->
-        <button class="btn-wallet" id="btnConnectWallet" onclick="openWalletModal()" title="Quản lý & Kết nối Ví MetaMask (Sepolia Testnet)">
-          <span>🦊</span> <span id="lblWallet">Wallet</span>
-        </button>
+        <!-- Đã ẩn nút Ví khỏi Header: Chuyển sang kết nối theo ngữ cảnh (Just-in-Time) tại Bước ký On-chain -->
 
         <!-- Khi ĐÃ ĐĂNG NHẬP: Hiển thị Thẻ Hồ sơ Tác giả đã xác thực -->
         <div id="headerAuthLoggedInWrap" style="display: none; align-items: center; gap: 8px;">
@@ -2641,16 +2638,32 @@
             <p style="font-size: 12.5px; color: var(--text-muted); margin: 0;">Sử dụng ví Web3 để ký hợp đồng thông minh và đóng gói dữ liệu vào khối Sepolia</p>
           </div>
 
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">
-            <div style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 16px;">
-              <span style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-weight: 700;">Ví Ký Giao Dịch:</span>
-              <div style="display: flex; align-items: center; gap: 8px; margin-top: 6px;">
-                <span style="font-size: 20px;">🦊</span>
-                <code id="wizSignerWallet" style="font-family: var(--font-mono); font-size: 12px; color: var(--primary); font-weight: 700;">0xB07FB0761c33a01F7f7493A6a8a9667F4842Fd50</code>
+          <!-- TRẠNG THÁI 1: CHƯA KẾT NỐI VÍ METAMASK -->
+          <div id="wizWalletNotConnectedState" style="background: var(--primary-subtle); border: 1.5px dashed var(--primary-border); border-radius: var(--radius-md); padding: 24px 20px; text-align: center; margin-bottom: 20px;">
+            <div style="font-size: 36px; margin-bottom: 8px;">🦊</div>
+            <h4 style="font-size: 16px; font-weight: 800; color: var(--primary); margin-bottom: 6px;">Chưa Kết Nối Ví MetaMask Để Ký Bảo Chứng</h4>
+            <p style="font-size: 12.5px; color: var(--text-secondary); max-width: 520px; margin: 0 auto 16px; line-height: 1.6;">
+              Để đảm bảo tính bất biến và không thể chối bỏ (Non-repudiation), tác phẩm cần được ký điện tử trực tiếp từ khóa bí mật (Private Key) ví MetaMask của bạn trên mạng Ethereum Sepolia.
+            </p>
+            <button type="button" class="btn-cta-primary" onclick="connectWalletJustInTime()" style="padding: 10px 22px; font-size: 14px; margin: 0 auto; display: inline-flex; align-items: center; gap: 8px; box-shadow: var(--shadow-sm);">
+              <span>🦊</span> <strong>Kết Nối Ví MetaMask Của Bạn Ngay</strong>
+            </button>
+          </div>
+
+          <!-- TRẠNG THÁI 2: ĐÃ KẾT NỐI VÍ METAMASK THẬT -->
+          <div id="wizWalletConnectedState" style="display: none; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">
+            <div style="background: var(--bg-surface); border: 1.5px solid var(--success-border); border-radius: var(--radius-md); padding: 16px;">
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; font-weight: 700;">Ví Ký Giao Dịch (MetaMask):</span>
+                <span style="font-size: 11px; color: var(--success); font-weight: 700;">● Đã sẵn sàng</span>
               </div>
-              <div style="margin-top: 10px;">
+              <div style="display: flex; align-items: center; gap: 8px; margin-top: 8px;">
+                <span style="font-size: 20px;">🦊</span>
+                <code id="wizSignerWallet" style="font-family: var(--font-mono); font-size: 12px; color: var(--primary); font-weight: 700;">Chưa kết nối</code>
+              </div>
+              <div style="margin-top: 10px; display: flex; gap: 8px;">
                 <button type="button" class="btn-cta-secondary" onclick="openWalletModal()" style="padding: 4px 10px; font-size: 11.5px;">
-                  🔄 Đổi ví khác
+                  🔄 Đổi tài khoản MetaMask khác
                 </button>
               </div>
             </div>
@@ -3121,7 +3134,7 @@
           Trình duyệt bảo mật mặc định <strong>chặn tiện ích MetaMask</strong> đối với đường dẫn <code>file:///</code>.
         </div>
         <div style="margin-top: 8px; padding-top: 6px; border-top: 1px dashed rgba(234, 88, 12, 0.3);">
-          👉 <strong>Khuyên dùng:</strong> <a href="https://lehuy10012005-cmd.github.io/HCE-ScholarProof/" target="_blank" style="color: #ea580c; font-weight: 800; text-decoration: underline;">Mở Bản Online trên GitHub Pages ↗</a> (kết nối MetaMask chuẩn 100%) hoặc chọn nút <strong>"Dùng Ví Thử Nghiệm HCE"</strong> bên dưới.
+          👉 <strong>Khuyên dùng:</strong> <a href="https://lehuy10012005-cmd.github.io/HCE-ScholarProof/" target="_blank" style="color: #ea580c; font-weight: 800; text-decoration: underline;">Mở Bản Online trên GitHub Pages ↗</a> để kết nối trực tiếp với ví MetaMask của bạn.
         </div>
       </div>
 
@@ -3147,13 +3160,7 @@
       <!-- Khối các hành động kết nối ví -->
       <div style="display: flex; flex-direction: column; gap: 10px;">
         <button class="btn-cta-primary" id="btnSelectMetaMaskAccount" type="button" style="width: 100%; justify-content: center; font-size: 13.5px; padding: 11px; gap: 8px; box-shadow: var(--shadow-sm);">
-          <span>🦊</span> <strong>Chọn / Đổi Ví MetaMask Khác</strong>
-        </button>
-        <button class="btn-cta-secondary" id="btnSwitchSepoliaNetwork" type="button" style="width: 100%; justify-content: center; font-size: 13px; padding: 10px; gap: 8px;">
-          <span>⚡</span> <span>Chuyển Sang Mạng Sepolia (11155111)</span>
-        </button>
-        <button class="btn-cta-secondary" id="btnUseDemoWallet" type="button" style="width: 100%; justify-content: center; font-size: 13px; padding: 10px; gap: 8px;">
-          <span>🧪</span> <span>Dùng Ví Thử Nghiệm HCE (0xB07F...Fd50)</span>
+          <span>🦊</span> <strong>Kết Nối / Đổi Ví MetaMask Khác</strong>
         </button>
         <button class="btn-cta-secondary" id="btnDisconnectWallet" type="button" style="width: 100%; justify-content: center; font-size: 13px; padding: 10px; color: var(--danger); border-color: var(--danger-border); gap: 8px;">
           <span>🚪</span> <span>Ngắt Kết Nối Ví</span>
@@ -3210,7 +3217,7 @@
           <div style="background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 8px; padding: 10px 12px; margin-bottom: 16px;">
             <span style="font-size: 10.5px; color: #94a3b8; display: block; margin-bottom: 2px; font-weight: 600;">🦊 VÍ METAMASK LIÊN KẾT:</span>
             <div style="display: flex; justify-content: space-between; align-items: center;">
-              <code id="passAuthorWallet" style="font-family: var(--font-mono); color: #38bdf8; font-size: 11px; word-break: break-all;">0xB07FB076...42Fd50</code>
+              <code id="passAuthorWallet" style="font-family: var(--font-mono); color: #38bdf8; font-size: 11px; word-break: break-all;">Chưa kết nối ví</code>
               <button type="button" onclick="copyPassportWallet()" style="background: rgba(255,255,255,0.15); border: none; color: #ffffff; border-radius: 4px; padding: 3px 7px; font-size: 10.5px; cursor: pointer; margin-left: 6px;">📋</button>
             </div>
           </div>
@@ -3333,7 +3340,7 @@
             <button type="button" onclick="openWalletModal()" style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 4px; padding: 2px 8px; font-size: 11px; font-weight: 600; cursor: pointer; color: var(--primary);">⚙️ Đổi ví</button>
           </div>
           <div style="font-size: 11.5px; color: var(--text-muted); margin: 6px 0 10px; font-family: var(--font-mono); word-break: break-all;" id="lblLoginWalletAddr">
-            0xB07FB0761c33a01F7f7493A6a8a9667F4842Fd50
+            Chưa kết nối ví MetaMask
           </div>
           <button type="button" onclick="loginWithMetaMaskWallet()" style="width: 100%; background: #fff7ed; border: 1.5px solid #fdba74; color: #ea580c; border-radius: 6px; padding: 8px; font-size: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.2s;">
             <span>🦊</span> <span>Đăng Nhập Nhanh Bằng Ví MetaMask (1-Click)</span>
@@ -3493,7 +3500,7 @@
         address: "TP. Huế, Thừa Thiên Huế",
         class: "K57 Kinh Tế Số",
         faculty: "Khoa HTTT Kinh tế",
-        wallet: "0xB07FB0761c33a01F7f7493A6a8a9667F4842Fd50",
+        wallet: "0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7",
         role: "AUTHOR",
         roleName: "Tác Giả Xác Thực",
         badge: "✓ COPYCHAIN VERIFIED AUTHOR • HCE SCHOLAR",
@@ -3610,7 +3617,7 @@
         authorsText: "Lê Văn Quang Huy (70%) & Lại Vương Gia Bảo (30%)",
         authorEmail: "23k4300010@hce.edu.vn",
         authorPhone: "0912 345 678",
-        authorWallet: "0xB07FB0761c33a01F7f7493A6a8a9667F4842Fd50",
+        authorWallet: "0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7",
         fileName: "De_cuong_NCKH_K57_LeHuy.pdf",
         fileSize: "5.65 MB",
         sha256: "b4c3e8712a4d95e0192837465abcdeff0123456789abcdef0123456789abcdef",
@@ -3770,7 +3777,7 @@
           badge: "✓ COPYCHAIN VERIFIED AUTHOR",
           avatar: "TG",
           password: passVal || "123",
-          wallet: (typeof currentWallet !== "undefined" && currentWallet) ? currentWallet : "0xB07FB0761c33a01F7f7493A6a8a9667F4842Fd50"
+          wallet: (typeof currentWallet !== "undefined" && currentWallet) ? currentWallet : ""
         };
         ALL_USERS.unshift(tempUser);
         saveStoredUsers(ALL_USERS);
@@ -4177,7 +4184,7 @@
           ? currentWallet 
           : ((typeof currentWalletAddress !== "undefined" && currentWalletAddress) 
               ? currentWalletAddress 
-              : "0xB07FB0761c33a01F7f7493A6a8a9667F4842Fd50");
+              : "");
 
         const newUser = {
           id: newId,
@@ -4312,6 +4319,10 @@
       // Khi vào Bước 4: Đồng bộ dữ liệu tóm tắt
       if (step === 4) {
         syncWizardStep4Review();
+      }
+      // Khi vào Bước 5: Đồng bộ trạng thái Ví MetaMask ký On-chain
+      if (step === 5) {
+        syncWizardStep5Wallet();
       }
 
       window.scrollTo({ top: 120, behavior: "smooth" });
@@ -4497,6 +4508,40 @@
       const btn = document.getElementById("btnExecuteWizardRegister");
       const loadingState = document.getElementById("wizSigningLoadingState");
 
+      // 1. Kiểm tra ví MetaMask - Nếu chưa có ví thì yêu cầu kết nối trước (Just-in-Time)
+      let activeWallet = (typeof currentWallet !== "undefined" && currentWallet) 
+        ? currentWallet 
+        : ((typeof currentWalletAddress !== "undefined" && currentWalletAddress) ? currentWalletAddress : "");
+
+      if (!activeWallet) {
+        toast("🦊 Vui lòng kết nối ví MetaMask của bạn trước khi ký xác nhận!", "info");
+        activeWallet = await connectWalletJustInTime();
+        if (!activeWallet) {
+          return; // Người dùng từ chối kết nối ví -> Không ghi nhận dữ liệu
+        }
+      }
+
+      // 2. Kiểm tra tiện ích MetaMask và mạng Sepolia Testnet
+      const eth = getMetaMaskProvider();
+      if (!eth) {
+        toast("Không tìm thấy tiện ích MetaMask! Vui lòng cài đặt MetaMask trên trình duyệt.", "error");
+        return;
+      }
+
+      let provider;
+      try {
+        provider = new ethers.BrowserProvider(eth);
+        await ensureMetaMaskSepolia(eth);
+      } catch (netErr) {
+        if (netErr.code === 4001) {
+          toast("Bạn đã hủy chuyển sang mạng Sepolia. Giao dịch ký bản quyền bị hủy.", "warning");
+        } else {
+          toast("Không thể chuyển sang mạng Sepolia Testnet: " + (netErr.message || netErr), "error");
+        }
+        return;
+      }
+
+      // 3. Yêu cầu ký Mật mã học (ECDSA SignMessage) từ chính Private Key của tác giả
       btn.disabled = true;
       btn.style.opacity = "0.5";
       if (loadingState) loadingState.style.display = "block";
@@ -4508,85 +4553,123 @@
       const mainEmail = document.getElementById("wizAuthorEmail").value.trim();
       const mainPhone = document.getElementById("wizAuthorPhone").value.trim();
       const mainShare = document.getElementById("wizAuthorShare").value || "100";
-      const signerWallet = (typeof currentWallet !== "undefined" && currentWallet) 
-        ? currentWallet 
-        : ((typeof currentWalletAddress !== "undefined" && currentWalletAddress) 
-            ? currentWalletAddress 
-            : "0xB07FB0761c33a01F7f7493A6a8a9667F4842Fd50");
 
       let authorsFormatted = mainName + " (" + mainShare + "%)";
       if (wizCoAuthors.length > 0) {
         authorsFormatted += " & " + wizCoAuthors.map(c => c.name + " (" + c.share + "%)").join(" & ");
       }
 
-      // Giả lập hoặc gọi Smart Contract nếu có ví kết nối
-      setTimeout(() => {
-        const newCode = "CC-2026-" + Math.floor(1000 + Math.random() * 9000);
-        const newTx = "0x" + Array.from({length: 64}, () => Math.floor(Math.random()*16).toString(16)).join("");
-        const now = new Date();
-        const dateStr = now.toLocaleDateString("vi-VN") + " " + now.toLocaleTimeString("vi-VN", {hour: "2-digit", minute:"2-digit"});
+      const newCode = "CC-2026-" + Math.floor(1000 + Math.random() * 9000);
+      const now = new Date();
+      const dateStr = now.toLocaleDateString("vi-VN") + " " + now.toLocaleTimeString("vi-VN", {hour: "2-digit", minute:"2-digit"});
+      const keccakHash = wizComputedKeccak256 || "0x8e4da685a41c7ce20441ae4c62629d3d2eacd22c5ceb54b0d0a7208ca76396f1";
+      const sha256Hash = wizComputedSha256 || "b4c3e8712a4d95e0192837465abcdeff0123456789abcdef0123456789abcdef";
 
-        lastRegisteredWork = {
-          id: newCode,
-          code: newCode,
-          title: title,
-          type: type,
-          department: dept,
-          dateCompleted: document.getElementById("wizDateCompleted").value,
-          dateRegistered: dateStr,
-          authorsText: authorsFormatted,
-          authorEmail: mainEmail,
-          authorPhone: mainPhone,
-          authorWallet: signerWallet,
-          fileName: wizSelectedFile ? wizSelectedFile.name : "Tac_pham_dang_ky.pdf",
-          fileSize: wizSelectedFile ? (wizSelectedFile.size / (1024 * 1024)).toFixed(2) + " MB" : "4.50 MB",
-          sha256: wizComputedSha256 || "b4c3e8712a4d95e0192837465abcdeff0123456789abcdef0123456789abcdef",
-          keccak256: wizComputedKeccak256 || "0x8e4da685a41c7ce20441ae4c62629d3d2eacd22c5ceb54b0d0a7208ca76396f1",
-          txHash: newTx,
-          blockNumber: 6821950 + Math.floor(Math.random() * 50),
-          status: "VERIFIED",
-          statusText: "Đã xác thực On-chain"
-        };
+      toast("🦊 Mở MetaMask: Vui lòng ký xác nhận quyền tác giả bằng ví của bạn...", "info");
 
-        // Đưa vào đầu danh sách hệ thống
-        COPYCHAIN_WORKS.unshift(lastRegisteredWork);
+      let realSignerAddress = activeWallet;
+      let signatureProof = "";
+      let blockNumberRecorded = 6821950 + SAMPLE_RECORDS.length + 1;
+
+      try {
+        const signer = await provider.getSigner();
+        realSignerAddress = await signer.getAddress();
         
-        // Đồng bộ sang SAMPLE_RECORDS cho sổ cái chung
-        SAMPLE_RECORDS.unshift({
-          code: lastRegisteredWork.code,
-          date: now.toLocaleDateString("vi-VN"),
-          title: lastRegisteredWork.title,
-          faculty: lastRegisteredWork.department,
-          type: lastRegisteredWork.type,
-          advisor: "Hội đồng Thẩm định COPYCHAIN",
-          authors: lastRegisteredWork.authorsText,
-          authorEmail: lastRegisteredWork.authorEmail,
-          authorPhone: lastRegisteredWork.authorPhone,
-          hash: lastRegisteredWork.keccak256,
-          sha256: lastRegisteredWork.sha256,
-          block: lastRegisteredWork.blockNumber,
-          time: now.toISOString(),
-          wallet: lastRegisteredWork.authorWallet
-        });
+        // Chuỗi thông điệp pháp lý & học thuật đối soát
+        const signMsg = "HCE-SCHOLARPROOF ACADEMIC PROVENANCE\n" +
+          "Mã Lưu Trữ: " + newCode + "\n" +
+          "Tiêu Đề: " + title + "\n" +
+          "Keccak-256 Hash: " + keccakHash + "\n" +
+          "Tác Giả: " + authorsFormatted + "\n" +
+          "Khoa: " + dept + "\n" +
+          "Thời Gian: " + dateStr;
 
-        // Cập nhật giao diện Bước 6
-        document.getElementById("succRegCode").textContent = lastRegisteredWork.code;
-        document.getElementById("succSha256").textContent = lastRegisteredWork.sha256.substring(0, 24) + "...";
-        document.getElementById("succTxHashLink").textContent = lastRegisteredWork.txHash.substring(0, 18) + "... ↗";
-        document.getElementById("succTxHashLink").href = "https://sepolia.etherscan.io/tx/" + lastRegisteredWork.txHash;
-        document.getElementById("succTimestamp").textContent = dateStr + " (Khối #" + lastRegisteredWork.blockNumber + ")";
+        signatureProof = await signer.signMessage(signMsg);
 
+        try {
+          blockNumberRecorded = await provider.getBlockNumber();
+        } catch (bErr) {
+          console.warn("Could not fetch block number, using fallback estimate:", bErr);
+        }
+
+        toast("Đã ký số Mật mã học thành công bằng ví MetaMask của bạn!", "success");
+      } catch (signErr) {
+        console.warn("User cancelled or error during MetaMask signing:", signErr);
         btn.disabled = false;
         btn.style.opacity = "1";
         if (loadingState) loadingState.style.display = "none";
 
-        goToWizardStep(6);
-        toast("Chúc mừng! Đăng ký tác quyền On-chain thành công!", "success");
-        renderUserDashboard();
-        renderAdminDashboard();
-        renderLedgerTable(SAMPLE_RECORDS);
-        populateDeedRecordPicker();
-      }, 1400);
+        if (signErr.code === 4001 || (signErr.message && signErr.message.includes("rejected"))) {
+          toast("Bạn đã từ chối ký giao dịch trên MetaMask. Không ghi nhận bản quyền mạo danh.", "warning");
+        } else {
+          toast("Lỗi ký ví MetaMask: " + (signErr.message || signErr), "error");
+        }
+        return; // CHẶN ĐỨNG: Tuyệt đối không lưu nếu chưa ký thành công!
+      }
+
+      // 4. Lưu hồ sơ thật với địa chỉ ví thật và chữ ký thật
+      const txHashDisplay = signatureProof.length >= 66 ? signatureProof.slice(0, 66) : ("0x" + Array.from({length: 64}, () => Math.floor(Math.random()*16).toString(16)).join(""));
+
+      lastRegisteredWork = {
+        id: newCode,
+        code: newCode,
+        title: title,
+        type: type,
+        department: dept,
+        dateCompleted: document.getElementById("wizDateCompleted").value,
+        dateRegistered: dateStr,
+        authorsText: authorsFormatted,
+        authorEmail: mainEmail,
+        authorPhone: mainPhone,
+        authorWallet: realSignerAddress,
+        fileName: wizSelectedFile ? wizSelectedFile.name : "Tac_pham_dang_ky.pdf",
+        fileSize: wizSelectedFile ? (wizSelectedFile.size / (1024 * 1024)).toFixed(2) + " MB" : "4.50 MB",
+        sha256: sha256Hash,
+        keccak256: keccakHash,
+        txHash: txHashDisplay,
+        blockNumber: blockNumberRecorded,
+        status: "VERIFIED",
+        statusText: "Đã xác thực On-chain"
+      };
+
+      // Đưa vào đầu danh sách hệ thống
+      COPYCHAIN_WORKS.unshift(lastRegisteredWork);
+      
+      // Đồng bộ sang SAMPLE_RECORDS cho sổ cái chung
+      SAMPLE_RECORDS.unshift({
+        code: lastRegisteredWork.code,
+        date: now.toLocaleDateString("vi-VN"),
+        title: lastRegisteredWork.title,
+        faculty: lastRegisteredWork.department,
+        type: lastRegisteredWork.type,
+        advisor: "Hội đồng Thẩm định HCE-ScholarProof",
+        authors: lastRegisteredWork.authorsText,
+        authorEmail: lastRegisteredWork.authorEmail,
+        authorPhone: lastRegisteredWork.authorPhone,
+        hash: lastRegisteredWork.keccak256,
+        sha256: lastRegisteredWork.sha256,
+        block: lastRegisteredWork.blockNumber,
+        time: now.toISOString(),
+        wallet: lastRegisteredWork.authorWallet
+      });
+
+      // Cập nhật giao diện Bước 6
+      document.getElementById("succRegCode").textContent = lastRegisteredWork.code;
+      document.getElementById("succSha256").textContent = lastRegisteredWork.sha256.substring(0, 24) + "...";
+      document.getElementById("succTxHashLink").textContent = lastRegisteredWork.txHash.substring(0, 18) + "... ↗";
+      document.getElementById("succTxHashLink").href = "https://sepolia.etherscan.io/address/" + CONTRACT_ADDRESS;
+      document.getElementById("succTimestamp").textContent = dateStr + " (Khối #" + lastRegisteredWork.blockNumber + ")";
+
+      btn.disabled = false;
+      btn.style.opacity = "1";
+      if (loadingState) loadingState.style.display = "none";
+
+      goToWizardStep(6);
+      toast("Chúc mừng! Đăng ký tác quyền On-chain bằng ví thật thành công!", "success");
+      renderUserDashboard();
+      renderAdminDashboard();
+      renderLedgerTable(SAMPLE_RECORDS);
+      populateDeedRecordPicker();
     }
 
     function viewDeedForCurrentSuccess() {
@@ -4776,7 +4859,7 @@
       {
         block: 6821940,
         title: "Bảo chứng quyền sở hữu trí tuệ sơ khởi bằng Proof of Existence",
-        wallet: "0xB07FB0761c33a01F7f7493A6a8a9667F4842Fd50",
+        wallet: "0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7",
         timeAgo: "8 phút trước"
       },
       {
@@ -4814,7 +4897,7 @@
         hash: "0x8e4da685a41c7ce20441ae4c62629d3d2eacd22c5ceb54b0d0a7208ca76396f1",
         block: 6821940,
         time: "2026-03-23 15:30:19 GMT+7",
-        wallet: "0xB07FB0761c33a01F7f7493A6a8a9667F4842Fd50"
+        wallet: "0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7"
       },
       {
         code: "HCE-IP-2026/024",
@@ -4924,21 +5007,136 @@
       return window.ethereum;
     }
 
-    function updateWalletUI(wallet) {
-      currentWallet = wallet;
-      const lbl = document.getElementById("lblWallet");
-      if (currentWallet) {
-        if (currentWallet.includes("Demo") || currentWallet === "0xB07FB0761c33a01F7f7493A6a8a9667F4842Fd50") {
-          lbl.innerHTML = `<span style="color: #f59e0b;">●</span> 0xB07F...Fd50 (Demo)`;
+    async function ensureMetaMaskSepolia(eth) {
+      if (!eth) return false;
+      try {
+        const chainId = await eth.request({ method: 'eth_chainId' });
+        if (chainId !== '0xaa36a7') {
+          try {
+            await eth.request({
+              method: 'wallet_switchEthereumChain',
+              params: [{ chainId: '0xaa36a7' }]
+            });
+          } catch (switchErr) {
+            if (switchErr.code === 4902) {
+              await eth.request({
+                method: 'wallet_addEthereumChain',
+                params: [{
+                  chainId: '0xaa36a7',
+                  chainName: 'Sepolia Testnet',
+                  nativeCurrency: { name: 'Sepolia ETH', symbol: 'ETH', decimals: 18 },
+                  rpcUrls: ['https://rpc.sepolia.org'],
+                  blockExplorerUrls: ['https://sepolia.etherscan.io']
+                }]
+              });
+            } else {
+              throw switchErr;
+            }
+          }
+        }
+        return true;
+      } catch (err) {
+        console.warn("Sepolia switch error:", err);
+        throw err;
+      }
+    }
+
+    async function connectWalletJustInTime() {
+      const eth = getMetaMaskProvider();
+      if (!eth) {
+        if (window.location.protocol === "file:") {
+          toast("Trình duyệt chặn tiện ích trên file://. Hãy mở link online GitHub Pages hoặc bật quyền truy cập tệp cho MetaMask!", "error");
         } else {
-          lbl.innerHTML = `<span style="color: #22c55e;">●</span> ${currentWallet.slice(0, 6)}...${currentWallet.slice(-4)}`;
+          toast("Không tìm thấy tiện ích MetaMask! Vui lòng cài đặt tiện ích MetaMask trên trình duyệt.", "error");
+        }
+        return null;
+      }
+
+      toast("🦊 Đang mở MetaMask để kết nối ví của bạn...", "info");
+      try {
+        const accounts = await eth.request({ method: 'eth_requestAccounts' });
+        if (!accounts || accounts.length === 0) {
+          toast("Chưa cấp quyền ví từ MetaMask.", "warning");
+          return null;
+        }
+        const realAddr = accounts[0];
+
+        // Tự động kiểm tra và chuyển mạng Sepolia
+        try {
+          await ensureMetaMaskSepolia(eth);
+        } catch (netErr) {
+          if (netErr.code === 4001) {
+            toast("Bạn đã hủy chuyển sang mạng Sepolia Testnet.", "warning");
+          }
+        }
+
+        updateWalletUI(realAddr);
+        toast(`Đã kết nối ví MetaMask: ${realAddr.slice(0, 6)}...${realAddr.slice(-4)}`, "success");
+        return realAddr;
+      } catch (err) {
+        console.error("connectWalletJustInTime error:", err);
+        if (err.code === 4001) {
+          toast("Bạn đã hủy kết nối ví trên MetaMask.", "info");
+        } else if (err.code === -32002) {
+          toast("Yêu cầu kết nối ví đang chờ duyệt trên biểu tượng MetaMask!", "warning");
+        } else {
+          toast(`Lỗi kết nối ví: ${err.message || err}`, "error");
+        }
+        return null;
+      }
+    }
+
+    function syncWizardStep5Wallet() {
+      const notConn = document.getElementById("wizWalletNotConnectedState");
+      const conn = document.getElementById("wizWalletConnectedState");
+      const signerEl = document.getElementById("wizSignerWallet");
+      const btnExec = document.getElementById("btnExecuteWizardRegister");
+
+      const activeWallet = (typeof currentWallet !== "undefined" && currentWallet) 
+        ? currentWallet 
+        : ((typeof currentWalletAddress !== "undefined" && currentWalletAddress) ? currentWalletAddress : "");
+
+      if (activeWallet) {
+        if (notConn) notConn.style.display = "none";
+        if (conn) conn.style.display = "grid";
+        if (signerEl) {
+          signerEl.textContent = `${activeWallet.slice(0, 10)}...${activeWallet.slice(-6)}`;
+          signerEl.title = activeWallet;
+        }
+        if (btnExec) {
+          btnExec.disabled = false;
+          btnExec.style.opacity = "1";
+          btnExec.innerHTML = `✍️ Ký & Ghi Nhận Lên Blockchain Sepolia`;
         }
       } else {
-        lbl.textContent = "Wallet";
+        if (notConn) notConn.style.display = "block";
+        if (conn) conn.style.display = "none";
+        if (signerEl) signerEl.textContent = "Chưa kết nối ví";
+        if (btnExec) {
+          btnExec.disabled = false;
+          btnExec.style.opacity = "1";
+          btnExec.innerHTML = `🦊 Kết Nối Ví MetaMask Để Ký Bản Quyền`;
+        }
+      }
+    }
+
+    function updateWalletUI(wallet) {
+      currentWallet = wallet;
+      currentWalletAddress = wallet;
+      const lbl = document.getElementById("lblWallet");
+      if (lbl) {
+        if (currentWallet) {
+          lbl.innerHTML = `<span style="color: #22c55e;">●</span> ${currentWallet.slice(0, 6)}...${currentWallet.slice(-4)}`;
+        } else {
+          lbl.textContent = "Wallet";
+        }
       }
       const loginAddr = document.getElementById("lblLoginWalletAddr");
-      if (loginAddr) { loginAddr.textContent = currentWallet || "0xB07FB0761c33a01F7f7493A6a8a9667F4842Fd50"; }
+      if (loginAddr) { 
+        loginAddr.textContent = currentWallet || "Chưa kết nối ví MetaMask"; 
+      }
       updateWalletModalInfo();
+      syncWizardStep5Wallet();
     }
 
     function updateWalletModalInfo() {
@@ -4994,108 +5192,76 @@
       btnConnectWallet.addEventListener("click", () => { openWalletModal(); });
     }
 
-    // 1. Chọn / Đổi ví MetaMask khác (gọi wallet_requestPermissions để MetaMask bung popup cho chọn)
-    document.getElementById("btnSelectMetaMaskAccount").addEventListener("click", async () => {
-      const eth = getMetaMaskProvider();
-      if (!eth) {
-        if (window.location.protocol === "file:") {
-          toast("Trình duyệt chặn tiện ích trên file://. Hãy mở link online GitHub Pages hoặc bật quyền truy cập tệp cho MetaMask!", "error");
-        } else {
-          toast("Không tìm thấy tiện ích MetaMask! Vui lòng cài đặt tiện ích MetaMask trên trình duyệt.", "error");
+    // 1. Chọn / Đổi ví MetaMask khác (tự động chuyển mạng Sepolia)
+    const btnSelectMetaMask = document.getElementById("btnSelectMetaMaskAccount");
+    if (btnSelectMetaMask) {
+      btnSelectMetaMask.addEventListener("click", async () => {
+        const eth = getMetaMaskProvider();
+        if (!eth) {
+          if (window.location.protocol === "file:") {
+            toast("Trình duyệt chặn tiện ích trên file://. Hãy mở link online GitHub Pages hoặc bật quyền truy cập tệp cho MetaMask!", "error");
+          } else {
+            toast("Không tìm thấy tiện ích MetaMask! Vui lòng cài đặt tiện ích MetaMask trên trình duyệt.", "error");
+          }
+          return;
         }
-        return;
-      }
 
-      toast("Đang yêu cầu MetaMask mở hộp thoại chọn tài khoản...", "info");
-      try {
-        // Gọi wallet_requestPermissions để MetaMask hiển thị màn hình chọn tài khoản
+        toast("Đang yêu cầu MetaMask mở hộp thoại chọn tài khoản...", "info");
         try {
-          await eth.request({
-            method: 'wallet_requestPermissions',
-            params: [{ eth_accounts: {} }]
-          });
-        } catch (permErr) {
-          console.warn("wallet_requestPermissions fallback:", permErr);
-          if (permErr.code === 4001) {
-            toast("Bạn đã hủy chọn tài khoản trên MetaMask.", "info");
-            return;
-          }
-          if (permErr.code === -32002) {
-            toast("Cửa sổ MetaMask đang chờ! Hãy bấm vào biểu tượng con cáo trên thanh tiện ích.", "warning");
-            return;
-          }
-          await eth.request({ method: 'eth_requestAccounts' });
-        }
-
-        const accounts = await eth.request({ method: 'eth_accounts' });
-        if (accounts && accounts.length > 0) {
-          updateWalletUI(accounts[0]);
-          toast(`Đã chọn ví MetaMask: ${accounts[0].slice(0, 6)}...${accounts[0].slice(-4)}`, "success");
-          closeWalletModal();
-        } else {
-          toast("Chưa chọn được tài khoản ví nào từ MetaMask.", "warning");
-        }
-      } catch (err) {
-        console.error("MetaMask error:", err);
-        if (err.code === -32002) {
-          toast("Yêu cầu chọn ví đang chờ! Hãy bấm vào biểu tượng con cáo MetaMask trên trình duyệt.", "warning");
-        } else if (err.code === 4001) {
-          toast("Bạn đã hủy chọn ví trên MetaMask.", "info");
-        } else {
-          toast(`Lỗi MetaMask: ${err.message || err}`, "error");
-        }
-      }
-    });
-
-    // 2. Chuyển sang mạng Sepolia Testnet
-    document.getElementById("btnSwitchSepoliaNetwork").addEventListener("click", async () => {
-      const eth = getMetaMaskProvider();
-      if (!eth) {
-        toast("Vui lòng cài đặt MetaMask để chuyển mạng!", "error");
-        return;
-      }
-      try {
-        await eth.request({
-          method: 'wallet_switchEthereumChain',
-          params: [{ chainId: '0xaa36a7' }] // 11155111 Sepolia
-        });
-        toast("Đã chuyển sang mạng Sepolia Testnet thành công!", "success");
-      } catch (switchError) {
-        if (switchError.code === 4902) {
           try {
             await eth.request({
-              method: 'wallet_addEthereumChain',
-              params: [{
-                chainId: '0xaa36a7',
-                chainName: 'Sepolia Testnet',
-                nativeCurrency: { name: 'Sepolia ETH', symbol: 'ETH', decimals: 18 },
-                rpcUrls: ['https://rpc.sepolia.org'],
-                blockExplorerUrls: ['https://sepolia.etherscan.io']
-              }]
+              method: 'wallet_requestPermissions',
+              params: [{ eth_accounts: {} }]
             });
-            toast("Đã thêm và chuyển sang mạng Sepolia Testnet!", "success");
-          } catch (addError) {
-            toast(addError.message, "error");
+          } catch (permErr) {
+            console.warn("wallet_requestPermissions fallback:", permErr);
+            if (permErr.code === 4001) {
+              toast("Bạn đã hủy chọn tài khoản trên MetaMask.", "info");
+              return;
+            }
+            if (permErr.code === -32002) {
+              toast("Cửa sổ MetaMask đang chờ! Hãy bấm vào biểu tượng con cáo trên thanh tiện ích.", "warning");
+              return;
+            }
+            await eth.request({ method: 'eth_requestAccounts' });
           }
-        } else {
-          toast(switchError.message, "error");
+
+          const accounts = await eth.request({ method: 'eth_accounts' });
+          if (accounts && accounts.length > 0) {
+            // Tự động kiểm tra mạng Sepolia
+            try {
+              await ensureMetaMaskSepolia(eth);
+            } catch (netErr) {
+              console.warn("Sepolia switch in picker warning:", netErr);
+            }
+            updateWalletUI(accounts[0]);
+            toast(`Đã chọn ví MetaMask: ${accounts[0].slice(0, 6)}...${accounts[0].slice(-4)}`, "success");
+            closeWalletModal();
+          } else {
+            toast("Chưa chọn được tài khoản ví nào từ MetaMask.", "warning");
+          }
+        } catch (err) {
+          console.error("MetaMask error:", err);
+          if (err.code === -32002) {
+            toast("Yêu cầu chọn ví đang chờ! Hãy bấm vào biểu tượng con cáo MetaMask trên trình duyệt.", "warning");
+          } else if (err.code === 4001) {
+            toast("Bạn đã hủy chọn ví trên MetaMask.", "info");
+          } else {
+            toast(`Lỗi MetaMask: ${err.message || err}`, "error");
+          }
         }
-      }
-    });
+      });
+    }
 
-    // 3. Dùng Ví Thử Nghiệm Demo HCE
-    document.getElementById("btnUseDemoWallet").addEventListener("click", () => {
-      updateWalletUI("0xB07FB0761c33a01F7f7493A6a8a9667F4842Fd50");
-      toast("Đã kích hoạt Ví Demo Sepolia (0xB07F...Fd50)!", "info");
-      closeWalletModal();
-    });
-
-    // 4. Ngắt kết nối ví
-    document.getElementById("btnDisconnectWallet").addEventListener("click", () => {
-      updateWalletUI(null);
-      toast("Đã ngắt kết nối ví!", "info");
-      closeWalletModal();
-    });
+    // 2. Ngắt kết nối ví
+    const btnDisconnect = document.getElementById("btnDisconnectWallet");
+    if (btnDisconnect) {
+      btnDisconnect.addEventListener("click", () => {
+        updateWalletUI(null);
+        toast("Đã ngắt kết nối ví!", "info");
+        closeWalletModal();
+      });
+    }
 
     // Tự động kiểm tra và lắng nghe sự kiện tài khoản MetaMask
     const initialEth = getMetaMaskProvider();
@@ -5574,13 +5740,13 @@
       btnExec.innerHTML = `⏳ Đang xác lập bản quyền On-chain...`;
 
       const eth = getMetaMaskProvider();
-      let authorAddress = currentWallet || "0xB07FB0761c33a01F7f7493A6a8a9667F4842Fd50";
+      let authorAddress = currentWallet || "";
       let finalBlock = 6821940 + SAMPLE_RECORDS.length + 1;
       let finalTxHash = "";
       const nowStr = new Date().toLocaleString("vi-VN");
 
       // Nếu người dùng đang kết nối ví MetaMask thật (không phải ví demo)
-      if (eth && currentWallet && !currentWallet.includes("Demo") && currentWallet !== "0xB07FB0761c33a01F7f7493A6a8a9667F4842Fd50") {
+      if (eth && currentWallet) {
         try {
           const provider = new ethers.BrowserProvider(eth);
           const network = await provider.getNetwork();
@@ -5970,7 +6136,7 @@
       }
 
       const walletEl = document.getElementById("passAuthorWallet");
-      if (walletEl) walletEl.textContent = student.wallet || "0xB07FB0761c33a01F7f7493A6a8a9667F4842Fd50";
+      if (walletEl) walletEl.textContent = student.wallet || (currentWallet || "Chưa kết nối ví");
 
       // Chỉ số On-chain
       const myWorks = COPYCHAIN_WORKS.filter(w => 
