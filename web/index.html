@@ -2369,7 +2369,7 @@
           
           <div class="f-group">
             <label>Tên tác phẩm *:</label>
-            <input type="text" id="wizWorkTitle" class="f-input" placeholder="Ví dụ: Nền tảng Xác thực Tác quyền Trực tuyến COPYCHAIN" value="Hệ thống Bảo chứng Bản quyền NCKH trên Blockchain Ethereum">
+            <input type="text" id="wizWorkTitle" class="f-input" placeholder="Nhập tên tác phẩm, công trình nghiên cứu...">
           </div>
 
           <div class="f-row">
@@ -2389,7 +2389,7 @@
             </div>
             <div class="f-group">
               <label>Ngày hoàn thành tác phẩm *:</label>
-              <input type="date" id="wizDateCompleted" class="f-input" value="2026-03-23">
+              <input type="date" id="wizDateCompleted" class="f-input">
             </div>
           </div>
 
@@ -2417,7 +2417,7 @@
 
           <div class="f-group">
             <label>Mô tả tóm tắt nội dung tác phẩm:</label>
-            <textarea id="wizDescription" class="f-textarea" rows="3" placeholder="Tóm tắt công năng, tính mới và đặc điểm sáng tạo của tác phẩm...">Giải pháp bảo chứng quyền sở hữu trí tuệ sơ khởi cho đề tài nghiên cứu và giải pháp công nghệ bằng Proof of Existence trên Blockchain Ethereum Sepolia.</textarea>
+            <textarea id="wizDescription" class="f-textarea" rows="3" placeholder="Tóm tắt công năng, tính mới và đặc điểm sáng tạo của tác phẩm..."></textarea>
           </div>
 
           <div class="wizard-actions-row">
@@ -2447,22 +2447,22 @@
             <div class="f-row">
               <div class="f-group">
                 <label>Họ và tên tác giả chính *:</label>
-                <input type="text" id="wizAuthorName" class="f-input" value="Lê Văn Quang Huy">
+                <input type="text" id="wizAuthorName" class="f-input" placeholder="Họ và tên tác giả chính...">
               </div>
               <div class="f-group">
                 <label>Số CCCD / CMND *:</label>
-                <input type="text" id="wizAuthorIdCard" class="f-input" value="046205001234">
+                <input type="text" id="wizAuthorIdCard" class="f-input" placeholder="Số CCCD / CMND...">
               </div>
             </div>
 
             <div class="f-row">
               <div class="f-group">
                 <label>Email liên hệ *:</label>
-                <input type="email" id="wizAuthorEmail" class="f-input" value="23k4300010@hce.edu.vn">
+                <input type="email" id="wizAuthorEmail" class="f-input" placeholder="Email liên hệ...">
               </div>
               <div class="f-group">
                 <label>Số điện thoại *:</label>
-                <input type="tel" id="wizAuthorPhone" class="f-input" value="0912 345 678">
+                <input type="tel" id="wizAuthorPhone" class="f-input" placeholder="Số điện thoại...">
               </div>
             </div>
 
@@ -2477,7 +2477,7 @@
               </div>
               <div class="f-group">
                 <label>Tỷ lệ quyền sở hữu (%) *:</label>
-                <input type="number" id="wizAuthorShare" class="f-input" min="1" max="100" value="70" onchange="calculateShareTotal()">
+                <input type="number" id="wizAuthorShare" class="f-input" min="1" max="100" value="100" onchange="calculateShareTotal()">
               </div>
             </div>
           </div>
@@ -3316,7 +3316,7 @@
         <span style="font-size: 26px;">🔐</span>
         <div>
           <h4 style="margin: 0; font-size: 17px; font-weight: 800;">Đăng Nhập COPYCHAIN</h4>
-          <p style="margin: 2px 0 0; font-size: 11.5px; opacity: 0.85;">Đăng nhập bằng Email / SĐT &amp; Liên kết ví MetaMask</p>
+          <p style="margin: 2px 0 0; font-size: 11.5px; opacity: 0.85;">Đăng nhập bằng Email hoặc Số điện thoại của bạn</p>
         </div>
       </div>
     </div>
@@ -3324,30 +3324,14 @@
       <form id="formLoginAccount" onsubmit="event.preventDefault(); handleAccountLogin();">
         <div class="f-group">
           <label>Tên đăng nhập (Email hoặc Số điện thoại) *:</label>
-          <input type="text" id="loginUsername" class="f-input" placeholder="Ví dụ: 23k4300010@hce.edu.vn hoặc 0912 345 678" value="23k4300010@hce.edu.vn" required>
+          <input type="text" id="loginUsername" class="f-input" placeholder="Nhập Email hoặc Số điện thoại..." required>
         </div>
         <div class="f-group">
           <label>Mật khẩu người dùng *:</label>
-          <input type="password" id="loginPassword" class="f-input" placeholder="Nhập mật khẩu..." value="123" required>
-        </div>
-        
-        <!-- Khối kết nối ví MetaMask kèm theo -->
-        <div style="background: var(--bg-subtle); border: 1.5px solid var(--border-color); border-radius: 8px; padding: 12px 14px; margin-bottom: 16px;">
-          <div style="display: flex; justify-content: space-between; align-items: center;">
-            <div style="display: flex; align-items: center; gap: 6px; font-size: 12.5px; font-weight: 700; color: var(--text-primary);">
-              <span>🦊</span> <span>Ví Web3 MetaMask:</span>
-            </div>
-            <button type="button" onclick="openWalletModal()" style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 4px; padding: 2px 8px; font-size: 11px; font-weight: 600; cursor: pointer; color: var(--primary);">⚙️ Đổi ví</button>
-          </div>
-          <div style="font-size: 11.5px; color: var(--text-muted); margin: 6px 0 10px; font-family: var(--font-mono); word-break: break-all;" id="lblLoginWalletAddr">
-            Chưa kết nối ví MetaMask
-          </div>
-          <button type="button" onclick="loginWithMetaMaskWallet()" style="width: 100%; background: #fff7ed; border: 1.5px solid #fdba74; color: #ea580c; border-radius: 6px; padding: 8px; font-size: 12px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.2s;">
-            <span>🦊</span> <span>Đăng Nhập Nhanh Bằng Ví MetaMask (1-Click)</span>
-          </button>
+          <input type="password" id="loginPassword" class="f-input" placeholder="Nhập mật khẩu..." required>
         </div>
 
-        <button type="submit" class="btn-exec-register" style="margin-top: 0; width: 100%; padding: 12px; font-size: 14px;">
+        <button type="submit" class="btn-exec-register" style="margin-top: 10px; width: 100%; padding: 12px; font-size: 14px;">
           Đăng Nhập &amp; Mở Khóa Tính Năng &rarr;
         </button>
       </form>
@@ -3405,7 +3389,7 @@
         <div class="f-row">
           <div class="f-group">
             <label>Ngày sinh:</label>
-            <input type="date" id="regAccDob" class="f-input" value="2005-01-10">
+            <input type="date" id="regAccDob" class="f-input">
           </div>
           <div class="f-group">
             <label>Địa chỉ thường trú:</label>
@@ -3676,9 +3660,7 @@
     let wizSelectedFile = null;
     let wizComputedSha256 = "";
     let wizComputedKeccak256 = "";
-    let wizCoAuthors = [
-      { name: "Lại Vương Gia Bảo", role: "Đồng tác giả công nghệ", share: 30 }
-    ];
+    let wizCoAuthors = [];
     let lastRegisteredWork = null;
 
     // --- HÀM TÍNH SHA-256 BẰNG WEB CRYPTO API ---
@@ -6557,7 +6539,7 @@
     // Khởi tạo mặc định ban đầu
     setAuthorType("single");
     updateAuthUI();
-    updateActiveStudentUI();
+    if (typeof updateActiveStudentUI === "function") updateActiveStudentUI();
     generateNewArchiveCode(true);
     renderLiveTicker();
     populateDeedRecordPicker();
