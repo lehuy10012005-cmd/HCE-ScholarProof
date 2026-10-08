@@ -20,6 +20,7 @@ import json
 import ssl
 import smtplib
 from http.server import HTTPServer, BaseHTTPRequestHandler
+import email.utils
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 
@@ -86,69 +87,63 @@ def send_otp_email(to_email, to_name, otp_code):
 
     subject = f"[COPYCHAIN] Mã xác thực OTP đăng ký tài khoản: {otp_code}"
     
-    # Nội dung văn bản thuần
-    text_content = f"""Xin chào {to_name or 'Quý tác giả'},
+    # Nội dung văn bản thuần tự nhiên
+    text_content = f"""Xin chào {to_name or 'bạn'},
 
-Mã OTP xác thực đăng ký tài khoản trên Hệ thống Bản quyền COPYCHAIN của bạn là: {otp_code}
+Bạn vừa yêu cầu mã xác nhận đăng ký tài khoản trên hệ thống COPYCHAIN.
+Mã xác nhận của bạn là: {otp_code}
 
-Mã có hiệu lực trong vòng 60 giây. Tuyệt đối không chia sẻ mã này cho bất kỳ ai.
+Mã có hiệu lực trong vòng 5 phút. Nếu bạn không gửi yêu cầu này, vui lòng bỏ qua email.
+
 Trân trọng,
-COPYCHAIN LegalTech Security Team
+Lê Văn Quang Huy - Dự án COPYCHAIN (ĐH Kinh tế Huế)
 """
 
-    # Nội dung HTML định dạng sang trọng
+    # Nội dung HTML tối giản chuẩn mực (không dùng emoji, không dùng màu đỏ cảnh báo)
     html_content = f"""<!DOCTYPE html>
 <html>
 <head>
   <meta charset="utf-8">
-  <style>
-    body {{ font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f8fafc; margin: 0; padding: 20px; color: #1e293b; }}
-    .container {{ max-width: 540px; margin: 0 auto; background: #ffffff; border-radius: 12px; border: 1px solid #e2e8f0; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }}
-    .header {{ background: linear-gradient(135deg, #1e3a8a, #2563eb); padding: 24px; text-align: center; color: #ffffff; }}
-    .header h1 {{ margin: 0; font-size: 22px; font-weight: 800; letter-spacing: 1px; }}
-    .header p {{ margin: 6px 0 0; font-size: 13px; opacity: 0.9; }}
-    .body-content {{ padding: 28px 24px; }}
-    .otp-card {{ background: #f1f5f9; border: 2px dashed #3b82f6; border-radius: 8px; text-align: center; padding: 18px; margin: 20px 0; }}
-    .otp-code {{ font-size: 32px; font-weight: 800; letter-spacing: 8px; color: #1e40af; font-family: 'Consolas', monospace; }}
-    .footer {{ background: #f8fafc; border-top: 1px solid #e2e8f0; padding: 16px; text-align: center; font-size: 11.5px; color: #64748b; }}
-  </style>
 </head>
-<body>
-  <div class="container">
-    <div class="header">
-      <h1>🛡️ COPYCHAIN LEGALTECH</h1>
-      <p>Hệ thống Đăng ký & Xác thực Bản quyền Tác giả On-Chain</p>
+<body style="margin: 0; padding: 24px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #f9fafb; color: #111827;">
+  <div style="max-width: 520px; margin: 0 auto; background: #ffffff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 32px 28px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+    <div style="border-bottom: 2px solid #2563eb; padding-bottom: 12px; margin-bottom: 20px;">
+      <h2 style="margin: 0; font-size: 18px; color: #1e3a8a; font-weight: 700;">Hệ thống Bản quyền Số COPYCHAIN</h2>
+      <p style="margin: 4px 0 0; font-size: 12px; color: #6b7280;">Trường Đại học Kinh tế - Đại học Huế</p>
     </div>
-    <div class="body-content">
-      <p style="font-size: 15px;">Xin chào <strong>{to_name or 'Quý tác giả'}</strong>,</p>
-      <p style="font-size: 14px; line-height: 1.6; color: #475569;">
-        Bạn đang tiến hành đăng ký tài khoản tác giả trên cổng dịch vụ <strong>COPYCHAIN</strong>. Dưới đây là mã xác thực một lần (OTP) của bạn:
-      </p>
-      
-      <div class="otp-card">
-        <div style="font-size: 12px; color: #64748b; text-transform: uppercase; font-weight: 700; margin-bottom: 6px;">Mã OTP Xác Thực (6 Chữ Số)</div>
-        <div class="otp-code">{otp_code}</div>
-        <div style="font-size: 12px; color: #dc2626; margin-top: 6px; font-weight: 600;">⏱️ Mã có hiệu lực trong 60 giây</div>
-      </div>
 
-      <p style="font-size: 13px; color: #64748b; line-height: 1.5;">
-        ⚠️ <strong>Cảnh báo an toàn:</strong> Không cung cấp mã OTP này cho bất kỳ ai để đảm bảo an toàn danh tính và quyền sở hữu trí tuệ tác phẩm của bạn trên Blockchain.
-      </p>
+    <p style="font-size: 14.5px; line-height: 1.6; margin: 0 0 16px;">Xin chào <strong>{to_name or 'bạn'}</strong>,</p>
+    <p style="font-size: 14px; line-height: 1.6; color: #374151; margin: 0 0 20px;">
+      Bạn vừa thực hiện đăng ký tài khoản trên cổng dịch vụ COPYCHAIN. Dưới đây là mã số xác nhận của bạn:
+    </p>
+
+    <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 6px; padding: 18px; text-align: center; margin: 0 0 24px;">
+      <div style="font-size: 12px; color: #166534; font-weight: 600; text-transform: uppercase; margin-bottom: 6px;">Mã xác nhận tài khoản</div>
+      <div style="font-size: 32px; font-weight: 800; letter-spacing: 6px; color: #15803d; font-family: 'Consolas', 'Courier New', monospace;">{otp_code}</div>
+      <div style="font-size: 12px; color: #4b5563; margin-top: 6px;">Hiệu lực trong 5 phút</div>
     </div>
-    <div class="footer">
-      Email này được gửi tự động từ hệ thống COPYCHAIN theo yêu cầu của bạn.<br>
-      © 2026 COPYCHAIN • Đại học Kinh tế (HCE) • Phân hiệu Web3/LegalTech.
+
+    <p style="font-size: 13px; line-height: 1.5; color: #6b7280; margin: 0 0 24px;">
+      Nếu bạn không yêu cầu mã này, có thể một ai đó đã nhập nhầm địa chỉ email của bạn. Bạn không cần làm gì thêm.
+    </p>
+
+    <div style="border-top: 1px solid #f3f4f6; padding-top: 16px; font-size: 12px; color: #9ca3af; line-height: 1.5;">
+      Trân trọng,<br>
+      <strong>Lê Văn Quang Huy</strong> • Phân hiệu Web3 / LegalTech<br>
+      Khoa Hệ thống Thông tin Kinh tế, Trường Đại học Kinh tế - ĐH Huế
     </div>
   </div>
 </body>
-</html>
-"""
+</html>"""
 
     msg = MIMEMultipart("alternative")
-    msg["Subject"] = f"Mã xác thực OTP đăng ký COPYCHAIN: {otp_code}"
-    msg["From"] = f"COPYCHAIN <{sender_email}>"
+    msg["Subject"] = f"Mã xác nhận tài khoản COPYCHAIN: {otp_code}"
+    msg["From"] = f"Lê Văn Quang Huy <{sender_email}>"
     msg["To"] = to_email
     msg["Reply-To"] = sender_email
+    msg["Date"] = email.utils.formatdate(localtime=True)
+    msg["Message-ID"] = email.utils.make_msgid(domain="gmail.com")
+    msg["MIME-Version"] = "1.0"
 
     part1 = MIMEText(text_content, "plain", "utf-8")
     part2 = MIMEText(html_content, "html", "utf-8")
