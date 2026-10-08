@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>HCE-ScholarProof | Cổng Bảo chứng Quyền tác giả & Phòng chống Trùng lặp Đề tài Khoa học - ĐH Kinh tế Huế</title>
+  <title>HCE Ledger | Cổng Bảo chứng Quyền tác giả & Sổ cái Học thuật On-Chain</title>
   <link rel="icon" type="image/png" href="hce-logo.png">
   
   <!-- Phông chữ Google Fonts chuẩn học thuật & hiện đại -->
@@ -2151,19 +2151,19 @@
     <div class="ann-inner">
       <div style="display: flex; align-items: center; gap: 8px;">
         <span class="ann-pill">LEGALTECH WEB3</span>
-        <span class="ann-title">COPYCHAIN &bull; Hệ thống Đăng ký &amp; Xác thực Tác quyền Minh bạch bằng Blockchain</span>
+        <span class="ann-title">HCE LEDGER &bull; Hệ thống Đăng ký &amp; Xác thực Tác quyền Minh bạch bằng Blockchain</span>
       </div>
       <a href="https://sepolia.etherscan.io/address/0xa2F53106B3dFdf23b6b158022646d231A21e49cb" target="_blank" class="ann-link">Sepolia Contract ↗</a>
     </div>
   </div>
 
-  <!-- HEADER CHUẨN ĐỒNG NHẤT COPYCHAIN -->
+  <!-- HEADER CHUẨN ĐỒNG NHẤT HCE LEDGER -->
   <header class="main-header">
     <div class="header-inner">
       <a href="#" class="brand-wrap" onclick="switchNavTab('tab-landing')">
-        <img src="hce-logo.png" alt="Logo COPYCHAIN" class="brand-logo-img">
+        <img src="hce-logo.png" alt="Logo HCE Ledger" class="brand-logo-img">
         <div class="brand-title">
-          <h1>COPYCHAIN</h1>
+          <h1>HCE LEDGER</h1>
           <p>Đăng ký tác quyền &bull; Xác thực minh bạch bằng Blockchain</p>
         </div>
       </a>
@@ -2210,20 +2210,7 @@
       </div>
   </header>
 
-  <!-- BĂNG CHUYỀN KHỐI THỜI GIAN THỰC (LIVE ON-CHAIN ACTIVITY FEED) -->
-  <div class="live-ticker-wrap">
-    <div class="live-ticker-inner">
-      <div class="live-ticker-badge" title="Đang đối soát liên tục với mạng Sepolia Testnet">
-        <span class="live-pulse-dot"></span>
-        <span>SEPOLIA LIVE</span>
-      </div>
-      <div class="live-ticker-content">
-        <div class="live-ticker-track" id="liveTickerTrack">
-          <!-- Render tự động bằng JavaScript -->
-        </div>
-      </div>
-    </div>
-  </div>
+  
 
   <!-- ========================================================================
        TAB 1: LANDING PAGE (TINH GIẢN - TẬP TRUNG CÔNG NĂNG CỐT LÕI)
@@ -2232,28 +2219,27 @@
     <!-- Hero Banner -->
     <div class="landing-hero">
       <div class="hero-grid">
-        <div>
-          <span class="hero-badge-tag">KHOA HTTT KINH TẾ &bull; HCE &bull; NIÊN KHÓA K57</span>
+        <!-- Cột trái: Nội dung giới thiệu & Nút chuyển hướng -->
+        <div class="hero-left-content">
+          <span class="hero-badge-tag">KHOA HTTT KINH TẾ &bull; TRƯỜNG ĐH KINH TẾ &bull; ĐH HUẾ</span>
           <h2 class="hero-main-title">
             Bảo Chứng Bản Quyền Ý Tưởng Trên <span>Blockchain</span>
           </h2>
           <p class="hero-lead-text">
-            Xác lập Bằng chứng Tồn tại (Proof of Existence) bất biến cho đề cương NCKH & Khóa luận tốt nghiệp của sinh viên Trường ĐH Kinh tế - ĐH Huế.
+            Nền tảng xác thực quyền ưu tiên học thuật và bảo chứng sở hữu trí tuệ bất biến trên Blockchain dành cho sinh viên Trường Đại học Kinh tế - Đại học Huế.
           </p>
 
-          
-          </div>
-
           <div class="hero-cta-group">
-            <button class="btn-cta-primary" onclick="checkAuthAndSwitchTab('tab-register')">✍️ Đăng ký đề cương ngay</button>
+            <button class="btn-cta-primary" onclick="checkAuthAndSwitchTab('tab-register')">✍️ Đăng ký xác thực ngay</button>
             <button class="btn-cta-secondary" onclick="switchNavTab('tab-appraisal')">🔍 Thẩm định đề tài</button>
           </div>
         </div>
 
-        <div>
+        <!-- Cột phải: Thẻ biểu trưng & thông tin HCE Ledger -->
+        <div class="hero-right-visual">
           <div class="hero-graphic-card">
             <img src="hce-logo.png" alt="Biểu trưng Đại học Kinh tế Huế" class="hero-crest-img">
-            <h3>HCE-SCHOLARPROOF</h3>
+            <h3>HCE LEDGER</h3>
             <p>Bảo chứng quyền tác giả sơ khởi bằng hàm băm mật mã và mốc thời gian khối trên mạng Ethereum Sepolia.</p>
           </div>
         </div>
@@ -2266,13 +2252,13 @@
         <!-- Cổng 1: Dành cho Sinh viên -->
         <div class="gateway-card student">
           <div>
-            <div class="gateway-badge">DÀNH CHO SINH VIÊN K57</div>
+            <div class="gateway-badge">DÀNH CHO SINH VIÊN HCE</div>
             <h4>✍️ Đăng Ký Bản Quyền Ý Tưởng</h4>
             <p>Nộp bản thảo đề cương để băm vân tay số Keccak-256 an toàn trong bộ nhớ RAM và nhận Chứng thư A4 bảo vệ ý tưởng trước khi bảo vệ.</p>
           </div>
           <div style="margin-top: 20px;">
             <button class="btn-gateway-action primary" onclick="checkAuthAndSwitchTab('tab-register')">
-              Bắt Đầu Đăng Ký Đề Cương &rarr;
+              Bắt Đầu Đăng Ký Xác Thực &rarr;
             </button>
           </div>
         </div>
@@ -2828,7 +2814,7 @@
               <strong>Nguyên nhân có thể xảy ra:</strong>
               <ul style="margin: 6px 0 10px 18px; padding: 0;">
                 <li>File tác phẩm đã bị chỉnh sửa nội dung, thay đổi định dạng hoặc tái xuất bản sau thời điểm đăng ký gốc.</li>
-                <li>Tác phẩm này chưa từng được nộp và đóng gói giao dịch trên Hợp đồng Thông minh COPYCHAIN.</li>
+                <li>Tác phẩm này chưa từng được nộp và đóng gói giao dịch trên Hợp đồng Thông minh HCE Ledger.</li>
                 <li>Bạn vừa tải lên một bản thảo khác với bản chính thức đã lưu hành.</li>
               </ul>
               <strong>Mã SHA-256 trích xuất từ file tải lên:</strong>
@@ -3282,7 +3268,7 @@
       <div style="display: flex; align-items: center; gap: 10px;">
         <span style="font-size: 26px;">🔐</span>
         <div>
-          <h4 style="margin: 0; font-size: 17px; font-weight: 800;">Đăng Nhập COPYCHAIN</h4>
+          <h4 style="margin: 0; font-size: 17px; font-weight: 800;">Đăng Nhập HCE Ledger</h4>
           <p style="margin: 2px 0 0; font-size: 11.5px; opacity: 0.85;">Đăng nhập bằng Email hoặc Số điện thoại của bạn</p>
         </div>
       </div>
@@ -3324,7 +3310,7 @@
       <div style="display: flex; align-items: center; gap: 10px;">
         <span style="font-size: 26px;">📝</span>
         <div>
-          <h4 style="margin: 0; font-size: 17px; font-weight: 800;">Đăng Ký Tài Khoản COPYCHAIN</h4>
+          <h4 style="margin: 0; font-size: 17px; font-weight: 800;">Đăng Ký Tài Khoản HCE Ledger</h4>
           <p style="margin: 2px 0 0; font-size: 11.5px; opacity: 0.85;">Đăng ký danh tính tác giả &amp; xác thực mã OTP an toàn</p>
         </div>
       </div>
@@ -4631,7 +4617,7 @@
           title: lastRegisteredWork.title,
           type: lastRegisteredWork.type,
           faculty: lastRegisteredWork.department,
-          advisor: "Hội đồng Thẩm định COPYCHAIN",
+          advisor: "Hội đồng Thẩm định HCE Ledger",
           authors: lastRegisteredWork.authorsText,
           hash: lastRegisteredWork.keccak256,
           sha256: lastRegisteredWork.sha256,
