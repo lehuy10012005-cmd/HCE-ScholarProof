@@ -2322,7 +2322,12 @@
         <!-- ==================== BƯỚC 1: THÔNG TIN TÁC PHẨM ==================== -->
         <div class="wizard-panel active" id="wizardPanel1">
           <div style="margin-bottom: 20px;">
-            <h3 style="font-size: 17px; font-weight: 800; color: var(--text-primary); margin-bottom: 4px;">Bước 1: Thông Tin Tác Phẩm</h3>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; flex-wrap: wrap; gap: 8px;">
+              <h3 style="font-size: 17px; font-weight: 800; color: var(--text-primary); margin: 0;">Bước 1: Thông Tin Tác Phẩm</h3>
+              <button type="button" onclick="resetWizardForNewRegistration()" class="btn-cta-secondary" style="padding: 4px 10px; font-size: 11px; font-weight: 700; gap: 4px; display: inline-flex; align-items: center;" title="Làm mới form về trạng thái trống ban đầu">
+                <span>🔄</span> <span>Làm mới form trống</span>
+              </button>
+            </div>
             <p style="font-size: 12.5px; color: var(--text-muted); margin: 0;">Khai báo chi tiết thông tin định danh tác phẩm cần bảo hộ quyền tác giả</p>
           </div>
           
@@ -2486,20 +2491,40 @@
             </div>
 
             <div id="wizDropFilledState" class="file-loaded-container" style="display: none;">
-              <div class="file-loaded-card">
-                <div class="file-loaded-icon-wrap pdf" id="wizLoadedIconWrap">
+              <div class="file-loaded-card" style="background: #ffffff; border: 1.5px solid #10b981; border-radius: var(--radius-md); padding: 12px 14px; box-shadow: var(--shadow-sm); display: flex; align-items: center; gap: 14px;">
+                <div class="file-loaded-icon-wrap pdf" id="wizLoadedIconWrap" style="width: 48px; height: 50px; border-radius: 6px; background: #e0f2fe; border: 1px solid #7dd3fc; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0;">
                   <span id="wizLoadedEmoji">📦</span>
-                  <span class="file-loaded-badge" id="wizLoadedBadge">FILE</span>
+                  <span class="file-loaded-badge" id="wizLoadedBadge" style="font-size: 9px; font-weight: 800; color: var(--primary);">FILE</span>
                 </div>
-                <div class="file-loaded-details">
-                  <div class="file-loaded-name" id="wizLoadedName">SourceCode_CopyChain_v1.zip</div>
-                  <div class="file-loaded-meta">
-                    <span id="wizLoadedSize">8.42 MB</span>
+                <div class="file-loaded-details" style="flex: 1; min-width: 0;">
+                  <div class="file-loaded-name" id="wizLoadedName" style="font-size: 13.5px; font-weight: 700; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 3px;">SourceCode_CopyChain_v1.zip</div>
+                  <div class="file-loaded-meta" style="font-size: 11.5px; color: #059669; display: flex; align-items: center; gap: 6px;">
+                    <span id="wizLoadedSize" style="font-weight: 700; color: var(--text-secondary);">8.42 MB</span>
                     <span>&bull;</span>
-                    <span style="color: #059669; font-weight: 600;">✓ Đã tính SHA-256 &amp; Keccak-256 an toàn trong RAM</span>
+                    <span style="font-weight: 600;">✓ Đã tính SHA-256 &amp; Keccak-256 an toàn trong RAM</span>
                   </div>
                 </div>
               </div>
+              <div class="file-loaded-actions" style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 8px;">
+                <button type="button" class="btn-file-action btn-file-change" onclick="event.stopPropagation(); triggerSelectNewWizFile();" style="background: #e0f2fe; border: 1.5px solid #0284c7; color: #0284c7; padding: 7px 14px; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 5px;">
+                  <span>🔄</span> <span>Thay thế / Đổi tệp khác</span>
+                </button>
+                <button type="button" class="btn-file-action btn-file-remove" onclick="event.stopPropagation(); removeWizFile();" style="background: #fee2e2; border: 1.5px solid #dc2626; color: #dc2626; padding: 7px 14px; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 5px;">
+                  <span>🗑️</span> <span>Xóa bỏ tệp</span>
+                </button>
+              </div>
+            </div>
+          </div>
+          <!-- Thanh điều khiển thao tác tệp trực quan -->
+          <div id="wizFileActionToolbar" style="display: none; justify-content: flex-end; gap: 10px; margin-top: 8px;">
+            <button type="button" onclick="triggerSelectNewWizFile()" style="background: #e0f2fe; border: 1.5px solid #0284c7; color: #0284c7; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 4px;">
+              <span>🔄</span> <span>Thay thế / Chọn tệp khác</span>
+            </button>
+            <button type="button" onclick="removeWizFile()" style="background: #fee2e2; border: 1.5px solid #dc2626; color: #dc2626; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 4px;">
+              <span>🗑️</span> <span>Xóa bỏ tệp</span>
+            </button>
+          </div>
+        </div>
               <div class="file-loaded-actions">
                 <button type="button" class="btn-file-action btn-file-change" onclick="event.stopPropagation(); triggerSelectNewWizFile();">🔄 Đổi tệp khác</button>
                 <button type="button" class="btn-file-action btn-file-remove" onclick="event.stopPropagation(); removeWizFile();">🗑️ Xóa tệp</button>
@@ -2524,9 +2549,7 @@
             </div>
           </div>
 
-          <div class="legal-disclaimer-box" style="margin-top: 16px;">
-            🔒 <strong>Bảo mật tuyệt đối (Zero-Knowledge Privacy):</strong> File tác phẩm chỉ được đọc cục bộ trong trình duyệt web của bạn để tính toán chuỗi hash 64 ký tự. Không có bất kỳ byte nội dung tệp thô nào được gửi ra ngoài máy tính của bạn.
-          </div>
+          
 
           <div class="wizard-actions-row">
             <button type="button" class="btn-cta-secondary" onclick="prevWizardStep()">&larr; Quay lại Bước 2</button>
@@ -2983,11 +3006,11 @@
             <tbody>
               <tr>
                 <td class="label-col">Mã Lưu Trữ:</td>
-                <td class="val-col mono" id="deedArchiveCode">HCE-IP-2026-K57-010</td>
+                <td class="val-col mono" id="deedArchiveCode">HCE-IP-CHỜ-CẤP</td>
               </tr>
               <tr>
                 <td class="label-col">Tiêu Đề Đề Tài:</td>
-                <td class="val-col" id="deedTitle">Bảo chứng quyền sở hữu trí tuệ sơ khởi bằng Proof of Existence</td>
+                <td class="val-col" id="deedTitle">(Vui lòng chọn công trình từ danh sách hoặc đăng ký tác phẩm mới)</td>
               </tr>
               <tr>
                 <td class="label-col">Loại Hình:</td>
@@ -3003,7 +3026,7 @@
               </tr>
               <tr>
                 <td class="label-col">Tác Giả / Nhóm:</td>
-                <td class="val-col" id="deedAuthors">Lê Văn Quang Huy (23K4300010) & Lại Vương Gia Bảo (23K4300024)</td>
+                <td class="val-col" id="deedAuthors">(Chưa có tác giả)</td>
               </tr>
               <tr>
                 <td class="label-col">Mã Băm SHA-256:</td>
@@ -3552,71 +3575,29 @@
     } catch (e) {}
 
     // Danh sách Tác phẩm Toàn hệ thống COPYCHAIN
-    let COPYCHAIN_WORKS = [
-      {
-        id: "CC-2026-0010",
-        code: "CC-2026-0010",
-        title: "Bảo chứng quyền sở hữu trí tuệ sơ khởi bằng Proof of Existence",
-        type: "Tài liệu nghiên cứu / Đề tài NCKH",
-        department: "Khoa HTTT Kinh tế",
-        dateCompleted: "2026-03-23",
-        dateRegistered: "23/03/2026 15:30",
-        authorsText: "Lê Văn Quang Huy (70%) & Lại Vương Gia Bảo (30%)",
-        authorEmail: "23k4300010@hce.edu.vn",
-        authorPhone: "0912 345 678",
-        authorWallet: "0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7",
-        fileName: "De_cuong_NCKH_K57_LeHuy.pdf",
-        fileSize: "5.65 MB",
-        sha256: "b4c3e8712a4d95e0192837465abcdeff0123456789abcdef0123456789abcdef",
-        keccak256: "0x8e4da685a41c7ce20441ae4c62629d3d2eacd22c5ceb54b0d0a7208ca76396f1",
-        txHash: "0x12a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3",
-        blockNumber: 6821940,
-        status: "VERIFIED",
-        statusText: "Đã xác thực On-chain"
-      },
-      {
-        id: "CC-2026-0024",
-        code: "CC-2026-0024",
-        title: "Mô hình định giá tài sản số dựa trên Smart Contract và Dữ liệu On-chain",
-        type: "Phần mềm & Thuật toán",
-        department: "Khoa Tài chính - Ngân hàng",
-        dateCompleted: "2026-01-23",
-        dateRegistered: "23/01/2026 09:15",
-        authorsText: "Nguyễn Văn An (100%)",
-        authorEmail: "22k4100055@hce.edu.vn",
-        authorPhone: "0905 111 222",
-        authorWallet: "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
-        fileName: "Asset_Pricing_SmartContract.sol",
-        fileSize: "1.24 MB",
-        sha256: "c5d4e3f2a1b0c9d8e7f6a5b4c3d2e1f0a9b8c7d6e5f4a3b2c1d0e9f8a7b6c5d4",
-        keccak256: "0x1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2c",
-        txHash: "0x98a7b6c5d4e3f2a1b0c9d8e7f6a5b4c3d2e1f0a9b8c7d6e5f4a3b2c1d0e9f8a7",
-        blockNumber: 6820712,
-        status: "VERIFIED",
-        statusText: "Đã xác thực On-chain"
-      },
-      {
-        id: "CC-2026-0035",
-        code: "CC-2026-0035",
-        title: "Nền tảng Tự động Hóa Quy trình Pháp lý Hợp đồng Thông minh (LegalTech)",
-        type: "Website & Nền tảng trực tuyến",
-        department: "Khoa HTTT Kinh tế",
-        dateCompleted: "2026-03-20",
-        dateRegistered: "20/03/2026 14:00",
-        authorsText: "Lê Hoàng Cường (100%)",
-        authorEmail: "23k4300035@hce.edu.vn",
-        authorPhone: "0935 777 888",
-        authorWallet: "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC",
-        fileName: "LegalTech_Architecture_Spec.docx",
-        fileSize: "3.80 MB",
-        sha256: "a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2",
-        keccak256: "0x7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b",
-        txHash: "0x54a3b2c1d0e9f8a7b6c5d4e3f2a1b0c9d8e7f6a5b4c3d2e1f0a9b8c7d6e5f4a3",
-        blockNumber: 6819504,
-        status: "PENDING",
-        statusText: "Chờ duyệt"
+    function getStoredWorks() {
+      try {
+        const stored = localStorage.getItem("COPYCHAIN_REGISTERED_WORKS");
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          if (Array.isArray(parsed)) {
+            // Lọc bỏ các mẫu cũ vô nghĩa nếu còn tồn dư trong localStorage
+            return parsed.filter(w => !["CC-2026-0010", "CC-2026-0024", "CC-2026-0035", "HCE-IP-2026/010", "HCE-IP-2026/024", "HCE-IP-2026/035"].includes(w.id || w.code));
+          }
+        }
+      } catch (e) {
+        console.warn("Lỗi đọc works:", e);
       }
-    ];
+      return []; // Khởi tạo trống, không dùng dữ liệu mẫu
+    }
+
+    function saveStoredWorks(works) {
+      try {
+        localStorage.setItem("COPYCHAIN_REGISTERED_WORKS", JSON.stringify(works));
+      } catch (e) {}
+    }
+
+    let COPYCHAIN_WORKS = getStoredWorks();
 
     // State Wizard 6 bước
     let currentWizardStep = 1;
@@ -4484,6 +4465,8 @@
       const lblKec = document.getElementById("lblWizKeccakHash");
       if (lblSha) lblSha.textContent = wizComputedSha256;
       if (lblKec) lblKec.textContent = wizComputedKeccak256;
+      const toolbar = document.getElementById("wizFileActionToolbar");
+      if (toolbar) toolbar.style.display = "flex";
       toast("Đã trích xuất mã băm SHA-256 & Keccak-256 thành công!", "success");
     }
 
@@ -4503,10 +4486,13 @@
       if (emptyState) emptyState.style.display = "block";
       const filledState = document.getElementById("wizDropFilledState");
       if (filledState) filledState.style.display = "none";
+      const toolbar = document.getElementById("wizFileActionToolbar");
+      if (toolbar) toolbar.style.display = "none";
       const lblSha = document.getElementById("lblWizSha256Hash");
       const lblKec = document.getElementById("lblWizKeccakHash");
       if (lblSha) lblSha.textContent = "b4c3e8... (Vui lòng tải tệp lên để băm)";
       if (lblKec) lblKec.textContent = "0x8e4d... (Vui lòng tải tệp lên để băm)";
+      toast("Đã xóa bỏ tệp tác phẩm. Bạn có thể chọn tệp mới!", "info");
     }
 
     function triggerSelectNewWizFile() {
@@ -4766,11 +4752,11 @@
         statusText: "Đã xác thực On-chain"
       };
 
-      // Đưa vào đầu danh sách hệ thống
+      // Đưa vào đầu danh sách hệ thống & lưu trữ localStorage
       COPYCHAIN_WORKS.unshift(lastRegisteredWork);
-      
-      // Đồng bộ sang SAMPLE_RECORDS cho sổ cái chung
-      SAMPLE_RECORDS.unshift({
+      saveStoredWorks(COPYCHAIN_WORKS);
+
+      const newLedgerRec = {
         code: lastRegisteredWork.code,
         date: now.toLocaleDateString("vi-VN"),
         title: lastRegisteredWork.title,
@@ -4783,9 +4769,48 @@
         hash: lastRegisteredWork.keccak256,
         sha256: lastRegisteredWork.sha256,
         block: lastRegisteredWork.blockNumber,
-        time: now.toISOString(),
+        time: dateStr + " GMT+7",
         wallet: lastRegisteredWork.authorWallet
-      });
+      };
+
+      // Đồng bộ sang SAMPLE_RECORDS & lưu trữ localStorage
+      SAMPLE_RECORDS.unshift(newLedgerRec);
+      saveStoredRecords(SAMPLE_RECORDS);
+
+      // CẬP NHẬT HỒ SƠ TÁC GIẢ NGAY LẬP TỨC TRONG ALL_USERS & LOCALSTORAGE
+      let targetUser = ALL_USERS.find(u => 
+        (u.email && u.email.toLowerCase() === mainEmail.toLowerCase()) ||
+        (currentAuthUser && u.id === currentAuthUser.id) ||
+        (realSignerAddress && u.wallet && u.wallet.toLowerCase() === realSignerAddress.toLowerCase())
+      );
+      if (targetUser) {
+        if (realSignerAddress) targetUser.wallet = realSignerAddress;
+      } else {
+        targetUser = {
+          id: "AUTH-" + (ALL_USERS.length + 1),
+          mssv: (currentAuthUser && currentAuthUser.mssv) ? currentAuthUser.mssv : ("HCE-" + Math.floor(100000 + Math.random()*900000)),
+          name: (currentAuthUser && currentAuthUser.name) ? currentAuthUser.name : (document.getElementById("wizAuthorName").value || "Tác Giả HCE"),
+          fullName: (currentAuthUser && currentAuthUser.fullName) ? currentAuthUser.fullName : (document.getElementById("wizAuthorName").value || "Tác Giả HCE"),
+          idCard: (currentAuthUser && currentAuthUser.idCard) ? currentAuthUser.idCard : document.getElementById("wizAuthorIdCard").value,
+          email: mainEmail,
+          phone: mainPhone,
+          dob: (currentAuthUser && currentAuthUser.dob) ? currentAuthUser.dob : "2000-01-01",
+          address: (currentAuthUser && currentAuthUser.address) ? currentAuthUser.address : "Đại học Kinh tế Huế",
+          class: (currentAuthUser && currentAuthUser.class) ? currentAuthUser.class : "Tác Giả / Nhà Nghiên Cứu",
+          faculty: document.getElementById("wizDepartment").value || "Khoa HTTT Kinh tế",
+          wallet: realSignerAddress,
+          role: "AUTHOR",
+          roleName: "Tác Giả Bản Quyền",
+          badge: "✓ HCE VERIFIED AUTHOR",
+          avatar: (currentAuthUser && currentAuthUser.avatar) ? currentAuthUser.avatar : "TG"
+        };
+        ALL_USERS.unshift(targetUser);
+      }
+      saveStoredUsers(ALL_USERS);
+      if (currentAuthUser && currentAuthUser.email === targetUser.email) {
+        currentAuthUser.wallet = realSignerAddress;
+        try { localStorage.setItem("COPYCHAIN_CURRENT_USER", JSON.stringify(currentAuthUser)); } catch(e) {}
+      }
 
       // Cập nhật giao diện Bước 6
       document.getElementById("succRegCode").textContent = lastRegisteredWork.code;
@@ -4806,6 +4831,7 @@
       renderUserDashboard();
       renderAdminDashboard();
       renderLedgerTable(SAMPLE_RECORDS);
+      renderAuthorsDirectory();
       populateDeedRecordPicker();
     }
 
@@ -5013,72 +5039,30 @@
       }
     ];
 
-    // Dữ liệu Sổ cái Mẫu Khởi tạo Chuẩn Học Thuật HCE
-    const SAMPLE_RECORDS = [
-      {
-        code: "HCE-IP-2026/010",
-        date: "23/03/2026",
-        title: "Bảo chứng quyền sở hữu trí tuệ sơ khởi bằng Proof of Existence",
-        faculty: "Khoa HTTT Kinh tế",
-        type: "Khóa luận tốt nghiệp Cử nhân K57",
-        advisor: "TS. Hà Ngọc Long",
-        authors: "Lê Văn Quang Huy (23K4300010 - K57 Kinh Tế Số) & Lại Vương Gia Bảo (23K4300024 - K57 Kinh Tế Số)",
-        authorMssv: "23K4300010",
-        authorEmail: "23k4300010@hce.edu.vn",
-        authorPhone: "0912 345 678",
-        authorClass: "K57 Kinh Tế Số",
-        authorList: [
-          { name: "Lê Văn Quang Huy", mssv: "23K4300010", email: "23k4300010@hce.edu.vn", phone: "0912 345 678", class: "K57 Kinh Tế Số", role: "Chủ nhiệm đề tài" },
-          { name: "Lại Vương Gia Bảo", mssv: "23K4300024", email: "23k4300024@hce.edu.vn", phone: "0987 654 321", class: "K57 Kinh Tế Số", role: "Đồng tác giả" }
-        ],
-        hash: "0x8e4da685a41c7ce20441ae4c62629d3d2eacd22c5ceb54b0d0a7208ca76396f1",
-        block: 6821940,
-        time: "2026-03-23 15:30:19 GMT+7",
-        wallet: "0x89205A3A3b2A69De6Dbf7f01ED13B2108B2c43e7"
-      },
-      {
-        code: "HCE-IP-2026/024",
-        date: "23/01/2026",
-        title: "Mô hình định giá tài sản số dựa trên Smart Contract và Dữ liệu On-chain",
-        faculty: "Khoa Tài chính - Ngân hàng",
-        type: "Đề tài NCKH Sinh viên K56",
-        advisor: "TS. Nguyễn Thanh",
-        authors: "Nguyễn Văn An (22K4100055 - K56 Tài chính) & Trần Thị Bình (22K4100088 - K56 Tài chính)",
-        authorMssv: "22K4100055",
-        authorEmail: "22k4100055@hce.edu.vn",
-        authorPhone: "0905 111 222",
-        authorClass: "K56 Tài chính",
-        authorList: [
-          { name: "Nguyễn Văn An", mssv: "22K4100055", email: "22k4100055@hce.edu.vn", phone: "0905 111 222", class: "K56 Tài chính", role: "Chủ nhiệm đề tài" },
-          { name: "Trần Thị Bình", mssv: "22K4100088", email: "22k4100088@hce.edu.vn", phone: "0905 333 444", class: "K56 Tài chính", role: "Đồng tác giả" }
-        ],
-        hash: "0x7605db0adb3d49bb6014db3c09f9166aa32c6c5acca02e4738f652f2677d8c9c",
-        block: 6820712,
-        time: "2026-01-23 17:48:30 GMT+7",
-        wallet: "0x70997970C51812dc3A010C7d01b50e0d17dc79C8"
-      },
-      {
-        code: "HCE-IP-2026/035",
-        date: "15/01/2026",
-        title: "Ứng dụng Zero-Knowledge Proofs bảo vệ dữ liệu khảo sát hành vi tiêu dùng",
-        faculty: "Khoa HTTT Kinh tế",
-        type: "Bài báo khoa học HCE Journal",
-        advisor: "PGS.TS. Trần Văn Nam",
-        authors: "Lê Hoàng Cường (23K4300035 - K57 Kinh Tế Số) & Phạm Minh Đức (23K4300049 - K57 Kinh Tế Số)",
-        authorMssv: "23K4300035",
-        authorEmail: "23k4300035@hce.edu.vn",
-        authorPhone: "0935 777 888",
-        authorClass: "K57 Kinh Tế Số",
-        authorList: [
-          { name: "Lê Hoàng Cường", mssv: "23K4300035", email: "23k4300035@hce.edu.vn", phone: "0935 777 888", class: "K57 Kinh Tế Số", role: "Chủ nhiệm đề tài" },
-          { name: "Phạm Minh Đức", mssv: "23K4300049", email: "23k4300049@hce.edu.vn", phone: "0935 999 000", class: "K57 Kinh Tế Số", role: "Đồng tác giả" }
-        ],
-        hash: "0x02e5721ce2d6a163b4fd0f63803d0b096db5781b60ae60b4fca817ceb9d6bfa7",
-        block: 6819504,
-        time: "2026-01-15 10:15:02 GMT+7",
-        wallet: "0x3C44CdDdB6a900fa2b585dd299e03d12FA4293BC"
+    // Dữ liệu Sổ cái Chuẩn Học Thuật HCE đọc từ LocalStorage (Không dùng dữ liệu mẫu)
+    function getStoredRecords() {
+      try {
+        const stored = localStorage.getItem("COPYCHAIN_REGISTERED_RECORDS");
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          if (Array.isArray(parsed)) {
+            // Lọc bỏ mẫu giả cũ
+            return parsed.filter(r => !["HCE-IP-2026/010", "HCE-IP-2026/024", "HCE-IP-2026/035"].includes(r.code));
+          }
+        }
+      } catch (e) {
+        console.warn("Lỗi đọc records:", e);
       }
-    ];
+      return [];
+    }
+
+    function saveStoredRecords(records) {
+      try {
+        localStorage.setItem("COPYCHAIN_REGISTERED_RECORDS", JSON.stringify(records));
+      } catch (e) {}
+    }
+
+    let SAMPLE_RECORDS = getStoredRecords();
 
     let currentHash = "";
     let currentWallet = null;
@@ -5106,6 +5090,15 @@
 
     // Chuyển Tab Điều Hướng & Auth Guard Bảo Vệ Tất Cả Dịch Vụ
     function switchNavTab(tabId) {
+      // Tự động reset biểu mẫu nếu tác giả đã đăng ký hoàn tất bước 6 và quay lại tính năng đăng ký
+      if (tabId === "tab-register" && currentWizardStep === 6) {
+        resetWizardForNewRegistration();
+      }
+      if (tabId === "tab-ledger") {
+        renderLedgerTable(SAMPLE_RECORDS);
+        renderAuthorsDirectory();
+      }
+
       // Danh sách các dịch vụ cốt lõi bắt buộc phải đăng nhập tài khoản
       const protectedTabs = ["tab-register", "tab-appraisal", "tab-certificate"];
       const activeUser = currentAuthUser || currentActiveStudent;
@@ -6178,14 +6171,28 @@
     function renderLedgerTable(records = SAMPLE_RECORDS) {
       const tbody = document.getElementById("tblLedgerBody");
       const badgeCount = document.getElementById("lblLedgerCountBadge");
+      const badgeSubWorks = document.getElementById("badgeSubNavWorksCount");
+
       if (badgeCount) {
         badgeCount.textContent = `Sepolia Verified: ${records.length} Records`;
       }
+      if (badgeSubWorks) {
+        badgeSubWorks.textContent = records.length;
+      }
 
       if (records.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 24px;">Không tìm thấy công trình nào phù hợp với bộ lọc.</td></tr>`;
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="7" style="text-align: center; color: var(--text-muted); padding: 36px 20px;">
+              <div style="font-size: 32px; margin-bottom: 8px;">📭</div>
+              <strong style="color: var(--text-primary); font-size: 14px;">Chưa có công trình nào được bảo hộ trên Sổ cái On-chain</strong><br>
+              <span style="font-size: 12px; color: var(--text-muted);">Hãy đăng ký tác phẩm nghiên cứu đầu tiên của bạn để khắc dấu thời gian Sepolia!</span>
+            </td>
+          </tr>
+        `;
         return;
       }
+
       tbody.innerHTML = records.map((r, i) => `
         <tr>
           <td><code style="font-family: var(--font-mono); color: var(--primary); font-weight: 700;">${r.code}</code></td>
@@ -6193,7 +6200,7 @@
           <td>
             <strong>${r.title}</strong><br>
             <small style="color: var(--text-muted);">${r.faculty} &bull; GVHD: ${r.advisor} &bull; 
-              <a href="javascript:void(0)" onclick="openAuthorPassportForRecord(${i})" style="color: var(--primary); font-weight: 700; text-decoration: underline;" title="Bấm để xem Căn cước Học thuật (Academic Passport) của tác giả">${r.authors}</a>
+              <a href="javascript:void(0)" onclick="openAuthorPassportForRecord(${i})" style="color: var(--primary); font-weight: 700; text-decoration: underline;" title="Bấm để xem Hồ sơ Tác giả &amp; Danh mục Công trình">${r.authors}</a>
             </small>
           </td>
           <td>
@@ -6202,8 +6209,8 @@
           <td><span style="font-size: 11px; font-family: var(--font-mono);">${r.time}</span></td>
           <td><span class="badge-pill-auth">AUTHENTICATED</span></td>
           <td style="white-space: nowrap;">
-            <button class="btn-detail" onclick="openAuthorPassportForRecord(${i})" style="background: #ffffff; border: 1.5px solid var(--primary); color: var(--primary); font-weight: 700; margin-right: 4px;" title="Xem Thẻ Căn cước Học thuật của tác giả">🪪 Hồ sơ SV</button>
-            <button class="btn-detail" onclick="openBlockDetail(${i})" title="Xem chi tiết khối & giao dịch">Khối</button>
+            <button class="btn-detail" onclick="openAuthorPassportForRecord(${i})" style="background: #ffffff; border: 1.5px solid var(--primary); color: var(--primary); font-weight: 700; margin-right: 4px;" title="Xem Hồ sơ Tác giả &amp; Danh mục Công trình">👤 Hồ sơ</button>
+            <button class="btn-detail" onclick="openBlockDetail(${i})" title="Xem chi tiết khối &amp; giao dịch">Khối</button>
             <button class="btn-detail" style="background: var(--primary-subtle); color: var(--primary); font-weight: 700; margin-left: 4px;" onclick="viewDeedForRecord(${i})" title="Xem phôi Chứng thư số của công trình này">📜 Chứng thư</button>
           </td>
         </tr>
@@ -6218,7 +6225,23 @@
       const track = document.getElementById("liveTickerTrack");
       if (!track) return;
 
-      const itemsHtml = LIVE_TICKER_ITEMS.map((item, idx) => `
+      const tickerList = (SAMPLE_RECORDS.length > 0)
+        ? SAMPLE_RECORDS.map(r => ({
+            block: r.block || 6821940,
+            title: r.title,
+            wallet: r.wallet || "0x7099...79C8",
+            timeAgo: r.date || "Vừa xong"
+          }))
+        : [
+            {
+              block: 6821940,
+              title: "Hệ thống HCE Ledger sẵn sàng tiếp nhận và bảo chứng tác phẩm nghiên cứu trên Sepolia Testnet",
+              wallet: "0x0000000000000000000000000000000000000000",
+              timeAgo: "Trực tuyến"
+            }
+          ];
+
+      const itemsHtml = tickerList.map((item, idx) => `
         <div class="ticker-item">
           <span style="color: #22c55e;">🟢</span>
           <span style="font-weight: 700; color: var(--text-primary);">Vừa xác nhận:</span>
@@ -6226,12 +6249,11 @@
           <span>&bull;</span>
           <span class="ticker-link" onclick="openTickerItemDetail(${idx})" title="Bấm để xem chi tiết đề tài">${item.title}</span>
           <span>&bull;</span>
-          <span style="font-family: var(--font-mono); color: var(--text-muted); font-size: 11px;">Ví ${item.wallet.slice(0, 6)}...${item.wallet.slice(-4)}</span>
+          <span style="font-family: var(--font-mono); color: var(--text-muted); font-size: 11px;">Ví ${item.wallet.length >= 10 ? (item.wallet.slice(0, 6) + '...' + item.wallet.slice(-4)) : item.wallet}</span>
           <span style="color: var(--text-muted); font-size: 10.5px;">(${item.timeAgo})</span>
         </div>
       `).join("");
 
-      // Nhân bản chuỗi để ticker chạy liên tục mượt mà bất tận (seamless loop)
       track.innerHTML = itemsHtml + itemsHtml;
     }
 
@@ -6330,7 +6352,7 @@
         (w.authorWallet && w.authorWallet.toLowerCase() === (student.wallet || "").toLowerCase())
       );
       const metricEl = document.getElementById("passMetricCount");
-      if (metricEl) metricEl.textContent = myWorks.length || 1;
+      if (metricEl) metricEl.textContent = myWorks.length;
 
       // Render danh sách công trình của tác giả trong modal
       renderAuthorWorksInModal(student, myWorks);
@@ -6341,28 +6363,179 @@
       if (!listEl) return;
 
       if (!works || works.length === 0) {
-        works = COPYCHAIN_WORKS.slice(0, 1);
+        listEl.innerHTML = `
+          <div style="background: var(--bg-surface); border: 1px dashed var(--border-color); border-radius: 6px; padding: 16px; text-align: center; color: var(--text-muted); font-size: 12.5px;">
+            📭 Tác giả chưa có tác phẩm nào được bảo hộ trên hệ thống.
+          </div>
+        `;
+        return;
       }
 
       listEl.innerHTML = works.map(w => `
-        <div style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 6px; padding: 10px 12px; display: flex; justify-content: space-between; align-items: center; gap: 8px;">
+        <div style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: 6px; padding: 10px 12px; display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-bottom: 6px;">
           <div>
             <div style="font-size: 11px; font-family: var(--font-mono); color: var(--primary); font-weight: 700;">${w.code || w.id} &bull; Khối #${w.blockNumber || 6821940}</div>
             <strong style="font-size: 12.5px; color: var(--text-primary); display: block; margin: 2px 0;">${w.title}</strong>
-            <span style="font-size: 11px; color: var(--text-muted);">${w.department || w.type} &bull; ${w.dateRegistered || "23/03/2026"}</span>
+            <span style="font-size: 11px; color: var(--text-muted);">${w.department || w.type} &bull; ${w.dateRegistered || "Đã xác thực On-chain"}</span>
           </div>
           <button onclick="viewDeedForCode('${w.code || w.id}')" style="background: var(--primary-subtle); border: 1px solid var(--primary-border); color: var(--primary); font-size: 11px; font-weight: 700; border-radius: 4px; padding: 5px 9px; cursor: pointer; white-space: nowrap;">📜 Xem Chứng Thư</button>
         </div>
       `).join("");
     }
 
+    // --- CHỨC NĂNG CHUYỂN SUB-VIEW & DANH BẠ TRA CỨU HỒ SƠ TÁC GIẢ ---
+    function switchLedgerSubView(view) {
+      const btnWorks = document.getElementById("btnSubNavWorks");
+      const btnAuthors = document.getElementById("btnSubNavAuthors");
+      const viewWorks = document.getElementById("ledgerWorksSubView");
+      const viewAuthors = document.getElementById("ledgerAuthorsSubView");
+      const headerTitle = document.getElementById("lblLedgerHeaderTitle");
+      const headerSub = document.getElementById("lblLedgerHeaderSub");
+
+      if (view === "works") {
+        if (btnWorks) {
+          btnWorks.style.background = "var(--primary)";
+          btnWorks.style.color = "#ffffff";
+          btnWorks.style.border = "none";
+        }
+        if (btnAuthors) {
+          btnAuthors.style.background = "var(--bg-subtle)";
+          btnAuthors.style.color = "var(--text-secondary)";
+          btnAuthors.style.border = "1px solid var(--border-color)";
+        }
+        if (viewWorks) viewWorks.style.display = "block";
+        if (viewAuthors) viewAuthors.style.display = "none";
+        if (headerTitle) headerTitle.textContent = "Sổ Cái Đối Soát Bản Quyền On-Chain (Recent Registrations)";
+        if (headerSub) headerSub.textContent = "Lịch sử các công trình nghiên cứu đã được khắc dấu thời gian khối bất biến";
+      } else {
+        if (btnAuthors) {
+          btnAuthors.style.background = "var(--primary)";
+          btnAuthors.style.color = "#ffffff";
+          btnAuthors.style.border = "none";
+        }
+        if (btnWorks) {
+          btnWorks.style.background = "var(--bg-subtle)";
+          btnWorks.style.color = "var(--text-secondary)";
+          btnWorks.style.border = "1px solid var(--border-color)";
+        }
+        if (viewWorks) viewWorks.style.display = "none";
+        if (viewAuthors) viewAuthors.style.display = "block";
+        if (headerTitle) headerTitle.textContent = "Danh Bạ Tra Cứu Hồ Sơ Tác GiẢ & Nhà Nghiên Cứu";
+        if (headerSub) headerSub.textContent = "Tra cứu thông tin định danh học thuật và toàn bộ công trình bảo hộ của các tác giả";
+        renderAuthorsDirectory();
+      }
+    }
+
+    function renderAuthorsDirectory() {
+      const grid = document.getElementById("authorsDirectoryGrid");
+      const badgeCount = document.getElementById("badgeSubNavAuthorsCount");
+      if (!grid) return;
+
+      // Danh sách tất cả tác giả (loại trừ tài khoản Admin hệ thống)
+      const authors = ALL_USERS.filter(u => u.role !== "ADMIN");
+      if (badgeCount) badgeCount.textContent = authors.length;
+
+      const facultyFilter = document.getElementById("selAuthorsFacultyFilter") ? document.getElementById("selAuthorsFacultyFilter").value : "ALL";
+      const searchVal = document.getElementById("txtAuthorsSearch") ? document.getElementById("txtAuthorsSearch").value.toLowerCase().trim() : "";
+
+      const filtered = authors.filter(a => {
+        const matchFac = (facultyFilter === "ALL") || (a.faculty && a.faculty === facultyFilter);
+        const matchSearch = !searchVal || 
+          (a.name && a.name.toLowerCase().includes(searchVal)) ||
+          (a.fullName && a.fullName.toLowerCase().includes(searchVal)) ||
+          (a.email && a.email.toLowerCase().includes(searchVal)) ||
+          (a.mssv && a.mssv.toLowerCase().includes(searchVal)) ||
+          (a.wallet && a.wallet.toLowerCase().includes(searchVal));
+        return matchFac && matchSearch;
+      });
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `
+          <div style="grid-column: 1 / -1; background: var(--bg-surface); border: 1px dashed var(--border-color); border-radius: var(--radius-md); padding: 36px 20px; text-align: center; color: var(--text-muted);">
+            <div style="font-size: 32px; margin-bottom: 8px;">👥</div>
+            <strong style="color: var(--text-primary); font-size: 14px;">Không tìm thấy tác giả nào phù hợp</strong><br>
+            <span style="font-size: 12px;">Hãy thử điều chỉnh từ khóa tìm kiếm hoặc bộ lọc Khoa.</span>
+          </div>
+        `;
+        return;
+      }
+
+      grid.innerHTML = filtered.map(a => {
+        // Tính số lượng tác phẩm của tác giả này từ COPYCHAIN_WORKS
+        const authorWorks = COPYCHAIN_WORKS.filter(w => 
+          (w.authorEmail && a.email && w.authorEmail.toLowerCase() === a.email.toLowerCase()) ||
+          (w.authorsText && a.name && w.authorsText.toLowerCase().includes(a.name.toLowerCase())) ||
+          (w.authorsText && a.fullName && w.authorsText.toLowerCase().includes(a.fullName.toLowerCase())) ||
+          (w.authorWallet && a.wallet && a.wallet.startsWith("0x") && w.authorWallet.toLowerCase() === a.wallet.toLowerCase())
+        );
+
+        const avatarLetters = a.avatar || (a.name ? a.name.split(" ").slice(-1)[0].substring(0, 2).toUpperCase() : "TG");
+        const walletDisplay = (a.wallet && a.wallet.startsWith("0x") && a.wallet.length === 42)
+          ? (a.wallet.substring(0, 6) + "..." + a.wallet.substring(38))
+          : "Chưa kết nối ví";
+
+        return `
+          <div style="background: var(--bg-surface); border: 1.5px solid var(--border-color); border-radius: var(--radius-md); padding: 18px; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; justify-content: space-between; transition: all 0.2s;">
+            <div>
+              <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                <div style="width: 46px; height: 46px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), #0284c7); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 15px; flex-shrink: 0;">
+                  ${avatarLetters}
+                </div>
+                <div style="min-width: 0; flex: 1;">
+                  <h4 style="margin: 0; font-size: 14.5px; font-weight: 800; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${a.fullName || a.name}</h4>
+                  <span style="font-size: 11.5px; color: var(--text-muted); display: block;">${a.faculty || 'ĐH Kinh tế Huế'} &bull; ${a.class || a.roleName || 'Tác giả'}</span>
+                </div>
+              </div>
+              <div style="font-size: 12px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 14px; background: var(--bg-subtle); padding: 10px 12px; border-radius: 6px;">
+                <div><strong>Email:</strong> <span style="font-family: var(--font-mono); color: var(--primary);">${a.email || '--'}</span></div>
+                <div><strong>Ví Sepolia:</strong> <span style="font-family: var(--font-mono); font-size: 11px;">${walletDisplay}</span></div>
+                <div><strong>Số tác phẩm đã bảo hộ:</strong> <strong style="color: var(--success); font-size: 13px;">${authorWorks.length} tác phẩm</strong></div>
+              </div>
+            </div>
+            <button type="button" class="btn-cta-secondary" onclick="openAuthorPassportForAuthorId('${a.id || a.email}')" style="width: 100%; padding: 8px 12px; font-size: 12.5px; font-weight: 700; justify-content: center; display: flex; align-items: center; gap: 6px;" title="Xem Thẻ Hồ sơ Căn cước Học thuật của tác giả">
+              <span>👤</span> <span>Xem Hồ Sơ &amp; Công Trình Chi Tiết</span>
+            </button>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function filterAuthorsDirectory() {
+      renderAuthorsDirectory();
+    }
+
+    function openAuthorPassportForAuthorId(idOrEmail) {
+      const author = ALL_USERS.find(u => u.id === idOrEmail || u.email === idOrEmail);
+      if (author) {
+        displayStudentPassport(author);
+        document.getElementById("authorPassportModal").style.display = "block";
+        document.getElementById("authorPassportBackdrop").style.display = "block";
+      } else {
+        openAuthorPassportModal();
+      }
+    }
+
     function openAuthorPassportModal(query) {
-      if (query !== undefined) {
+      if (query !== undefined && query !== null) {
         if (typeof query === "number") {
           openAuthorPassportForRecord(query);
           return;
-        } else if (typeof query === "string" && query.startsWith("0x")) {
-          openAuthorPassportByWallet(query);
+        } else if (typeof query === "string") {
+          if (query.startsWith("0x")) {
+            openAuthorPassportByWallet(query);
+            return;
+          }
+          const found = ALL_USERS.find(u => u.id === query || u.email === query || u.mssv === query);
+          if (found) {
+            displayStudentPassport(found);
+            document.getElementById("authorPassportModal").style.display = "block";
+            document.getElementById("authorPassportBackdrop").style.display = "block";
+            return;
+          }
+        } else if (typeof query === "object") {
+          displayStudentPassport(query);
+          document.getElementById("authorPassportModal").style.display = "block";
+          document.getElementById("authorPassportBackdrop").style.display = "block";
           return;
         }
       }
@@ -6380,25 +6553,30 @@
     function openAuthorPassportForRecord(idx) {
       const r = SAMPLE_RECORDS[idx];
       if (!r) return;
-      let matched = ALL_USERS.find(u => (r.authorEmail && u.email === r.authorEmail) || r.authors.toLowerCase().includes(u.name.toLowerCase()));
+      let matched = ALL_USERS.find(u => 
+        (r.authorEmail && u.email && u.email.toLowerCase() === r.authorEmail.toLowerCase()) || 
+        (u.name && r.authors.toLowerCase().includes(u.name.toLowerCase())) ||
+        (u.fullName && r.authors.toLowerCase().includes(u.fullName.toLowerCase())) ||
+        (r.wallet && u.wallet && u.wallet.toLowerCase() === r.wallet.toLowerCase())
+      );
       if (!matched) {
         matched = {
           id: r.code,
-          mssv: r.authorMssv || "23K4300010",
+          mssv: r.authorMssv || "HCE-AUTHOR",
           name: r.authors.split("&")[0].split("(")[0].trim(),
           fullName: r.authors.split("&")[0].split("(")[0].trim(),
           idCard: "04620500" + Math.floor(1000 + Math.random() * 9000),
-          email: r.authorEmail || "23k4300010@hce.edu.vn",
+          email: r.authorEmail || "author@hce.edu.vn",
           phone: r.authorPhone || "0912 345 678",
-          dob: "2005-01-10",
+          dob: "2000-01-01",
           address: "TP. Huế, Thừa Thiên Huế",
-          class: r.authorClass || "K57 Kinh Tế Số",
+          class: r.authorClass || "Tác Giả Bản Quyền",
           faculty: r.faculty || "Khoa HTTT Kinh tế",
           wallet: r.wallet,
           role: "AUTHOR",
           roleName: "Tác Giả Xác Thực",
           badge: "✓ COPYCHAIN VERIFIED AUTHOR",
-          avatar: "SV"
+          avatar: "TG"
         };
       }
       displayStudentPassport(matched);
