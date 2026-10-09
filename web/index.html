@@ -2481,15 +2481,18 @@
             <p style="font-size: 12.5px; color: var(--text-muted); margin: 0;">Trích xuất dấu vân tay số SHA-256 an toàn trong RAM mà không lưu trữ tệp thô lên Blockchain</p>
           </div>
 
+          <!-- Vùng kéo thả tệp tải lên -->
           <div class="upload-zone" id="wizDropzone" onclick="if(!this.classList.contains('has-file')) triggerSelectNewWizFile();">
             <input type="file" id="wizFileInput" style="display: none;" onchange="if(this.files&&this.files[0]) handleWizFileUpload(this.files[0]);">
             
+            <!-- Trạng thái chờ khi chưa có tệp -->
             <div id="wizDropEmptyState" style="pointer-events: none;">
               <div class="upload-icon">📤</div>
               <h4>Kéo thả tệp tác phẩm vào đây hoặc bấm để chọn tệp</h4>
               <p>Hỗ trợ tất cả định dạng: PDF, DOCX, ZIP, MP4, MP3, PNG, JPG, CODE, SQL... (Tối đa 200 MB)</p>
             </div>
 
+            <!-- Trạng thái khi đã nạp tệp: Chỉ hiện khi ĐÃ CÓ tệp -->
             <div id="wizDropFilledState" class="file-loaded-container" style="display: none;">
               <div class="file-loaded-card" style="background: #ffffff; border: 1.5px solid #10b981; border-radius: var(--radius-md); padding: 12px 14px; box-shadow: var(--shadow-sm); display: flex; align-items: center; gap: 14px;">
                 <div class="file-loaded-icon-wrap pdf" id="wizLoadedIconWrap" style="width: 48px; height: 50px; border-radius: 6px; background: #e0f2fe; border: 1px solid #7dd3fc; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0;">
@@ -2505,34 +2508,18 @@
                   </div>
                 </div>
               </div>
-              <div class="file-loaded-actions" style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 8px;">
+              <div class="file-loaded-actions" style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 10px;">
                 <button type="button" class="btn-file-action btn-file-change" onclick="event.stopPropagation(); triggerSelectNewWizFile();" style="background: #e0f2fe; border: 1.5px solid #0284c7; color: #0284c7; padding: 7px 14px; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 5px;">
-                  <span>🔄</span> <span>Thay thế / Đổi tệp khác</span>
+                  <span>🔄</span> <span>Đổi tệp khác</span>
                 </button>
                 <button type="button" class="btn-file-action btn-file-remove" onclick="event.stopPropagation(); removeWizFile();" style="background: #fee2e2; border: 1.5px solid #dc2626; color: #dc2626; padding: 7px 14px; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 5px;">
-                  <span>🗑️</span> <span>Xóa bỏ tệp</span>
+                  <span>🗑️</span> <span>Xóa tệp</span>
                 </button>
-              </div>
-            </div>
-          </div>
-          <!-- Thanh điều khiển thao tác tệp trực quan -->
-          <div id="wizFileActionToolbar" style="display: none; justify-content: flex-end; gap: 10px; margin-top: 8px;">
-            <button type="button" onclick="triggerSelectNewWizFile()" style="background: #e0f2fe; border: 1.5px solid #0284c7; color: #0284c7; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 4px;">
-              <span>🔄</span> <span>Thay thế / Chọn tệp khác</span>
-            </button>
-            <button type="button" onclick="removeWizFile()" style="background: #fee2e2; border: 1.5px solid #dc2626; color: #dc2626; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer; display: inline-flex; align-items: center; gap: 4px;">
-              <span>🗑️</span> <span>Xóa bỏ tệp</span>
-            </button>
-          </div>
-        </div>
-              <div class="file-loaded-actions">
-                <button type="button" class="btn-file-action btn-file-change" onclick="event.stopPropagation(); triggerSelectNewWizFile();">🔄 Đổi tệp khác</button>
-                <button type="button" class="btn-file-action btn-file-remove" onclick="event.stopPropagation(); removeWizFile();">🗑️ Xóa tệp</button>
               </div>
             </div>
           </div>
 
-          <!-- Bảng hiển thị kết quả băm mật mã kép -->
+          <!-- Bảng hiển thị kết quả băm mật mã kép (NẰM NGAY BÊN TRONG BƯỚC 3, BÊN DƯỚI DROPZONE) -->
           <div style="margin-top: 18px; display: flex; flex-direction: column; gap: 12px;">
             <div class="hash-field-wrap">
               <label>Mã Băm SHA-256 Hash (Tiêu chuẩn Quốc tế):</label>
@@ -2549,8 +2536,7 @@
             </div>
           </div>
 
-          
-
+          <!-- Các nút điều hướng Bước 3 -->
           <div class="wizard-actions-row">
             <button type="button" class="btn-cta-secondary" onclick="prevWizardStep()">&larr; Quay lại Bước 2</button>
             <button type="button" class="btn-cta-primary" onclick="nextWizardStep()">Tiếp Tục: Bước 4 (Kiểm Tra Thông Tin) &rarr;</button>
@@ -4465,9 +4451,7 @@
       const lblKec = document.getElementById("lblWizKeccakHash");
       if (lblSha) lblSha.textContent = wizComputedSha256;
       if (lblKec) lblKec.textContent = wizComputedKeccak256;
-      const toolbar = document.getElementById("wizFileActionToolbar");
-      if (toolbar) toolbar.style.display = "flex";
-      toast("Đã trích xuất mã băm SHA-256 & Keccak-256 thành công!", "success");
+            toast("Đã trích xuất mã băm SHA-256 & Keccak-256 thành công!", "success");
     }
 
     function removeWizFile() {
@@ -4486,9 +4470,7 @@
       if (emptyState) emptyState.style.display = "block";
       const filledState = document.getElementById("wizDropFilledState");
       if (filledState) filledState.style.display = "none";
-      const toolbar = document.getElementById("wizFileActionToolbar");
-      if (toolbar) toolbar.style.display = "none";
-      const lblSha = document.getElementById("lblWizSha256Hash");
+            const lblSha = document.getElementById("lblWizSha256Hash");
       const lblKec = document.getElementById("lblWizKeccakHash");
       if (lblSha) lblSha.textContent = "b4c3e8... (Vui lòng tải tệp lên để băm)";
       if (lblKec) lblKec.textContent = "0x8e4d... (Vui lòng tải tệp lên để băm)";
@@ -4854,15 +4836,121 @@
     }
 
     function resetWizardForNewRegistration() {
-      wizSelectedFile = null;
-      wizComputedSha256 = "";
-      wizComputedKeccak256 = "";
-      document.getElementById("wizFileInput").value = "";
-      document.getElementById("wizDropEmptyState").style.display = "block";
-      document.getElementById("wizDropFilledState").style.display = "none";
-      document.getElementById("cbLegalGuarantee").checked = false;
-      toggleLegalGuarantee();
-      goToWizardStep(1);
+      try {
+        // 1. Reset toàn bộ trường thông tin Bước 1
+        const titleEl = document.getElementById("wizWorkTitle");
+        if (titleEl) titleEl.value = "";
+
+        const typeEl = document.getElementById("wizWorkType");
+        if (typeEl) typeEl.selectedIndex = 0;
+
+        const dateEl = document.getElementById("wizDateCompleted");
+        if (dateEl) dateEl.value = new Date().toISOString().split("T")[0];
+
+        const langEl = document.getElementById("wizLanguage");
+        if (langEl) langEl.selectedIndex = 0;
+
+        const deptEl = document.getElementById("wizDepartment");
+        if (deptEl) deptEl.selectedIndex = 0;
+
+        const descEl = document.getElementById("wizDescription");
+        if (descEl) descEl.value = "";
+
+        // 2. Reset Bước 2: Tác giả chính & Đồng tác giả
+        const aName = document.getElementById("wizAuthorName");
+        const aId = document.getElementById("wizAuthorIdCard");
+        const aMail = document.getElementById("wizAuthorEmail");
+        const aPhone = document.getElementById("wizAuthorPhone");
+
+        if (currentAuthUser) {
+          if (aName) aName.value = currentAuthUser.fullName || currentAuthUser.name || "";
+          if (aId) aId.value = currentAuthUser.idCard || "";
+          if (aMail) aMail.value = currentAuthUser.email || "";
+          if (aPhone) aPhone.value = currentAuthUser.phone || "";
+        } else {
+          if (aName) aName.value = "";
+          if (aId) aId.value = "";
+          if (aMail) aMail.value = "";
+          if (aPhone) aPhone.value = "";
+        }
+
+        const aRole = document.getElementById("wizAuthorRole");
+        if (aRole) aRole.selectedIndex = 0;
+
+        const aShare = document.getElementById("wizAuthorShare");
+        if (aShare) aShare.value = "100";
+
+        wizCoAuthors = [];
+        if (typeof renderCoAuthorsList === "function") renderCoAuthorsList();
+        if (typeof calculateShareTotal === "function") calculateShareTotal();
+
+        // 3. Reset Bước 3: Tệp và các chuỗi hash
+        wizSelectedFile = null;
+        wizComputedSha256 = "";
+        wizComputedKeccak256 = "";
+
+        const fi = document.getElementById("wizFileInput");
+        if (fi) fi.value = "";
+
+        const dropzone = document.getElementById("wizDropzone");
+        if (dropzone) {
+          dropzone.classList.remove("has-file");
+          dropzone.style.borderColor = "";
+          dropzone.style.background = "";
+        }
+
+        const emptyState = document.getElementById("wizDropEmptyState");
+        if (emptyState) emptyState.style.display = "block";
+
+        const filledState = document.getElementById("wizDropFilledState");
+        if (filledState) filledState.style.display = "none";
+
+        const lblSha = document.getElementById("lblWizSha256Hash");
+        if (lblSha) lblSha.textContent = "b4c3e8... (Vui lòng tải tệp lên để băm)";
+
+        const lblKec = document.getElementById("lblWizKeccakHash");
+        if (lblKec) lblKec.textContent = "0x8e4d... (Vui lòng tải tệp lên để băm)";
+
+        // 4. Reset Bước 4 & Bước 5: Cam kết pháp lý & Khối giao dịch On-Chain
+        const cb = document.getElementById("cbLegalGuarantee");
+        if (cb) cb.checked = false;
+        if (typeof toggleLegalGuarantee === "function") toggleLegalGuarantee();
+
+        const txBox = document.getElementById("wizOnChainTxResultBox");
+        if (txBox) txBox.style.display = "none";
+
+        const loadBox = document.getElementById("wizTxLoadingState");
+        if (loadBox) loadBox.style.display = "none";
+
+        lastRegisteredWork = null;
+
+        // 5. Quay về Bước 1
+        currentWizardStep = 1;
+        for (let i = 1; i <= 6; i++) {
+          const panel = document.getElementById("wizardPanel" + i);
+          const node = document.getElementById("wizardNode" + i);
+          if (panel) {
+            if (i === 1) panel.classList.add("active");
+            else panel.classList.remove("active");
+          }
+          if (node) {
+            if (i === 1) {
+              node.classList.add("active");
+              node.classList.remove("completed");
+            } else {
+              node.classList.remove("active", "completed");
+            }
+          }
+        }
+        const line = document.getElementById("wizardProgressLine");
+        if (line) line.style.width = "0%";
+
+        window.scrollTo({ top: 120, behavior: "smooth" });
+        toast("✓ Đã làm mới toàn bộ biểu mẫu về trạng thái trống ban đầu!", "success");
+      } catch (err) {
+        console.error("Lỗi khi làm mới form:", err);
+        toast("Có lỗi khi làm mới: " + err.message, "error");
+      }
     }
 
     // --- RENDER USER DASHBOARD ---
