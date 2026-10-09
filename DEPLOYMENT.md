@@ -35,11 +35,11 @@ graph TD
 - **Trình biên dịch:** Solidity `0.8.20+commit.a1b79de6`
 - **Tối ưu hóa (Optimization):** `Yes (200 runs)`
 - **Địa chỉ hợp đồng chính thức (Contract Address):**  
-  `0xa2F53106B3dFdf23b6b158022646d231A21e49cb`
+  `0xa2f53106B3dFdF23b6b158022646d231A21e49Cb`
 - **Địa chỉ ví triển khai (Deployer / Owner):**  
   `0xB07FB0761c33a01F7f7493A6a8a9667F4842Fd50`
 - **Đường dẫn Etherscan:**  
-  [https://sepolia.etherscan.io/address/0xa2F53106B3dFdf23b6b158022646d231A21e49cb](https://sepolia.etherscan.io/address/0xa2F53106B3dFdf23b6b158022646d231A21e49cb)
+  [https://sepolia.etherscan.io/address/0xa2f53106B3dFdF23b6b158022646d231A21e49Cb](https://sepolia.etherscan.io/address/0xa2f53106B3dFdF23b6b158022646d231A21e49Cb)
 - **Trạng thái mã nguồn:** ✅ **Verified Source Code (MIT License)**
 
 ### 2.2. Lộ trình mở rộng sang Layer 2 (Production Ready)

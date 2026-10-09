@@ -9,7 +9,7 @@
   2. **Lại Vương Gia Bảo** — MSSV: `23K4300024` (Thành viên cặp / Phụ trách DApp Hosting & Kịch bản Demo Hội đồng)
 * **Kho lưu trữ GitHub chính thức:** [https://github.com/lehuy10012005-cmd/HCE-ScholarProof](https://github.com/lehuy10012005-cmd/HCE-ScholarProof)
 * **Cổng DApp trực tuyến (GitHub Pages):** [https://lehuy10012005-cmd.github.io/HCE-ScholarProof/](https://lehuy10012005-cmd.github.io/HCE-ScholarProof/)
-* **Địa chỉ hợp đồng Sepolia:** [`0xa2F53106B3dFdf23b6b158022646d231A21e49cb`](https://sepolia.etherscan.io/address/0xa2F53106B3dFdf23b6b158022646d231A21e49cb)
+* **Địa chỉ hợp đồng Sepolia:** [`0xa2f53106B3dFdF23b6b158022646d231A21e49Cb`](https://sepolia.etherscan.io/address/0xa2f53106B3dFdF23b6b158022646d231A21e49Cb)
 * **Sản phẩm bàn giao Lab 15:**
   - Tài liệu triển khai & vận hành: [`DEPLOYMENT.md`](./DEPLOYMENT.md)
   - Kịch bản slide thuyết trình bảo vệ trước Hội đồng: [`SLIDES.md`](./SLIDES.md)
@@ -32,7 +32,7 @@ Hợp đồng thông minh lõi của đồ án đã được biên dịch bằng
 
 ### 2.1. Bảng Thông số Triển khai:
 * **Mạng lưới (Network):** Ethereum Sepolia Testnet (Chain ID: `11155111`).
-* **Địa chỉ Hợp đồng (Contract Address):** [`0xa2F53106B3dFdf23b6b158022646d231A21e49cb`](https://sepolia.etherscan.io/address/0xa2F53106B3dFdf23b6b158022646d231A21e49cb).
+* **Địa chỉ Hợp đồng (Contract Address):** [`0xa2f53106B3dFdF23b6b158022646d231A21e49Cb`](https://sepolia.etherscan.io/address/0xa2f53106B3dFdF23b6b158022646d231A21e49Cb).
 * **Mã băm giao dịch triển khai (Deployment Tx):** [`0xbdd0fffe7e716bc598686e0ba1d7c08b79f2fe4e8be515fe6b66e7463f10f845`](https://sepolia.etherscan.io/tx/0xbdd0fffe7e716bc598686e0ba1d7c08b79f2fe4e8be515fe6b66e7463f10f845).
 * **Khối giao dịch triển khai (Block Number):** Khối `6821942` trên mạng Sepolia.
 * **Tình trạng mã nguồn trên Etherscan:** Đã được Verify & Publish thành công 100% với tích xanh bảo mật.

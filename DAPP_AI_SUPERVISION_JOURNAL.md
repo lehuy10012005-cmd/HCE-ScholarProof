@@ -94,7 +94,7 @@ Quan điểm chỉ đạo xuyên suốt của nhóm sinh viên:
 * **Phân tích lỗi của AI (Hallucination nghiêm trọng):** Khi bấm nút *"Xác nhận Ký số On-chain"*, AI chỉ viết một hàm `setTimeout(..., 2000)` để đổi giao diện sang màu xanh báo thành công ảo! Trong thực tế, ví MetaMask không hề bật lên, không có khoản phí Gas nào bị trừ và không hề có giao dịch nào được gửi lên mạng Sepolia Testnet.
 * **Rủi ro Kinh tế - Học thuật:** Đồ án Web3 bảo chứng học thuật nếu không có giao dịch thật trên chuỗi thì chứng thư số A4 không có bất kỳ giá trị chứng minh sự tồn tại (Proof of Existence vô giá trị).
 * **Chỉ đạo của Sinh viên:** Bắt buộc AI loại bỏ hoàn toàn mã giả lập; thay thế bằng hàm `ethereum.request({ method: 'eth_sendTransaction' })`:
-  * Gửi giao dịch đến Smart Contract `0xa2F53106B3dFdf23b6b158022646d231A21e49cb`.
+  * Gửi giao dịch đến Smart Contract `0xa2f53106B3dFdF23b6b158022646d231A21e49Cb`.
   * Nhúng dữ liệu mã băm Keccak-256 vào trường `data` của giao dịch.
   * Bắt buộc hiển thị Transaction Hash thật kèm nút bấm dẫn trực tiếp tới trình đối soát Sepolia Etherscan.
 * **Bằng chứng:** Commit [`6df5c54`](https://github.com/lehuy10012005-cmd/HCE-ScholarProof/commit/6df5c54) — Tích hợp giao dịch On-chain thật ghi nhận trực tiếp vào ví MetaMask.
@@ -200,7 +200,7 @@ graph TD
 
 1. **Lab 8:** Xác lập nền tảng lý thuyết — Đưa ra bài toán bảo vệ quyền tác giả học thuật sơ khai (Proof of Existence) tại Đại học Kinh tế Huế.
 2. **Lab 9:** Xác lập Đặc tả nghiệp vụ `SPEC.md` — Quy định cấu trúc dữ liệu lưu trữ trên Blockchain và các bước của Wizard.
-3. **Lab 10:** Phát triển và kiểm toán Smart Contract `ScholarProof.sol` — Địa chỉ hợp đồng thực tế: `0xa2F53106B3dFdf23b6b158022646d231A21e49cb`.
+3. **Lab 10:** Phát triển và kiểm toán Smart Contract `ScholarProof.sol` — Địa chỉ hợp đồng thực tế: `0xa2f53106B3dFdF23b6b158022646d231A21e49Cb`.
 4. **Lab 11:** Thiết kế giao diện Web DApp ban đầu — Triển khai cấu trúc HTML/CSS/JS thuần không phụ thuộc framework cồng kềnh.
 5. **Lab 12:** Kiểm thử hợp đồng thông minh — Bảo đảm không có lỗi Reentrancy hay tràn số.
 6. **Lab 13:** Tích hợp giao tiếp Web3 — Kết nối ví MetaMask theo chuẩn Just-in-Time, ký số và phát sinh giao dịch on-chain thật.
