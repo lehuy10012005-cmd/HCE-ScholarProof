@@ -2401,7 +2401,7 @@
     <div class="reg-wrapper" style="max-width: 1060px;">
       
       <!-- THẺ KHÓA AUTH GATE: YÊU CẦU ĐĂNG NHẬP ĐỂ SỬ DỤNG DỊCH VỤ ĐĂNG KÝ -->
-      <div id="regAuthLockGate" class="auth-gate-lock-card" style="display: none;">
+      <div id="regAuthLockGate" class="auth-gate-lock-card" style="display: block;">
         <div class="auth-gate-badge">🛡️ BẢO VỆ ĐỊNH DANH HỌC THUẬT ON-CHAIN</div>
         <div class="auth-gate-icon">🔒</div>
         <h2>Yêu Cầu Đăng Nhập Để Đăng Ký Tác Quyền</h2>
@@ -2448,7 +2448,7 @@
       </div>
 
       <!-- KHUNG NỘI DUNG WIZARD ĐĂNG KÝ (CHỈ HIỂN THỊ KHI ĐÃ ĐĂNG NHẬP) -->
-      <div id="regWizardMainContent">
+      <div id="regWizardMainContent" style="display: none;">
       <div class="wizard-wrap">
         <div class="wizard-progress-bar">
           <div class="wizard-progress-line" id="wizardProgressLine" style="width: 0%;"></div>
@@ -2878,7 +2878,7 @@
        ======================================================================== -->
   <section class="tab-content" id="tab-appraisal">
       <!-- THẺ KHÓA AUTH GATE: THẨM ĐỊNH TÁC PHẨM -->
-      <div id="appraisalAuthLockGate" class="auth-gate-lock-card" style="display: none; max-width: 840px; margin: 36px auto;">
+      <div id="appraisalAuthLockGate" class="auth-gate-lock-card" style="display: block; max-width: 840px; margin: 36px auto;">
         <div class="auth-gate-badge">⚖️ HỘI ĐỒNG THẨM ĐỊNH & KIỂM ĐỊNH TOÀN VẸN</div>
         <div class="auth-gate-icon">🔒</div>
         <h2>Yêu Cầu Đăng Nhập Để Thẩm Định Tác Phẩm</h2>
@@ -2920,7 +2920,7 @@
         </div>
       </div>
 
-    <div id="appraisalMainContent" class="appraisal-wrapper">
+    <div id="appraisalMainContent" class="appraisal-wrapper" style="display: none;">
       <div class="appraisal-grid">
         
         <!-- Cột trái: Tóm tắt & Tệp kiểm tra -->
@@ -3166,7 +3166,7 @@
        ======================================================================== -->
   <section class="tab-content" id="tab-certificate">
       <!-- THẺ KHÓA AUTH GATE: CHỨNG NHẬN TÁC QUYỀN -->
-      <div id="certificateAuthLockGate" class="auth-gate-lock-card" style="display: none; max-width: 840px; margin: 36px auto;">
+      <div id="certificateAuthLockGate" class="auth-gate-lock-card" style="display: block; max-width: 840px; margin: 36px auto;">
         <div class="auth-gate-badge">📜 CHỨNG THƯ TÁC QUYỀN A4 ON-CHAIN</div>
         <div class="auth-gate-icon">🔒</div>
         <h2>Yêu Cầu Đăng Nhập Để Xem & Cấp Chứng Nhận</h2>
@@ -3184,7 +3184,7 @@
         </div>
       </div>
 
-    <div id="certificateMainContent" class="cert-section-wrapper">
+    <div id="certificateMainContent" class="cert-section-wrapper" style="display: none;">
       
       <!-- Thanh chọn & Đổi hồ sơ Chứng thư linh hoạt -->
       <div style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 12px 18px; margin-bottom: 20px; box-shadow: var(--shadow-sm); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
@@ -5861,15 +5861,15 @@
       const groupCountWrap = document.getElementById("groupCountWrap");
 
       if (type === "single") {
-        btnSingle.classList.add("active");
-        btnGroup.classList.remove("active");
-        groupCountWrap.style.display = "none";
-        renderSingleAuthorInput();
+        if (btnSingle) btnSingle.classList.add("active");
+        if (btnGroup) btnGroup.classList.remove("active");
+        if (groupCountWrap) groupCountWrap.style.display = "none";
+        if (typeof renderSingleAuthorInput === "function") renderSingleAuthorInput();
       } else {
-        btnGroup.classList.add("active");
-        btnSingle.classList.remove("active");
-        groupCountWrap.style.display = "block";
-        renderGroupMemberInputs();
+        if (btnGroup) btnGroup.classList.add("active");
+        if (btnSingle) btnSingle.classList.remove("active");
+        if (groupCountWrap) groupCountWrap.style.display = "block";
+        if (typeof renderGroupMemberInputs === "function") renderGroupMemberInputs();
       }
     }
 
@@ -5994,6 +5994,7 @@
 
     function renderSingleAuthorInput() {
       const container = document.getElementById("authorListContainer");
+      if (!container) return;
       const s = currentActiveStudent || (typeof HCE_STUDENT_PROFILES !== "undefined" && HCE_STUDENT_PROFILES[0]) || (typeof ALL_USERS !== "undefined" && ALL_USERS[0]) || { name: "Tác Giả", mssv: "HCE-01" };
       container.innerHTML = `
         <div class="author-member-card">
@@ -6034,8 +6035,9 @@
     }
 
     function renderGroupMemberInputs() {
-      const count = parseInt(document.getElementById("selGroupMemberCount").value, 10) || 2;
       const container = document.getElementById("authorListContainer");
+      if (!container) return;
+      const count = parseInt(document.getElementById("selGroupMemberCount")?.value, 10) || 2;
       let html = "";
       for (let i = 1; i <= count; i++) {
         const roleLabel = (i === 1) ? "👑 Thành viên 1 (Chủ nhiệm / Trưởng nhóm)" : `👥 Thành viên ${i} (Đồng tác giả)`;
@@ -6138,111 +6140,6 @@
       return authorsFormatted.join(" & ");
     }
 
-    // Xử lý Kéo thả & Quản lý Tệp Đề Cương
-    const regDropzone = document.getElementById("regDropzone");
-    const regFileInput = document.getElementById("regFileInput");
-
-    regFileInput.addEventListener("change", async (e) => {
-      if (e.target.files && e.target.files[0]) {
-        await processRegFile(e.target.files[0]);
-      }
-    });
-
-    regDropzone.addEventListener("dragover", (e) => {
-      e.preventDefault();
-      if (!regDropzone.classList.contains("has-file")) {
-        regDropzone.style.borderColor = "var(--primary)";
-      }
-    });
-
-    regDropzone.addEventListener("dragleave", () => {
-      if (!regDropzone.classList.contains("has-file")) {
-        regDropzone.style.borderColor = "var(--border-color)";
-      }
-    });
-
-    regDropzone.addEventListener("drop", async (e) => {
-      e.preventDefault();
-      if (!regDropzone.classList.contains("has-file")) {
-        regDropzone.style.borderColor = "var(--border-color)";
-      }
-      if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-        await processRegFile(e.dataTransfer.files[0]);
-      }
-    });
-
-    async function processRegFile(file) {
-      toast("Đang băm Keccak-256 an toàn trong RAM...", "info");
-      currentHash = await hashFile(file);
-
-      // Nhận diện định dạng tệp để hiển thị logo trực quan
-      const ext = file.name.split('.').pop().toLowerCase();
-      let emoji = "📄";
-      let typeBadge = "FILE";
-      let iconClass = "other";
-
-      if (ext === "pdf") {
-        emoji = "📕";
-        typeBadge = "PDF";
-        iconClass = "pdf";
-      } else if (ext === "doc" || ext === "docx") {
-        emoji = "📘";
-        typeBadge = "WORD";
-        iconClass = "doc";
-      } else if (ext === "xls" || ext === "xlsx") {
-        emoji = "📊";
-        typeBadge = "EXCEL";
-        iconClass = "doc";
-      }
-
-      // Cập nhật card tệp trực quan bên trong ô Kéo thả
-      const wrapEl = document.getElementById("fileLoadedIconWrap");
-      wrapEl.className = `file-loaded-icon-wrap ${iconClass}`;
-      document.getElementById("fileLoadedEmoji").textContent = emoji;
-      document.getElementById("fileLoadedTypeBadge").textContent = typeBadge;
-      document.getElementById("fileLoadedName").textContent = file.name;
-      
-      const sizeStr = (file.size > 1024 * 1024) 
-        ? `${(file.size / 1024 / 1024).toFixed(2)} MB` 
-        : `${(file.size / 1024).toFixed(1)} KB`;
-      document.getElementById("fileLoadedSize").textContent = `${sizeStr} • Tệp cục bộ thiết bị`;
-
-      // Chuyển trạng thái Dropzone: Ẩn vùng trống, Hiện vùng tệp đã nạp
-      regDropzone.classList.add("has-file");
-      document.getElementById("dropzoneEmptyState").style.display = "none";
-      document.getElementById("dropzoneFilledState").style.display = "flex";
-
-      // Cập nhật Live Preview Card & Hash Box ở cột bên phải
-      document.getElementById("lblPreviewFilename").textContent = file.name;
-      document.getElementById("lblPreviewFilesize").textContent = `${sizeStr} • Đã băm Keccak-256`;
-      document.getElementById("previewThumbIcon").textContent = emoji;
-      document.getElementById("lblKeccakHash").textContent = currentHash;
-
-      toast("Đã tính vân tay số Keccak-256 an toàn trong RAM!", "success");
-    }
-
-    // Xóa tệp hiện tại khi người dùng chọn nhầm
-    function removeCurrentFile() {
-      currentHash = "";
-      regFileInput.value = "";
-      regDropzone.classList.remove("has-file");
-      document.getElementById("dropzoneFilledState").style.display = "none";
-      document.getElementById("dropzoneEmptyState").style.display = "block";
-
-      // Reset Live Preview Card & Hash Box
-      document.getElementById("lblPreviewFilename").textContent = "Chưa chọn tệp đề cương";
-      document.getElementById("lblPreviewFilesize").textContent = "Kéo thả hoặc tải tệp lên để tạo vân tay số Keccak-256";
-      document.getElementById("previewThumbIcon").textContent = "📄";
-      document.getElementById("lblKeccakHash").textContent = "Chưa có vân tay số — Vui lòng nạp tệp tài liệu";
-
-      toast("Đã gỡ bỏ tệp tài liệu!", "info");
-    }
-
-    // Đổi tệp khác
-    function triggerSelectNewFile() {
-      regFileInput.click();
-    }
-
     // Tự động sinh mã hồ sơ lưu trữ ngẫu nhiên duy nhất (Phương án A)
     function generateNewArchiveCode(silent = false) {
       const randomNum = Math.floor(100 + Math.random() * 900);
@@ -6266,154 +6163,28 @@
       toast("Đã sao chép mã băm Keccak-256!", "info");
     }
 
-    // Thực hiện đăng ký bản quyền On-chain
-    document.getElementById("btnExecuteRegister").addEventListener("click", async () => {
-      if (!currentHash) {
-        toast("Vui lòng kéo thả hoặc chọn tệp đề cương nghiên cứu trước khi ký On-chain!", "error");
-        return;
-      }
-
-      const title = document.getElementById("regTitleInput").value.trim();
-      if (!title) {
-        toast("Vui lòng nhập tiêu đề công trình nghiên cứu!", "error");
-        document.getElementById("regTitleInput").focus();
-        return;
-      }
-
-      const authors = getFormattedAuthors();
-      if (!authors) {
-        return;
-      }
-
-      const faculty = document.getElementById("regFacultySelect").value;
-      const advisor = document.getElementById("regAdvisorInput").value.trim() || "Chưa cập nhật";
-      const type = document.getElementById("regTypeSelect").value;
-      const code = document.getElementById("regArchiveCodeInput").value.trim() || generateNewArchiveCode(true);
-
-      const btnExec = document.getElementById("btnExecuteRegister");
-      const oldBtnText = btnExec.innerHTML;
-      btnExec.disabled = true;
-      btnExec.innerHTML = `⏳ Đang xác lập bản quyền On-chain...`;
-
-      const eth = getMetaMaskProvider();
-      let authorAddress = currentWallet || "";
-      let finalBlock = 6821940 + SAMPLE_RECORDS.length + 1;
-      let finalTxHash = "";
-      const nowStr = new Date().toLocaleString("vi-VN");
-
-      // Nếu người dùng đang kết nối ví MetaMask thật (không phải ví demo)
-      if (eth && currentWallet) {
-        try {
-          const provider = new ethers.BrowserProvider(eth);
-          const network = await provider.getNetwork();
-
-          if (Number(network.chainId) !== 11155111) {
-            toast("Ví chưa ở mạng Sepolia. Đang yêu cầu chuyển mạng...", "info");
-            try {
-              await eth.request({
-                method: 'wallet_switchEthereumChain',
-                params: [{ chainId: '0xaa36a7' }]
-              });
-            } catch (switchErr) {
-              console.warn("User declined network switch:", switchErr);
-            }
-          }
-
-          const signer = await provider.getSigner();
-          authorAddress = await signer.getAddress();
-          toast("🦊 Đang mở MetaMask để Tác giả ký xác nhận bảo chứng...", "info");
-
-          try {
-            const signMsg = `HCE-SCHOLARPROOF ACADEMIC PROVENANCE\nMã Lưu Trữ: ${code}\nTiêu Đề: ${title}\nKeccak-256 Hash: ${currentHash}\nTác Giả: ${authors}\nKhoa: ${faculty}\nThời Gian: ${nowStr}`;
-            const sig = await signer.signMessage(signMsg);
-            finalTxHash = sig.slice(0, 66);
-            finalBlock = await provider.getBlockNumber();
-            toast("Đã ký số Mật mã học thành công bằng Private Key ví của bạn!", "success");
-          } catch (signErr) {
-            console.warn("Sign cancelled or error:", signErr);
-            if (signErr.code === 4001 || (signErr.message && signErr.message.includes("rejected"))) {
-              toast("Bạn đã hủy thao tác trên MetaMask.", "warning");
-              btnExec.disabled = false;
-              btnExec.innerHTML = oldBtnText;
-              return;
-            }
-          }
-        } catch (metamaskErr) {
-          console.warn("MetaMask provider error:", metamaskErr);
-        }
-      }
-
-      // Lưu hồ sơ vào Sổ cái và nạp sang Chứng thư số
-      const primaryAuthor = (window.lastRegisteredAuthorList && window.lastRegisteredAuthorList[0]) ? window.lastRegisteredAuthorList[0] : {
-        name: "Lê Văn Quang Huy",
-        mssv: "23K4300010",
-        email: "23k4300010@hce.edu.vn",
-        phone: "0912 345 678",
-        class: "K57 Kinh Tế Số"
-      };
-
-      const newRecord = {
-        code: code,
-        date: "Hôm nay",
-        title: title,
-        faculty: faculty,
-        type: type,
-        advisor: advisor,
-        authors: authors,
-        authorMssv: primaryAuthor.mssv,
-        authorEmail: primaryAuthor.email,
-        authorPhone: primaryAuthor.phone,
-        authorClass: primaryAuthor.class,
-        authorList: window.lastRegisteredAuthorList || [primaryAuthor],
-        hash: currentHash,
-        block: finalBlock,
-        time: nowStr,
-        wallet: authorAddress,
-        txHash: finalTxHash
-      };
-      SAMPLE_RECORDS.unshift(newRecord);
-
-      // Thêm ngay vào đầu Băng Chuyền Khối Thời Gian Thực (Live Ticker)
-      LIVE_TICKER_ITEMS.unshift({
-        block: finalBlock,
-        title: title,
-        wallet: authorAddress,
-        timeAgo: "vừa xong"
-      });
-      renderLiveTicker();
-
-      renderLedgerTable();
-      populateDeedRecordPicker();
-      applyRecordToDeed(newRecord);
-      const selDeed = document.getElementById("selDeedRecordPicker");
-      if (selDeed) selDeed.value = "0";
-
-      generateNewArchiveCode(true);
-      btnExec.disabled = false;
-      btnExec.innerHTML = oldBtnText;
-
-      toast("Xác lập bản quyền thành công! Đã cấp Chứng thư số A4 chính thức.", "success");
-      switchNavTab("tab-certificate");
-    });
-
-    // Thẩm định Dropzone
+    // Thẩm định Dropzone (Bảo vệ an toàn bằng kiểm tra tồn tại phần tử)
     const appraisalDropzone = document.getElementById("appraisalDropzone");
     const appraisalFileInput = document.getElementById("appraisalFileInput");
-    appraisalFileInput.addEventListener("change", async (e) => {
-      if (e.target.files && e.target.files[0]) runAuditFile(e.target.files[0]);
-    });
-    appraisalDropzone.addEventListener("dragover", (e) => { 
-      e.preventDefault(); 
-      if (!appraisalDropzone.classList.contains("has-file")) appraisalDropzone.style.borderColor = "var(--primary)"; 
-    });
-    appraisalDropzone.addEventListener("dragleave", () => { 
-      if (!appraisalDropzone.classList.contains("has-file")) appraisalDropzone.style.borderColor = "var(--border-color)"; 
-    });
-    appraisalDropzone.addEventListener("drop", (e) => {
-      e.preventDefault();
-      if (!appraisalDropzone.classList.contains("has-file")) appraisalDropzone.style.borderColor = "var(--border-color)";
-      if (e.dataTransfer.files && e.dataTransfer.files[0]) runAuditFile(e.dataTransfer.files[0]);
-    });
+    if (appraisalFileInput) {
+      appraisalFileInput.addEventListener("change", async (e) => {
+        if (e.target.files && e.target.files[0]) runAuditFile(e.target.files[0]);
+      });
+    }
+    if (appraisalDropzone) {
+      appraisalDropzone.addEventListener("dragover", (e) => { 
+        e.preventDefault(); 
+        if (!appraisalDropzone.classList.contains("has-file")) appraisalDropzone.style.borderColor = "var(--primary)"; 
+      });
+      appraisalDropzone.addEventListener("dragleave", () => { 
+        if (!appraisalDropzone.classList.contains("has-file")) appraisalDropzone.style.borderColor = "var(--border-color)"; 
+      });
+      appraisalDropzone.addEventListener("drop", (e) => {
+        e.preventDefault();
+        if (!appraisalDropzone.classList.contains("has-file")) appraisalDropzone.style.borderColor = "var(--border-color)";
+        if (e.dataTransfer.files && e.dataTransfer.files[0]) runAuditFile(e.dataTransfer.files[0]);
+      });
+    }
 
     let currentMatchedAuditWork = null;
 
