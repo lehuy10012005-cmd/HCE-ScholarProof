@@ -2605,7 +2605,7 @@
               Để đảm bảo tính bất biến và không thể chối bỏ (Non-repudiation), tác phẩm cần được ký điện tử trực tiếp từ khóa bí mật (Private Key) ví MetaMask của bạn trên mạng Ethereum Sepolia.
             </p>
             <button type="button" class="btn-cta-primary" onclick="connectWalletJustInTime()" style="padding: 10px 22px; font-size: 14px; margin: 0 auto; display: inline-flex; align-items: center; gap: 8px; box-shadow: var(--shadow-sm);">
-              <span>🦊</span> <strong>Kết Nối Ví MetaMask Của Bạn Ngay</strong>
+              <span>🦊</span> <strong>Mở MetaMask & Chọn Tài Khoản Ví</strong>
             </button>
           </div>
 
@@ -5132,16 +5132,37 @@
         return null;
       }
 
-      toast("🦊 Đang mở MetaMask để kết nối ví của bạn...", "info");
+      toast("🦊 Đang mở cửa sổ MetaMask để bạn đăng nhập & chọn tài khoản ví...", "info");
       try {
-        const accounts = await eth.request({ method: 'eth_requestAccounts' });
+        let accounts = [];
+        // Bắt buộc MetaMask bật giao diện popup để người dùng chọn tài khoản (thay vì tự động lấy ngầm)
+        try {
+          await eth.request({
+            method: 'wallet_requestPermissions',
+            params: [{ eth_accounts: {} }]
+          });
+          accounts = await eth.request({ method: 'eth_accounts' });
+        } catch (permErr) {
+          console.warn("wallet_requestPermissions warning:", permErr);
+          if (permErr.code === 4001) {
+            toast("Bạn đã hủy kết nối hoặc đóng cửa sổ MetaMask.", "info");
+            return null;
+          }
+          if (permErr.code === -32002) {
+            toast("Cửa sổ MetaMask đang mở chờ bạn thao tác! Hãy bấm vào biểu tượng con cáo trên thanh tiện ích.", "warning");
+            return null;
+          }
+          // Fallback nếu ví không hỗ trợ requestPermissions
+          accounts = await eth.request({ method: 'eth_requestAccounts' });
+        }
+
         if (!accounts || accounts.length === 0) {
-          toast("Chưa cấp quyền ví từ MetaMask.", "warning");
+          toast("Chưa chọn được tài khoản nào từ ví MetaMask.", "warning");
           return null;
         }
         const realAddr = accounts[0];
 
-        // Tự động kiểm tra và chuyển mạng Sepolia
+        // Tự động kiểm tra và chuyển sang mạng Sepolia Testnet
         try {
           await ensureMetaMaskSepolia(eth);
         } catch (netErr) {
@@ -5151,14 +5172,14 @@
         }
 
         updateWalletUI(realAddr);
-        toast(`Đã kết nối ví MetaMask: ${realAddr.slice(0, 6)}...${realAddr.slice(-4)}`, "success");
+        toast(`Đã kết nối tài khoản MetaMask: ${realAddr.slice(0, 6)}...${realAddr.slice(-4)}`, "success");
         return realAddr;
       } catch (err) {
         console.error("connectWalletJustInTime error:", err);
         if (err.code === 4001) {
           toast("Bạn đã hủy kết nối ví trên MetaMask.", "info");
         } else if (err.code === -32002) {
-          toast("Yêu cầu kết nối ví đang chờ duyệt trên biểu tượng MetaMask!", "warning");
+          toast("Cửa sổ MetaMask đang chờ! Hãy bấm vào biểu tượng con cáo MetaMask trên thanh tiện ích.", "warning");
         } else {
           toast(`Lỗi kết nối ví: ${err.message || err}`, "error");
         }
