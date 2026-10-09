@@ -21,10 +21,11 @@
 
 * **Chủ đề lựa chọn:** **Chủ đề 8 — Ghi nhận quyền tác giả của ý tưởng nghiên cứu khoa học (Proof of Authorship & Idea Timestamping)**  
   *(Căn cứ theo danh mục 10 chủ đề tại Phần N, Trang 48–49 — Sổ tay thực hành ECO2432)*
-* **Tên sản phẩm:** **HCE-ScholarProof**
+* **Tên sản phẩm:** **HCE-ScholarProof** (Thương hiệu thực nghiệm: **HCE LEDGER**)
 * **Tuyên ngôn định vị giá trị (Value Proposition):**
-  > *“Nhóm xây dựng HCE-ScholarProof cho sinh viên, giảng viên và các nhà nghiên cứu trẻ Trường Đại học Kinh tế để xác lập bằng chứng ưu tiên quyền sở hữu trí tuệ bất biến (Proof of Existence) cho các ý tưởng nghiên cứu, đề cương khoa học và tập dữ liệu ban đầu trên blockchain với chi phí vi mô, ngăn chặn hoàn toàn nguy cơ bị chiếm đoạt ý tưởng (Scooping) mà không cần bộc lộ nội dung bí mật ra công chúng.”*
-* **Hồ sơ đăng ký chi tiết:** Xem tệp [`TOPIC_REGISTRATION.md`](./TOPIC_REGISTRATION.md)
+  > *“Nhóm sinh viên phát triển nền tảng DApp phi tập trung HCE-ScholarProof giúp sinh viên và giảng viên bảo hộ quyền sở hữu trí tuệ sơ khởi cho ý tưởng nghiên cứu khoa học, đề tài khoá luận bằng chứng minh sự tồn tại (Proof of Existence) và dấu thời gian khối (Block Timestamp) bất biến trên Blockchain Sepolia, giảm thiểu 100% rủi ro đạo văn và tranh chấp học thuật với chi phí lưu trữ tối ưu thông qua cơ chế băm nhị phân client-side.”*
+* **Địa chỉ Hợp đồng Thông minh chính thức (Sepolia Testnet):**  
+  [`0xa2F53106B3dFdf23b6b158022646d231A21e49cb`](https://sepolia.etherscan.io/address/0xa2F53106B3dFdf23b6b158022646d231A21e49cb)
 
 ---
 
@@ -39,7 +40,7 @@
 | **Lab 12** | [`test/ScholarProof.test.js`](./test/ScholarProof.test.js)<br>[`contracts/test/ScholarProof_test.sol`](./contracts/test/ScholarProof_test.sol)<br>[`lab12.md`](./lab12.md) | Bộ kịch bản kiểm thử tự động toàn diện: Luồng chuẩn, chống gian lận nộp đè mã băm, xử lý ngoại lệ biên | ✅ **Hoàn thành** |
 | **Lab 13** | [`web/index.html`](./web/index.html) (Tích hợp Sepolia Testnet)<br>[`lab13.md`](./lab13.md)<br>[`AI_JOURNAL.md`](./AI_JOURNAL.md) | Tích hợp địa chỉ hợp đồng deploy Sepolia, xác thực mã nguồn Etherscan, kiểm thử luồng ký ví và đối soát sự kiện on-chain | ✅ **Hoàn thành** |
 | **Lab 14** | [`audit_report.md`](./audit_report.md)<br>[`lab14.md`](./lab14.md)<br>[`scripts/gas_benchmark.py`](./scripts/gas_benchmark.py) | Kiểm toán an toàn hợp đồng, đo lường chi phí Gas thực nghiệm trên Layer 2 Base/Arbitrum vs Sepolia Testnet | ✅ **Hoàn thành** |
-| **Lab 15** | [`DEPLOYMENT.md`](./DEPLOYMENT.md)<br>[`SLIDES.md`](./SLIDES.md)<br>[`lab15.md`](./lab15.md) | Tài liệu hướng dẫn vận hành hệ thống, slide thuyết trình nghiệm thu trước hội đồng, bảo vệ thành công đồ án | ✅ **Hoàn thành (Đồ án 100%)** |
+| **Lab 15** | [`DEPLOYMENT.md`](./DEPLOYMENT.md)<br>[`SLIDES.md`](./SLIDES.md)<br>[`DAPP_AI_SUPERVISION_JOURNAL.md`](./DAPP_AI_SUPERVISION_JOURNAL.md)<br>[`lab15.md`](./lab15.md) | Tài liệu hướng dẫn vận hành, nhật ký thực chiến giám sát AI & bằng chứng kiểm thử Web DApp, slide thuyết trình nghiệm thu trước hội đồng | ✅ **Hoàn thành (Đồ án 100%)** |
 
 ---
 
@@ -48,21 +49,21 @@
 HCE-ScholarProof/
 ├── contracts/
 │   ├── capstone/
-│   │   └── ScholarProof.sol     # Hợp đồng thông minh ghi nhận quyền tác giả ý tưởng (v2)
+│   │   └── ScholarProof.sol            # Hợp đồng thông minh ghi nhận quyền tác giả ý tưởng (v2)
 │   ├── project/
-│   │   └── ProjectCore.sol      # Hợp đồng lõi theo định danh quy định của học phần
-│   └── training/                # Thư viện hợp đồng mẫu tham chiếu (TimeLockVault, VaultBuggy)
+│   │   └── ProjectCore.sol             # Hợp đồng lõi theo định danh quy định của học phần
+│   └── training/                       # Thư viện hợp đồng mẫu tham chiếu (TimeLockVault, VaultBuggy)
 ├── web/
-│   └── index.html               # Giao diện Web3 DApp băm file và tra cứu on-chain
-├── AGENTS.md                    # Quy ước lập trình và chuẩn mực bảo mật dự án
-├── AI_JOURNAL.md                # Nhật ký làm việc, phản biện và giám sát AI (Lab 1 - 10)
-├── SPEC.md                      # Bản đặc tả nghiệp vụ BA và máy trạng thái hệ thống
-├── TOPIC_REGISTRATION.md        # Bản đăng ký đề tài Capstone chính thức của cặp sinh viên
-├── lab08.md                     # Báo cáo kỹ thuật và kinh tế khởi động đồ án (Lab 8)
-├── lab10.md                     # Báo cáo rà soát mã AI và kiểm toán hợp đồng lõi (Lab 10)
-├── package.json                 # Cấu hình phụ thuộc OpenZeppelin Contracts v5
-└── README.md                    # Tài liệu giới thiệu tổng quan đồ án HCE-ScholarProof
+│   └── index.html                      # Giao diện Web3 DApp băm file client-side và tra cứu on-chain
+├── AGENTS.md                           # Quy ước lập trình và chuẩn mực bảo mật dự án
+├── AI_JOURNAL.md                       # Nhật ký làm việc, phản biện và giám sát AI học phần (Lab 1 - 15)
+├── DAPP_AI_SUPERVISION_JOURNAL.md      # Nhật ký thực chiến giám sát AI & bằng chứng kiểm thử Web DApp
+├── SPEC.md                             # Bản đặc tả nghiệp vụ BA và máy trạng thái hệ thống
+├── TOPIC_REGISTRATION.md               # Bản đăng ký đề tài Capstone chính thức của cặp sinh viên
+├── lab08.md - lab15.md                 # Bộ 8 báo cáo kỹ thuật & kinh tế chi tiết của từng giai đoạn Lab
+├── package.json                        # Cấu hình phụ thuộc OpenZeppelin Contracts v5
+└── README.md                           # Tài liệu giới thiệu tổng quan đồ án HCE-ScholarProof
 ```
 
 ---
-*Dự án được xây dựng và phát triển theo chuẩn quy ước [AGENTS.md](./AGENTS.md) của học phần ECO2432.*
+*Dự án được xây dựng và phát triển theo chuẩn quy ước [AGENTS.md](./AGENTS.md) của học phần ECO2432 — Trường Đại học Kinh tế, Đại học Huế.*
