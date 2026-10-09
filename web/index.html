@@ -2142,6 +2142,116 @@
       margin-bottom: 16px;
     }
 
+
+    /* ==========================================================================
+       AUTH GATE LOCK CARDS: BẢO VỆ CÁC DỊCH VỤ CỐT LÕI KHI CHƯA ĐĂNG NHẬP
+       ========================================================================== */
+    .auth-gate-lock-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 44px 32px;
+      text-align: center;
+      max-width: 840px;
+      margin: 36px auto;
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.08);
+      position: relative;
+      overflow: hidden;
+      animation: fadeInAuthGate 0.4s ease-out;
+    }
+    @keyframes fadeInAuthGate {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .auth-gate-lock-card::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #1e3a8a, #059669, #d97706);
+    }
+    .auth-gate-badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: var(--primary);
+      background: var(--primary-subtle);
+      border: 1px solid var(--primary-border);
+      padding: 4px 12px;
+      border-radius: 9999px;
+      margin-bottom: 16px;
+    }
+    .auth-gate-icon {
+      font-size: 52px;
+      margin-bottom: 12px;
+      display: inline-block;
+      filter: drop-shadow(0 4px 12px rgba(30, 58, 138, 0.25));
+      animation: pulseGateLock 2.4s infinite ease-in-out;
+    }
+    @keyframes pulseGateLock {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.08); }
+    }
+    .auth-gate-lock-card h2 {
+      font-size: 23px;
+      font-weight: 800;
+      color: var(--text-primary);
+      margin-bottom: 12px;
+    }
+    .auth-gate-desc {
+      font-size: 14px;
+      line-height: 1.65;
+      color: var(--text-secondary);
+      max-width: 660px;
+      margin: 0 auto 28px;
+    }
+    .auth-gate-features {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      text-align: left;
+      margin-bottom: 32px;
+    }
+    .gate-feat-item {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      padding: 14px 16px;
+      border-radius: var(--radius-md);
+    }
+    .gate-feat-icon {
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+    .gate-feat-item strong {
+      display: block;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 2px;
+    }
+    .gate-feat-item span {
+      font-size: 12px;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+    .auth-gate-actions {
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+    .auth-gate-footnote {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
   </style>
 </head>
 <body>
@@ -2173,8 +2283,8 @@
         <button class="nav-tab-btn active" onclick="switchNavTab('tab-landing')">Trang chủ</button>
         <button class="nav-tab-btn" onclick="checkAuthAndSwitchTab('tab-register')">Đăng ký tác phẩm</button>
         <button class="nav-tab-btn" onclick="switchNavTab('tab-ledger')">Tra cứu</button>
-        <button class="nav-tab-btn" onclick="switchNavTab('tab-appraisal')">Kiểm tra toàn vẹn</button>
-        <button class="nav-tab-btn" onclick="switchNavTab('tab-certificate')">Chứng nhận</button>
+        <button class="nav-tab-btn" onclick="checkAuthAndSwitchTab('tab-appraisal')">Kiểm tra toàn vẹn</button>
+        <button class="nav-tab-btn" onclick="checkAuthAndSwitchTab('tab-certificate')">Chứng nhận</button>
       </nav>
 
       <div class="header-right">
@@ -2208,6 +2318,7 @@
           </button>
         </div>
       </div>
+    </div>
   </header>
 
   
@@ -2231,7 +2342,7 @@
 
           <div class="hero-cta-group">
             <button class="btn-cta-primary" onclick="checkAuthAndSwitchTab('tab-register')">✍️ Đăng ký xác thực ngay</button>
-            <button class="btn-cta-secondary" onclick="switchNavTab('tab-appraisal')">🔍 Thẩm định đề tài</button>
+            <button class="btn-cta-secondary" onclick="checkAuthAndSwitchTab('tab-appraisal')">🔍 Thẩm định đề tài</button>
           </div>
         </div>
 
@@ -2271,7 +2382,7 @@
             <p>Kéo thả tệp đề cương cần kiểm tra để đối soát tự động với toàn bộ cơ sở dữ liệu trên Blockchain Sepolia, phát hiện trùng lặp tức thì.</p>
           </div>
           <div style="margin-top: 20px;">
-            <button class="btn-gateway-action council" onclick="switchNavTab('tab-appraisal')">
+            <button class="btn-gateway-action council" onclick="checkAuthAndSwitchTab('tab-appraisal')">
               Vào Bàn Thẩm Định Ngay &rarr;
             </button>
           </div>
@@ -2289,7 +2400,55 @@
   <section class="tab-content" id="tab-register">
     <div class="reg-wrapper" style="max-width: 1060px;">
       
-      <!-- WIZARD PROGRESS BAR 6 BƯỚC -->
+      <!-- THẺ KHÓA AUTH GATE: YÊU CẦU ĐĂNG NHẬP ĐỂ SỬ DỤNG DỊCH VỤ ĐĂNG KÝ -->
+      <div id="regAuthLockGate" class="auth-gate-lock-card" style="display: none;">
+        <div class="auth-gate-badge">🛡️ BẢO VỆ ĐỊNH DANH HỌC THUẬT ON-CHAIN</div>
+        <div class="auth-gate-icon">🔒</div>
+        <h2>Yêu Cầu Đăng Nhập Để Đăng Ký Tác Quyền</h2>
+        <p class="auth-gate-desc">
+          Hệ thống HCE LEDGER yêu cầu xác thực tài khoản tác giả (Sinh viên, Giảng viên, Nhà nghiên cứu) trước khi khởi tạo hồ sơ bảo chứng trên mạng Blockchain Sepolia. Quá trình này đảm bảo tính chịu trách nhiệm pháp lý và quyền tác giả độc bản không bị mạo danh.
+        </p>
+        
+        <div class="auth-gate-features">
+          <div class="gate-feat-item">
+            <span class="gate-feat-icon">🆔</span>
+            <div>
+              <strong>Định Danh Minh Bạch</strong>
+              <span>Gắn liền CCCD/Mã định danh và hồ sơ học thuật vào chữ ký số</span>
+            </div>
+          </div>
+          <div class="gate-feat-item">
+            <span class="gate-feat-icon">⚡</span>
+            <div>
+              <strong>Ký Số & Ví Web3</strong>
+              <span>Tích hợp kết nối trực tiếp ví MetaMask với hợp đồng thông minh Sepolia</span>
+            </div>
+          </div>
+          <div class="gate-feat-item">
+            <span class="gate-feat-icon">📜</span>
+            <div>
+              <strong>Chứng Thư Bất Biến</strong>
+              <span>Cấp Deed of Existence lưu trữ vĩnh viễn trên sổ cái phi tập trung</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="auth-gate-actions">
+          <button type="button" class="btn-cta-primary" onclick="openLoginAccountModal()" style="padding: 12px 28px; font-size: 14px; font-weight: 700; border-radius: 8px; cursor: pointer; box-shadow: 0 4px 14px rgba(27, 85, 226, 0.3);">
+            🔐 Đăng Nhập Ngay
+          </button>
+          <button type="button" class="btn-cta-secondary" onclick="openRegisterAccountModal()" style="padding: 12px 28px; font-size: 14px; font-weight: 700; border-radius: 8px; cursor: pointer;">
+            📝 Đăng Ký Tài Khoản Mới
+          </button>
+        </div>
+
+        <div class="auth-gate-footnote">
+          <span>💡 Chưa có tài khoản? Nhấn <strong>Đăng Ký</strong> để tạo hồ sơ nhanh chóng chỉ trong 30 giây (có mã OTP tự động xác thực).</span>
+        </div>
+      </div>
+
+      <!-- KHUNG NỘI DUNG WIZARD ĐĂNG KÝ (CHỈ HIỂN THỊ KHI ĐÃ ĐĂNG NHẬP) -->
+      <div id="regWizardMainContent">
       <div class="wizard-wrap">
         <div class="wizard-progress-bar">
           <div class="wizard-progress-line" id="wizardProgressLine" style="width: 0%;"></div>
@@ -2698,7 +2857,7 @@
               <button type="button" class="btn-cta-primary" onclick="viewDeedForCurrentSuccess()" style="padding: 11px 22px; font-size: 13.5px; gap: 8px;">
                 <span>📜</span> <span>Xem &amp; Tải Giấy Xác Nhận Điện Tử A4</span>
               </button>
-              <button type="button" class="btn-cta-secondary" onclick="switchNavTab('tab-dashboard')" style="padding: 11px 20px; font-size: 13px;">
+              <button type="button" class="btn-cta-secondary" onclick="checkAuthAndSwitchTab('tab-dashboard')" style="padding: 11px 20px; font-size: 13px;">
                 <span>📊</span> <span>Về Dashboard Tác Giả</span>
               </button>
               <button type="button" class="btn-cta-secondary" onclick="resetWizardForNewRegistration()" style="padding: 11px 20px; font-size: 13px;">
@@ -2709,6 +2868,7 @@
         </div>
 
       </div>
+      </div><!-- /#regWizardMainContent -->
 
     </div>
   </section>
@@ -2717,7 +2877,50 @@
        TAB 3: IDEA APPRAISAL DASHBOARD (THẨM ĐỊNH TÍNH ĐỘC BẢN ON-CHAIN)
        ======================================================================== -->
   <section class="tab-content" id="tab-appraisal">
-    <div class="appraisal-wrapper">
+      <!-- THẺ KHÓA AUTH GATE: THẨM ĐỊNH TÁC PHẨM -->
+      <div id="appraisalAuthLockGate" class="auth-gate-lock-card" style="display: none; max-width: 840px; margin: 36px auto;">
+        <div class="auth-gate-badge">⚖️ HỘI ĐỒNG THẨM ĐỊNH & KIỂM ĐỊNH TOÀN VẸN</div>
+        <div class="auth-gate-icon">🔒</div>
+        <h2>Yêu Cầu Đăng Nhập Để Thẩm Định Tác Phẩm</h2>
+        <p class="auth-gate-desc">
+          Công cụ đối soát đề tài học thuật và kiểm định hàm băm mật mã yêu cầu phiên đăng nhập hợp lệ để lưu nhật ký thẩm định (Audit Trail) và bảo mật quyền tác giả.
+        </p>
+        
+        <div class="auth-gate-features">
+          <div class="gate-feat-item">
+            <span class="gate-feat-icon">⚡</span>
+            <div>
+              <strong>Băm Mật Mã Cục Bộ</strong>
+              <span>Tính toán Keccak-256 an toàn ngay trên RAM trình duyệt</span>
+            </div>
+          </div>
+          <div class="gate-feat-item">
+            <span class="gate-feat-icon">🔍</span>
+            <div>
+              <strong>Đối Soát Sổ Cái Sepolia</strong>
+              <span>Kiểm tra tức thì với toàn bộ hồ sơ đã bảo chứng trên Blockchain</span>
+            </div>
+          </div>
+          <div class="gate-feat-item">
+            <span class="gate-feat-icon">📑</span>
+            <div>
+              <strong>Biên Bản Thẩm Định</strong>
+              <span>Xuất kết luận độc bản kèm mã tham chiếu bằng chứng số</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="auth-gate-actions">
+          <button type="button" class="btn-cta-primary" onclick="openLoginAccountModal()" style="padding: 12px 28px; font-size: 14px; font-weight: 700; border-radius: 8px; cursor: pointer; box-shadow: 0 4px 14px rgba(27, 85, 226, 0.3);">
+            🔐 Đăng Nhập Ngay
+          </button>
+          <button type="button" class="btn-cta-secondary" onclick="openRegisterAccountModal()" style="padding: 12px 28px; font-size: 14px; font-weight: 700; border-radius: 8px; cursor: pointer;">
+            📝 Đăng Ký Tài Khoản Mới
+          </button>
+        </div>
+      </div>
+
+    <div id="appraisalMainContent" class="appraisal-wrapper">
       <div class="appraisal-grid">
         
         <!-- Cột trái: Tóm tắt & Tệp kiểm tra -->
@@ -2962,7 +3165,26 @@
        TAB 5: A4 ACADEMIC DEED CERTIFICATE (CHỨNG THƯ QUYỀN TÁC GIẢ A4)
        ======================================================================== -->
   <section class="tab-content" id="tab-certificate">
-    <div class="cert-section-wrapper">
+      <!-- THẺ KHÓA AUTH GATE: CHỨNG NHẬN TÁC QUYỀN -->
+      <div id="certificateAuthLockGate" class="auth-gate-lock-card" style="display: none; max-width: 840px; margin: 36px auto;">
+        <div class="auth-gate-badge">📜 CHỨNG THƯ TÁC QUYỀN A4 ON-CHAIN</div>
+        <div class="auth-gate-icon">🔒</div>
+        <h2>Yêu Cầu Đăng Nhập Để Xem & Cấp Chứng Nhận</h2>
+        <p class="auth-gate-desc">
+          Giấy chứng nhận bản quyền học thuật A4 và mã QR truy xuất dữ liệu hợp đồng thông minh Sepolia chỉ khả dụng đối với tác giả đã đăng nhập tài khoản.
+        </p>
+        
+        <div class="auth-gate-actions">
+          <button type="button" class="btn-cta-primary" onclick="openLoginAccountModal()" style="padding: 12px 28px; font-size: 14px; font-weight: 700; border-radius: 8px; cursor: pointer; box-shadow: 0 4px 14px rgba(27, 85, 226, 0.3);">
+            🔐 Đăng Nhập Ngay
+          </button>
+          <button type="button" class="btn-cta-secondary" onclick="openRegisterAccountModal()" style="padding: 12px 28px; font-size: 14px; font-weight: 700; border-radius: 8px; cursor: pointer;">
+            📝 Đăng Ký Tài Khoản Mới
+          </button>
+        </div>
+      </div>
+
+    <div id="certificateMainContent" class="cert-section-wrapper">
       
       <!-- Thanh chọn & Đổi hồ sơ Chứng thư linh hoạt -->
       <div style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 12px 18px; margin-bottom: 20px; box-shadow: var(--shadow-sm); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
@@ -3306,8 +3528,6 @@
       </div>
     </div>
   </div>
-    </div>
-  </div>
 
   <!-- ========================================================================
        MODAL: ĐĂNG KÝ TÀI KHOẢN TÁC GIẢ (KÈM BƯỚC XÁC THỰC MÃ OTP 6 SỐ)
@@ -3428,7 +3648,6 @@
       </div>
     </div>
   </div>
-  </div>
 
   <!-- TOAST BOX -->
   <div class="toast-box" id="toastBox"></div>
@@ -3543,6 +3762,7 @@
     }
 
     let ALL_USERS = getStoredUsers();
+    let HCE_STUDENT_PROFILES = ALL_USERS;
     let currentWalletAddress = null;
     let currentActiveStudent = null; // Mặc định chế độ Khách vãng lai
     let currentAuthUser = null;
@@ -3820,25 +4040,39 @@
       } catch (e) {}
       updateAuthUI();
       closeAuthorPassportModal();
+      // Chuyển ngay lập tức về Trang Chủ, ngăn khách truy cập các biểu mẫu dịch vụ
+      switchNavTab("tab-landing");
       toast("Đã đăng xuất tài khoản an toàn.", "info");
     }
 
     
     // ========================================================================
-    // CƠ CHẾ AUTH GUARD: CHẶN TÍNH NĂNG KHI CHƯA ĐĂNG NHẬP
+    // CƠ CHẾ AUTH GUARD: CHẶN TÍNH NĂNG KHI CHƯA ĐĂNG NHẬP (STRICT AUTHENTICATION)
     // ========================================================================
     let simulatedOtpCode = "864209";
     let pendingRegisterData = null;
     let otpCountdownInterval = null;
 
+    // Kiểm tra trạng thái đăng nhập xác thực của tác giả
+    function isUserAuthenticated() {
+      const u = currentAuthUser || currentActiveStudent;
+      return !!(u && (u.id || u.email || u.fullName || u.name));
+    }
+
     // Chặn chuyển tab nếu chưa đăng nhập
     function checkAuthAndSwitchTab(tabId) {
-      if (tabId === "tab-register") {
-        if (!currentActiveStudent) {
-          toast("Vui lòng đăng nhập hoặc đăng ký tài khoản để sử dụng tính năng Đăng ký tác quyền!", "warning");
-          openLoginAccountModal();
-          return;
-        }
+      const protectedTabs = ["tab-register", "tab-appraisal", "tab-certificate", "tab-dashboard"];
+      if (protectedTabs.includes(tabId) && !isUserAuthenticated()) {
+        pendingNavTabAfterLogin = tabId;
+        let serviceName = "Dịch vụ";
+        if (tabId === "tab-register") serviceName = "Đăng ký tác phẩm";
+        else if (tabId === "tab-appraisal") serviceName = "Kiểm tra toàn vẹn & Thẩm định tác phẩm";
+        else if (tabId === "tab-certificate") serviceName = "Xem và cấp Giấy chứng nhận bản quyền";
+        else if (tabId === "tab-dashboard") serviceName = "Bàn điều khiển hồ sơ tác giả";
+
+        toast("🔒 Vui lòng đăng nhập hoặc đăng ký tài khoản để sử dụng " + serviceName + "!", "warning");
+        openLoginAccountModal();
+        return;
       }
       switchNavTab(tabId);
     }
@@ -4216,9 +4450,49 @@
       const lbl = document.getElementById("lblHeaderAuth");
       const btn = document.getElementById("btnHeaderAuth");
 
+      const isAuth = (typeof isUserAuthenticated === "function") ? isUserAuthenticated() : !!(currentAuthUser || currentActiveStudent);
       const activeUser = currentAuthUser || currentActiveStudent;
 
-      if (activeUser) {
+      // Điều khiển Auth Gate tại chỗ trên Tab Đăng Ký
+      const regLockGate = document.getElementById("regAuthLockGate");
+      const regWizardContent = document.getElementById("regWizardMainContent");
+      if (regLockGate && regWizardContent) {
+        if (isAuth) {
+          regLockGate.style.display = "none";
+          regWizardContent.style.display = "block";
+        } else {
+          regLockGate.style.display = "block";
+          regWizardContent.style.display = "none";
+        }
+      }
+
+      // Điều khiển Auth Gate tại chỗ trên Tab Thẩm Định
+      const appraisalLockGate = document.getElementById("appraisalAuthLockGate");
+      const appraisalContent = document.getElementById("appraisalMainContent");
+      if (appraisalLockGate && appraisalContent) {
+        if (isAuth) {
+          appraisalLockGate.style.display = "none";
+          appraisalContent.style.display = "block";
+        } else {
+          appraisalLockGate.style.display = "block";
+          appraisalContent.style.display = "none";
+        }
+      }
+
+      // Điều khiển Auth Gate tại chỗ trên Tab Chứng Nhận
+      const certLockGate = document.getElementById("certificateAuthLockGate");
+      const certContent = document.getElementById("certificateMainContent");
+      if (certLockGate && certContent) {
+        if (isAuth) {
+          certLockGate.style.display = "none";
+          certContent.style.display = "block";
+        } else {
+          certLockGate.style.display = "block";
+          certContent.style.display = "none";
+        }
+      }
+
+      if (isAuth && activeUser) {
         if (loggedInWrap) loggedInWrap.style.display = "flex";
         if (loggedOutWrap) loggedOutWrap.style.display = "none";
 
@@ -4241,6 +4515,17 @@
         if (btn) btn.title = "Đăng nhập tài khoản tác giả / người dùng";
         if (dashGreeting) dashGreeting.textContent = "Khách vãng lai";
         if (dashRole) dashRole.textContent = "Chưa xác thực";
+
+        // Nếu khách đang mở bất kỳ tab bảo vệ nào -> Tự động chuyển về Trang Chủ
+        const curActiveTab = document.querySelector(".tab-content.active");
+        if (curActiveTab && ["tab-register", "tab-appraisal", "tab-certificate", "tab-dashboard"].includes(curActiveTab.id)) {
+          document.querySelectorAll(".tab-content").forEach(el => el.classList.remove("active"));
+          document.querySelectorAll(".nav-tab-btn").forEach(el => el.classList.remove("active"));
+          const landing = document.getElementById("tab-landing");
+          if (landing) landing.classList.add("active");
+          const homeBtn = document.querySelector(".nav-tab-btn");
+          if (homeBtn) homeBtn.classList.add("active");
+        }
       }
 
       if (typeof renderUserDashboard === "function") renderUserDashboard();
@@ -4249,6 +4534,11 @@
 
     // --- ĐIỀU HƯỚNG WIZARD 6 BƯỚC ---
     function goToWizardStep(step) {
+      if (typeof isUserAuthenticated === "function" && !isUserAuthenticated()) {
+        toast("🔒 Vui lòng đăng nhập hoặc đăng ký tài khoản để thực hiện quy trình đăng ký tác quyền!", "warning");
+        openLoginAccountModal();
+        return;
+      }
       if (step < 1 || step > 6) return;
       
       // Kiểm tra tính hợp lệ cơ bản nếu nhảy bước
@@ -4304,6 +4594,11 @@
     }
 
     function nextWizardStep() {
+      if (!isUserAuthenticated()) {
+        toast("🔒 Vui lòng đăng nhập hoặc đăng ký tài khoản để tiếp tục!", "warning");
+        openLoginAccountModal();
+        return;
+      }
       goToWizardStep(currentWizardStep + 1);
     }
 
@@ -5178,6 +5473,22 @@
 
     // Chuyển Tab Điều Hướng & Auth Guard Bảo Vệ Tất Cả Dịch Vụ
     function switchNavTab(tabId) {
+      // Danh sách các dịch vụ cốt lõi bắt buộc phải đăng nhập tài khoản
+      const protectedTabs = ["tab-register", "tab-appraisal", "tab-certificate", "tab-dashboard"];
+
+      if (protectedTabs.includes(tabId) && !isUserAuthenticated()) {
+        pendingNavTabAfterLogin = tabId;
+        let serviceName = "Dịch vụ này";
+        if (tabId === "tab-register") serviceName = "Đăng ký tác phẩm";
+        else if (tabId === "tab-appraisal") serviceName = "Kiểm tra toàn vẹn & Thẩm định tác phẩm";
+        else if (tabId === "tab-certificate") serviceName = "Xem và cấp Giấy chứng nhận bản quyền";
+        else if (tabId === "tab-dashboard") serviceName = "Bàn điều khiển hồ sơ tác giả";
+
+        toast("🔒 Vui lòng đăng nhập hoặc đăng ký tài khoản để sử dụng " + serviceName + "!", "warning");
+        openLoginAccountModal();
+        return;
+      }
+
       // Tự động reset biểu mẫu nếu tác giả đã đăng ký hoàn tất bước 6 và quay lại tính năng đăng ký
       if (tabId === "tab-register" && currentWizardStep === 6) {
         resetWizardForNewRegistration();
@@ -5185,22 +5496,6 @@
       if (tabId === "tab-ledger") {
         renderLedgerTable(SAMPLE_RECORDS);
         renderAuthorsDirectory();
-      }
-
-      // Danh sách các dịch vụ cốt lõi bắt buộc phải đăng nhập tài khoản
-      const protectedTabs = ["tab-register", "tab-appraisal", "tab-certificate"];
-      const activeUser = currentAuthUser || currentActiveStudent;
-
-      if (protectedTabs.includes(tabId) && !activeUser) {
-        pendingNavTabAfterLogin = tabId;
-        let serviceName = "Dịch vụ";
-        if (tabId === "tab-register") serviceName = "Đăng ký tác phẩm";
-        else if (tabId === "tab-appraisal") serviceName = "Kiểm tra toàn vẹn & Thẩm định tác phẩm";
-        else if (tabId === "tab-certificate") serviceName = "Xem và cấp Giấy chứng nhận bản quyền";
-
-        toast(`🔒 Vui lòng đăng nhập hoặc đăng ký tài khoản để sử dụng ${serviceName}!`, "warning");
-        openLoginAccountModal();
-        return;
       }
 
       document.querySelectorAll(".tab-content").forEach(el => el.classList.remove("active"));
@@ -5699,7 +5994,7 @@
 
     function renderSingleAuthorInput() {
       const container = document.getElementById("authorListContainer");
-      const s = currentActiveStudent || HCE_STUDENT_PROFILES[0];
+      const s = currentActiveStudent || (typeof HCE_STUDENT_PROFILES !== "undefined" && HCE_STUDENT_PROFILES[0]) || (typeof ALL_USERS !== "undefined" && ALL_USERS[0]) || { name: "Tác Giả", mssv: "HCE-01" };
       container.innerHTML = `
         <div class="author-member-card">
           <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
