@@ -3761,6 +3761,16 @@
       }
     }
 
+    // Cấu hình Hợp đồng Thông minh On-Chain ScholarProof trên Sepolia
+    const CONTRACT_ADDRESS = "0xa2F53106B3dFdf23b6b158022646d231A21e49cb";
+    const SCHOLAR_PROOF_ABI = [
+      "function registerIdea(bytes32 docHash, string calldata title, string calldata category) external",
+      "function verifyIdea(bytes32 docHash) external view returns (address author, uint256 timestamp, uint256 blockNumber, string memory title, string memory category)",
+      "function isIdeaRegistered(bytes32 docHash) external view returns (bool isRegistered)",
+      "function totalIdeas() external view returns (uint256)",
+      "event IdeaRegistered(bytes32 indexed docHash, address indexed author, uint256 timestamp, uint256 blockNumber, string title, string category)"
+    ];
+
     let ALL_USERS = getStoredUsers();
     let HCE_STUDENT_PROFILES = ALL_USERS;
     let currentWalletAddress = null;
@@ -4924,88 +4934,88 @@
       toast("🦊 Mở MetaMask: Vui lòng ký xác nhận quyền tác giả bằng ví của bạn...", "info");
 
       let realSignerAddress = activeWallet;
-      let signatureProof = "";
       let onChainTxHash = "";
       let blockNumberRecorded = 11877335;
 
       try {
         const signer = await provider.getSigner();
         realSignerAddress = await signer.getAddress();
-        
-        let txSuccess = false;
 
-        // 1. Kiểm tra số dư ví để thực hiện GIAO DỊCH ON-CHAIN THỰC SỰ (ghi nhận vào tab Hoạt Động của MetaMask)
+        // 1. Chuẩn hóa mã băm docHash sang đúng chuẩn bytes32 cho Hợp đồng thông minh
+        let docHashBytes32 = "";
+        if (keccakHash.startsWith("0x") && keccakHash.length === 66) {
+          docHashBytes32 = keccakHash;
+        } else if (sha256Hash.startsWith("0x") && sha256Hash.length === 66) {
+          docHashBytes32 = sha256Hash;
+        } else {
+          docHashBytes32 = ethers.keccak256(ethers.toUtf8Bytes(keccakHash || sha256Hash || newCode));
+        }
+
+        // 2. Kiểm tra trùng lặp trên Sổ cái Smart Contract Sepolia trước khi phát sóng giao dịch
+        const contractRead = new ethers.Contract(CONTRACT_ADDRESS, SCHOLAR_PROOF_ABI, provider);
         try {
-          const balance = await provider.getBalance(realSignerAddress);
-          if (balance > 0n) {
-            toast("🦊 Mở MetaMask: Vui lòng bấm 'Xác nhận' để gửi giao dịch On-Chain lên khối Sepolia...", "info");
-            
-            // Calldata chứa chuỗi bằng chứng băm mật mã học (Proof of Existence)
-            const memoString = "HCE_PROOF:" + newCode + ":" + sha256Hash.slice(0, 32) + ":" + keccakHash.slice(0, 32);
-            const calldata = ethers.hexlify(ethers.toUtf8Bytes(memoString));
-
-            const tx = await signer.sendTransaction({
-              to: CONTRACT_ADDRESS,
-              value: 0n,
-              data: calldata
-            });
-
-            toast("⏳ Giao dịch đã phát sóng lên Sepolia! Đang chờ Validator đóng gói khối...", "info");
-            const receipt = await tx.wait(1);
-
-            if (receipt && receipt.hash) {
-              onChainTxHash = receipt.hash;
-              blockNumberRecorded = receipt.blockNumber;
-              txSuccess = true;
-              toast("✓ Giao dịch On-Chain đã được ghi vào khối Sepolia & lưu vào lịch sử ví MetaMask!", "success");
-            }
+          const isRegistered = await contractRead.isIdeaRegistered(docHashBytes32);
+          if (isRegistered) {
+            const ideaInfo = await contractRead.verifyIdea(docHashBytes32);
+            const regDate = new Date(Number(ideaInfo[1]) * 1000).toLocaleString("vi-VN");
+            toast("⚠️ Tác phẩm này đã được bảo chứng trên Sepolia bởi ví " + ideaInfo[0].slice(0, 6) + "..." + ideaInfo[0].slice(-4) + " lúc " + regDate + "! Hệ thống từ chối đăng ký trùng lặp để bảo vệ quyền tác giả.", "error");
+            btn.disabled = false;
+            btn.style.opacity = "1";
+            if (loadingState) loadingState.style.display = "none";
+            return;
           }
-        } catch (txErr) {
-          console.warn("sendTransaction error / fallback:", txErr);
-          if (txErr.code === 4001 || (txErr.message && txErr.message.includes("rejected"))) {
-            throw txErr; // Người dùng chủ động bấm Hủy trên MetaMask
-          }
+        } catch (checkErr) {
+          console.warn("isIdeaRegistered check note:", checkErr);
         }
 
-        // 2. Nếu không đủ gas hoặc mạng bận, dùng chữ ký thông điệp ECDSA
-        if (!txSuccess) {
-          toast("🦊 Mở MetaMask: Vui lòng ký xác nhận quyền tác giả bằng ví của bạn...", "info");
-          const signMsg = "HCE-SCHOLARPROOF ACADEMIC PROVENANCE\n" +
-            "Mã Lưu Trữ: " + newCode + "\n" +
-            "Tiêu Đề: " + title + "\n" +
-            "Keccak-256 Hash: " + keccakHash + "\n" +
-            "Tác Giả: " + authorsFormatted + "\n" +
-            "Khoa: " + dept + "\n" +
-            "Thời Gian: " + dateStr;
-
-          signatureProof = await signer.signMessage(signMsg);
-          onChainTxHash = signatureProof.length >= 66 ? signatureProof.slice(0, 66) : ("0x" + Array.from({length: 64}, () => Math.floor(Math.random()*16).toString(16)).join(""));
-          try {
-            blockNumberRecorded = await provider.getBlockNumber();
-          } catch (bErr) {}
-          toast("Đã ký số Mật mã học thành công bằng ví MetaMask của bạn!", "success");
+        // 3. Kiểm tra số dư ví SepoliaETH của tác giả
+        const balance = await provider.getBalance(realSignerAddress);
+        if (balance === 0n) {
+          toast("Số dư ví của bạn là 0 SepoliaETH! Vui lòng nạp một ít testnet ETH để trả phí gas giao dịch.", "error");
+          btn.disabled = false;
+          btn.style.opacity = "1";
+          if (loadingState) loadingState.style.display = "none";
+          return;
         }
-      } catch (signErr) {
-        console.warn("User cancelled or error during MetaMask signing:", signErr);
+
+        // 4. Khởi tạo Contract Write và gọi trực tiếp hàm registerIdea()
+        const contractWrite = new ethers.Contract(CONTRACT_ADDRESS, SCHOLAR_PROOF_ABI, signer);
+        toast("🦊 Mở MetaMask: Vui lòng bấm 'Xác nhận' để gửi giao dịch On-Chain lên Smart Contract Sepolia...", "info");
+
+        const cleanTitle = title.slice(0, 190);
+        const cleanCategory = (dept || "Nghiên cứu khoa học").slice(0, 90);
+
+        const tx = await contractWrite.registerIdea(docHashBytes32, cleanTitle, cleanCategory);
+        toast("⏳ Giao dịch đã phát sóng lên Sepolia! Đang chờ Validator đóng gói khối...", "info");
+
+        const receipt = await tx.wait(1);
+        if (!receipt || !receipt.hash) {
+          throw new Error("Không nhận được biên lai giao dịch từ mạng Sepolia.");
+        }
+
+        onChainTxHash = receipt.hash;
+        blockNumberRecorded = Number(receipt.blockNumber);
+        toast("✓ Giao dịch On-Chain đã được ghi vào Smart Contract Sepolia & lưu vào lịch sử ví MetaMask!", "success");
+
+      } catch (txErr) {
+        console.error("Lỗi giao dịch On-chain:", txErr);
         btn.disabled = false;
         btn.style.opacity = "1";
         if (loadingState) loadingState.style.display = "none";
 
-        if (signErr.code === 4001 || (signErr.message && signErr.message.includes("rejected"))) {
-          toast("Bạn đã từ chối ký giao dịch trên MetaMask. Không ghi nhận bản quyền mạo danh.", "warning");
+        if (txErr.code === 4001 || (txErr.message && txErr.message.includes("rejected"))) {
+          toast("Bạn đã hủy xác nhận giao dịch trên MetaMask.", "warning");
+        } else if (txErr.message && txErr.message.includes("IdeaAlreadyRegistered")) {
+          toast("⚠️ Hợp đồng thông minh từ chối: Mã băm tác phẩm này đã tồn tại trên Blockchain Sepolia!", "error");
+        } else if (txErr.message && txErr.message.includes("insufficient funds")) {
+          toast("Số dư SepoliaETH không đủ để chi trả phí gas giao dịch!", "error");
         } else {
-          toast("Lỗi ký ví MetaMask: " + (signErr.message || signErr), "error");
+          toast("Lỗi phát sóng Smart Contract: " + (txErr.reason || txErr.message || txErr), "error");
         }
-        return; // CHẶN ĐỨNG: Tuyệt đối không lưu nếu chưa ký thành công!
+        return; // CHẶN ĐỨNG: Tuyệt đối không lưu sổ cái nếu giao dịch On-chain thất bại!
       }
 
-      // 4. Lưu hồ sơ thật với địa chỉ ví thật và chữ ký thật
       let txHashDisplay = onChainTxHash;
-      if (!txHashDisplay) {
-        txHashDisplay = (signatureProof.length >= 66)
-          ? signatureProof.slice(0, 66)
-          : ("0x" + Array.from({length: 64}, () => Math.floor(Math.random()*16).toString(16)).join(""));
-      }
 
       lastRegisteredWork = {
         id: newCode,
@@ -5047,7 +5057,8 @@
         sha256: lastRegisteredWork.sha256,
         block: lastRegisteredWork.blockNumber,
         time: dateStr + " GMT+7",
-        wallet: lastRegisteredWork.authorWallet
+        wallet: lastRegisteredWork.authorWallet,
+        txHash: lastRegisteredWork.txHash
       };
 
       // Đồng bộ sang SAMPLE_RECORDS & lưu trữ localStorage
@@ -5092,11 +5103,8 @@
       // Cập nhật giao diện Bước 6
       document.getElementById("succRegCode").textContent = lastRegisteredWork.code;
       document.getElementById("succSha256").textContent = lastRegisteredWork.sha256.substring(0, 24) + "...";
-      document.getElementById("succTxHashLink").textContent = lastRegisteredWork.txHash.substring(0, 18) + "... ↗";
-      const targetTxUrl = (onChainTxHash && onChainTxHash.length === 66 && onChainTxHash.startsWith("0x"))
-        ? ("https://sepolia.etherscan.io/tx/" + onChainTxHash)
-        : ("https://sepolia.etherscan.io/address/" + CONTRACT_ADDRESS);
-      document.getElementById("succTxHashLink").href = targetTxUrl;
+      document.getElementById("succTxHashLink").textContent = lastRegisteredWork.txHash.substring(0, 20) + "... (Mở trên Sepolia Etherscan ↗)";
+      document.getElementById("succTxHashLink").href = "https://sepolia.etherscan.io/tx/" + lastRegisteredWork.txHash;
       document.getElementById("succTimestamp").textContent = dateStr + " (Khối #" + lastRegisteredWork.blockNumber + ")";
 
       btn.disabled = false;
@@ -5450,14 +5458,6 @@
     let currentHash = "";
     let currentWallet = null;
 
-    // Cấu hình Hợp đồng Thông minh On-Chain ScholarProof trên Sepolia
-    let CONTRACT_ADDRESS = "0xa2F53106B3dFdf23b6b158022646d231A21e49cb";
-    const SCHOLAR_PROOF_ABI = [
-      "function registerIdea(bytes32 docHash, string calldata title, string calldata category) external",
-      "function verifyIdea(bytes32 docHash) external view returns (bool exists, address author, uint256 timestamp, uint256 blockNumber, string memory title, string memory category)",
-      "function totalIdeas() external view returns (uint256)",
-      "event IdeaRegistered(bytes32 indexed docHash, address indexed author, uint256 timestamp, uint256 blockNumber, string title, string category)"
-    ];
 
     // Toast Utility
     function toast(msg, type = "info") {
