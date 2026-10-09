@@ -3543,12 +3543,10 @@
       if (storedActiveUser) {
         const u = JSON.parse(storedActiveUser);
         // Chỉ khôi phục phiên nếu là tài khoản thật người dùng đã đăng ký (không tự động gán tài khoản mẫu)
-        if (u && u.id && u.id !== "23K4300010" && u.id !== "23K4300024" && u.id !== "22K4100055" && !u.id.startsWith("USR-ADMIN")) {
+        if (u && u.id) {
           currentActiveStudent = u;
           currentAuthUser = u;
           currentPassportStudent = u;
-        } else {
-          localStorage.removeItem("COPYCHAIN_CURRENT_USER");
         }
       }
     } catch (e) {}
@@ -3705,6 +3703,11 @@
           updateAuthUI();
           closeLoginAccountModal();
           toast("Đăng nhập thành công! Xin chào tác giả " + (found.fullName || found.name), "success");
+          if (typeof pendingNavTabAfterLogin !== "undefined" && pendingNavTabAfterLogin) {
+            const nextTab = pendingNavTabAfterLogin;
+            pendingNavTabAfterLogin = null;
+            setTimeout(() => switchNavTab(nextTab), 300);
+          }
         } else {
           toast("Mật khẩu không chính xác!", "error");
         }
@@ -3737,6 +3740,11 @@
         updateAuthUI();
         closeLoginAccountModal();
         toast("Đăng nhập thành công với tài khoản: " + tempUser.fullName, "success");
+        if (typeof pendingNavTabAfterLogin !== "undefined" && pendingNavTabAfterLogin) {
+          const nextTab = pendingNavTabAfterLogin;
+          pendingNavTabAfterLogin = null;
+          setTimeout(() => switchNavTab(nextTab), 300);
+        }
       }
     }
 
@@ -4215,6 +4223,11 @@
         updateAuthUI();
         closeRegisterAccountModal();
         toast("✓ Xác thực OTP thành công! Xin chào tác giả " + newUser.name, "success");
+        if (typeof pendingNavTabAfterLogin !== "undefined" && pendingNavTabAfterLogin) {
+          const nextTab = pendingNavTabAfterLogin;
+          pendingNavTabAfterLogin = null;
+          setTimeout(() => switchNavTab(nextTab), 600);
+        }
 
         // Mở ngay khung hồ sơ ngang để người dùng thấy tài khoản
         setTimeout(() => {
@@ -5045,24 +5058,43 @@
       setTimeout(() => el.remove(), 3500);
     }
 
-    // Chuyển Tab Điều Hướng
+    let pendingNavTabAfterLogin = null;
+
+    // Chuyển Tab Điều Hướng & Auth Guard Bảo Vệ Tất Cả Dịch Vụ
     function switchNavTab(tabId) {
+      // Danh sách các dịch vụ cốt lõi bắt buộc phải đăng nhập tài khoản
+      const protectedTabs = ["tab-register", "tab-appraisal", "tab-certificate"];
+      const activeUser = currentAuthUser || currentActiveStudent;
+
+      if (protectedTabs.includes(tabId) && !activeUser) {
+        pendingNavTabAfterLogin = tabId;
+        let serviceName = "Dịch vụ";
+        if (tabId === "tab-register") serviceName = "Đăng ký tác phẩm";
+        else if (tabId === "tab-appraisal") serviceName = "Kiểm tra toàn vẹn & Thẩm định tác phẩm";
+        else if (tabId === "tab-certificate") serviceName = "Xem và cấp Giấy chứng nhận bản quyền";
+
+        toast(`🔒 Vui lòng đăng nhập hoặc đăng ký tài khoản để sử dụng ${serviceName}!`, "warning");
+        openLoginAccountModal();
+        return;
+      }
+
       document.querySelectorAll(".tab-content").forEach(el => el.classList.remove("active"));
       document.querySelectorAll(".nav-tab-btn").forEach(el => el.classList.remove("active"));
       
       const target = document.getElementById(tabId);
       if (target) target.classList.add("active");
 
-      // Cập nhật trạng thái nút
+      // Cập nhật trạng thái active cho nút trên thanh điều hướng
       const btn = Array.from(document.querySelectorAll(".nav-tab-btn")).find(b => {
-        return b.getAttribute("onclick") && b.getAttribute("onclick").includes(tabId);
+        const oc = b.getAttribute("onclick") || "";
+        return oc.includes(tabId);
       });
       if (btn) btn.classList.add("active");
 
-      // Cuộn lên đầu
+      // Cuộn lên đầu trang
       window.scrollTo({ top: 0, behavior: 'smooth' });
 
-      // Nếu chuyển sang tab Certificate -> vẽ QR
+      // Nếu chuyển sang tab Certificate -> vẽ QR động
       if (tabId === "tab-certificate") {
         renderDeedQr();
       }
