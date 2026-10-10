@@ -1703,6 +1703,8 @@
       display: flex;
       gap: 12px;
       justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
       margin-top: 20px;
     }
     .btn-deed-action {
@@ -1711,9 +1713,259 @@
       font-size: 13px;
       font-weight: 700;
       cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      text-decoration: none;
+      transition: all 0.2s ease;
     }
-    .btn-deed-action.print { background: var(--primary); color: #fff; border: none; }
+    .btn-deed-action.print { background: var(--primary); color: #fff; border: none; box-shadow: 0 4px 12px rgba(30, 58, 138, 0.2); }
+    .btn-deed-action.print:hover { background: #1d4ed8; transform: translateY(-1px); }
     .btn-deed-action.copy { background: var(--bg-surface); color: var(--text-primary); border: 1px solid var(--border-color); }
+    .btn-deed-action.copy:hover { background: var(--bg-subtle); border-color: var(--primary); color: var(--primary); }
+    .btn-deed-action.eth-link {
+      background: linear-gradient(135deg, #1e3a8a, #2563eb);
+      color: #ffffff !important;
+      border: none;
+      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.28);
+    }
+    .btn-deed-action.eth-link:hover {
+      background: linear-gradient(135deg, #1d4ed8, #1e40af);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 18px rgba(37, 99, 235, 0.38);
+    }
+
+    /* BỐ CỤC 2 CỘT CHỨNG NHẬN (CERTIFICATE WORKSPACE GRID) */
+    .cert-workspace-grid {
+      display: grid;
+      grid-template-columns: 360px minmax(0, 1fr);
+      gap: 24px;
+      align-items: start;
+      margin-top: 14px;
+    }
+    @media (max-width: 1080px) {
+      .cert-workspace-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .cert-info-sidebar {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 22px 20px;
+      box-shadow: var(--shadow-sm);
+      position: sticky;
+      top: 84px;
+    }
+    .cert-meta-group {
+      margin-bottom: 14px;
+    }
+    .cert-meta-label {
+      font-size: 10.5px;
+      font-weight: 800;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      margin-bottom: 4px;
+    }
+    .cert-meta-val {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-primary);
+      word-break: break-word;
+      line-height: 1.4;
+    }
+    .cert-meta-val.mono {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--primary);
+    }
+    .btn-cert-side {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      padding: 10px 14px;
+      border-radius: var(--radius-md);
+      font-size: 12.5px;
+      font-weight: 700;
+      cursor: pointer;
+      margin-bottom: 8px;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      box-sizing: border-box;
+    }
+    .btn-cert-side.eth {
+      background: linear-gradient(135deg, #1e3a8a, #2563eb);
+      color: #fff !important;
+      border: none;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.22);
+    }
+    .btn-cert-side.eth:hover {
+      background: linear-gradient(135deg, #1d4ed8, #1e40af);
+      transform: translateY(-1px);
+    }
+    .btn-cert-side.print {
+      background: var(--bg-subtle);
+      color: var(--text-primary);
+      border: 1px solid var(--border-color);
+    }
+    .btn-cert-side.print:hover {
+      background: #e2e8f0;
+    }
+    .btn-cert-side.copy {
+      background: transparent;
+      color: var(--text-secondary);
+      border: 1px dashed var(--border-color);
+    }
+    .btn-cert-side.copy:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+      background: rgba(30, 58, 138, 0.04);
+    }
+
+    /* THANH TÌM KIẾM & BỘ LỌC CHỨNG THƯ THÔNG MINH */
+    .cert-filter-bar {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 14px 18px;
+      margin-bottom: 16px;
+      box-shadow: var(--shadow-sm);
+    }
+    .cert-search-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .cert-search-box-wrap {
+      position: relative;
+      flex: 1;
+      min-width: 290px;
+    }
+    .cert-search-input {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 10px 38px 10px 38px;
+      font-size: 13.5px;
+      border-radius: var(--radius-md);
+      border: 1.5px solid var(--border-color);
+      background: var(--bg-page);
+      color: var(--text-primary);
+      outline: none;
+      transition: all 0.2s;
+    }
+    .cert-search-input:focus {
+      border-color: var(--primary);
+      background: #ffffff;
+      box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.12);
+    }
+    .cert-search-icon {
+      position: absolute;
+      left: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 15px;
+      color: var(--text-muted);
+      pointer-events: none;
+    }
+    .cert-search-clear {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      font-size: 15px;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: none;
+      padding: 2px 6px;
+      border-radius: 50%;
+    }
+    .cert-search-clear:hover {
+      color: var(--text-primary);
+      background: #e2e8f0;
+    }
+    .cert-search-dropdown {
+      position: absolute;
+      top: calc(100% + 6px);
+      left: 0;
+      right: 0;
+      max-height: 380px;
+      overflow-y: auto;
+      background: var(--bg-surface);
+      border: 1.5px solid var(--border-color);
+      border-radius: var(--radius-md);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+      z-index: 1000;
+    }
+    .cert-dropdown-item {
+      padding: 11px 15px;
+      border-bottom: 1px solid var(--border-color);
+      cursor: pointer;
+      transition: background 0.15s ease;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .cert-dropdown-item:last-child {
+      border-bottom: none;
+    }
+    .cert-dropdown-item:hover {
+      background: var(--bg-subtle);
+    }
+    .cert-dropdown-item-title {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1.35;
+    }
+    .cert-dropdown-item-sub {
+      font-size: 11.5px;
+      color: var(--text-muted);
+      margin-top: 3px;
+    }
+    .cert-dropdown-item-badge {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 4px;
+      background: rgba(30, 58, 138, 0.08);
+      color: var(--primary);
+      white-space: nowrap;
+    }
+    .cert-filter-pills {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .cert-pill-btn {
+      padding: 7px 15px;
+      font-size: 12px;
+      font-weight: 700;
+      border-radius: 20px;
+      border: 1px solid var(--border-color);
+      background: var(--bg-subtle);
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .cert-pill-btn:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+    .cert-pill-btn.active {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+      box-shadow: 0 2px 8px rgba(30, 58, 138, 0.2);
+    }
 
     /* PRINT STYLES - HỖ TRỢ IN CHỨNG THƯ A4 & BÁO CÁO DANH MỤC PHÒNG QLKH */
     @media print {
@@ -1751,19 +2003,53 @@
         display: none !important;
       }
 
-      /* Mặc định: In Phôi Chứng thư Số A4 (Tab 5) */
-      body:not(.print-mode-ledger):not(.print-mode-appraisal) .academic-deed-card,
-      body:not(.print-mode-ledger):not(.print-mode-appraisal) .academic-deed-card * {
-        visibility: visible;
+      /* In Chứng thư Bước 6 */
+      body.print-mode-step6 #step6DeedPrintArea,
+      body.print-mode-step6 #step6DeedPrintArea * {
+        visibility: visible !important;
       }
-      body:not(.print-mode-ledger):not(.print-mode-appraisal) .academic-deed-card {
+      body.print-mode-step6 #step6DeedPrintArea {
         position: absolute;
         top: 0; left: 0; width: 100%;
-        margin: 0; padding: 40px;
+        margin: 0; padding: 36px;
+        box-shadow: none;
+        border: 4px double #1e3a8a !important;
+        display: block !important;
+      }
+      body.print-mode-step6 *:not(#step6DeedPrintArea):not(#step6DeedPrintArea *) {
+        display: none !important;
+      }
+
+      /* In Phôi Chứng thư Số A4 (Tab 5) */
+      body.print-mode-certificate #academicDeedPrintArea,
+      body.print-mode-certificate #academicDeedPrintArea * {
+        visibility: visible !important;
+      }
+      body.print-mode-certificate #academicDeedPrintArea {
+        position: absolute;
+        top: 0; left: 0; width: 100%;
+        margin: 0; padding: 36px;
+        box-shadow: none;
+        border: 4px double #1e3a8a !important;
+        display: block !important;
+      }
+      body.print-mode-certificate *:not(#academicDeedPrintArea):not(#academicDeedPrintArea *) {
+        display: none !important;
+      }
+
+      /* Fallback mặc định khi gọi print */
+      body:not(.print-mode-ledger):not(.print-mode-appraisal):not(.print-mode-step6):not(.print-mode-certificate) #academicDeedPrintArea,
+      body:not(.print-mode-ledger):not(.print-mode-appraisal):not(.print-mode-step6):not(.print-mode-certificate) #academicDeedPrintArea * {
+        visibility: visible;
+      }
+      body:not(.print-mode-ledger):not(.print-mode-appraisal):not(.print-mode-step6):not(.print-mode-certificate) #academicDeedPrintArea {
+        position: absolute;
+        top: 0; left: 0; width: 100%;
+        margin: 0; padding: 36px;
         box-shadow: none;
         border: 4px double #1e3a8a !important;
       }
-      .deed-actions-row, header.main-header, .top-announcement-bar, .live-ticker-wrap, footer, .toast-box, .detail-popover, .popover-backdrop {
+      .deed-actions-row, header.main-header, .top-announcement-bar, .live-ticker-wrap, footer, .toast-box, .detail-popover, .popover-backdrop, .cert-info-sidebar, .cert-filter-bar {
         display: none !important;
       }
     }
@@ -2921,16 +3207,112 @@
               </div>
             </div>
 
-            <div style="display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
-              <button type="button" class="btn-cta-primary" onclick="viewDeedForCurrentSuccess()" style="padding: 11px 22px; font-size: 13.5px; gap: 8px;">
-                <span>📜</span> <span>Xem &amp; Tải Giấy Xác Nhận Điện Tử A4</span>
+            <div style="display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; margin-bottom: 26px;">
+              <button type="button" class="btn-cta-primary" onclick="printStep6Deed()" style="padding: 11px 22px; font-size: 13.5px; gap: 8px;">
+                <span>🖨️</span> <span>In / Tải Giấy Xác Nhận PDF A4</span>
               </button>
-              <button type="button" class="btn-cta-secondary" onclick="checkAuthAndSwitchTab('tab-dashboard')" style="padding: 11px 20px; font-size: 13px;">
-                <span>📊</span> <span>Về Dashboard Tác Giả</span>
+              <button type="button" class="btn-cta-secondary" onclick="viewDeedForCurrentSuccess()" style="padding: 11px 20px; font-size: 13px;">
+                <span>📜</span> <span>Mở Sang Tab Chứng Nhận</span>
               </button>
               <button type="button" class="btn-cta-secondary" onclick="resetWizardForNewRegistration()" style="padding: 11px 20px; font-size: 13px;">
                 <span>➕</span> <span>Đăng Ký Tác Phẩm Khác</span>
               </button>
+            </div>
+
+            <!-- HIỂN THỊ TRỰC TIẾP CHỨNG THƯ A4 NGAY TẠI BƯỚC 6 (YÊU CẦU 4) -->
+            <div id="step6DeedSection" style="max-width: 860px; margin: 0 auto; text-align: left; border-top: 2px dashed var(--border-color); padding-top: 24px;">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
+                <div>
+                  <h3 style="font-size: 15px; font-weight: 800; color: var(--primary); margin: 0; text-transform: uppercase;">
+                    📜 CHỨNG THƯ BẢO CHỨNG QUYỀN TÁC GIẢ KHỔ A4 (BẢN GỐC ON-CHAIN)
+                  </h3>
+                  <p style="font-size: 12px; color: var(--text-muted); margin: 4px 0 0;">
+                    Chứng thư số đã được tạo lập tự động và niêm phong bất biến ngay sau khi giao dịch ký ví xác nhận thành công.
+                  </p>
+                </div>
+                <div style="display: flex; gap: 8px;">
+                  <button type="button" class="btn-deed-action print" onclick="printStep6Deed()" style="padding: 8px 16px; font-size: 12.5px;">🖨️ In / Tải PDF A4</button>
+                  <a id="step6DeedTxLink" target="_blank" rel="noopener noreferrer" class="btn-deed-action eth-link" href="#" style="padding: 8px 16px; font-size: 12.5px;">🌐 Sepolia Etherscan ↗</a>
+                </div>
+              </div>
+
+              <!-- Thẻ Deed A4 tại Bước 6 -->
+              <div class="academic-deed-card" id="step6DeedPrintArea">
+                <div class="deed-inner">
+                  <div class="deed-header">
+                    <img src="hce-logo.png" alt="Logo HCE" class="deed-crest-logo">
+                    <div class="deed-subhead-nat">CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM &bull; ĐỘC LẬP - TỰ DO - HẠNH PHÚC</div>
+                    <div class="deed-subhead-uni">BỘ GIÁO DỤC VÀ ĐÀO TẠO &bull; TRƯỜNG ĐẠI HỌC KINH TẾ - ĐẠI HỌC HUẾ</div>
+                    <h2>CHỨNG THƯ BẢO CHỨNG QUYỀN TÁC GIẢ</h2>
+                    <p class="deed-dispatch" id="step6DeedDispatchNum">Số: 26/CT-ĐHKT-NCKH &bull; COPYCHAIN ELECTRONIC CERTIFICATE OF AUTHORSHIP</p>
+                  </div>
+
+                  <table class="deed-table">
+                    <tbody>
+                      <tr>
+                        <td class="label-col">Mã Lưu Trữ:</td>
+                        <td class="val-col mono" id="step6DeedArchiveCode">HCE-IP-CHỜ-CẤP</td>
+                      </tr>
+                      <tr>
+                        <td class="label-col">Tiêu Đề Đề Tài:</td>
+                        <td class="val-col" id="step6DeedTitle">--</td>
+                      </tr>
+                      <tr>
+                        <td class="label-col">Loại Hình:</td>
+                        <td class="val-col" id="step6DeedType">Khóa luận tốt nghiệp Cử nhân K57</td>
+                      </tr>
+                      <tr>
+                        <td class="label-col">Khoa Chuyên Môn:</td>
+                        <td class="val-col" id="step6DeedDepartment">Khoa Hệ thống Thông tin Kinh tế &bull; Đại học Kinh tế Huế</td>
+                      </tr>
+                      <tr>
+                        <td class="label-col">GV Hướng Dẫn:</td>
+                        <td class="val-col" id="step6DeedAdvisor">TS. Hà Ngọc Long</td>
+                      </tr>
+                      <tr>
+                        <td class="label-col">Tác Giả / Nhóm:</td>
+                        <td class="val-col" id="step6DeedAuthors">--</td>
+                      </tr>
+                      <tr>
+                        <td class="label-col">Mã Băm SHA-256:</td>
+                        <td class="val-col mono" id="step6DeedSha256">--</td>
+                      </tr>
+                      <tr>
+                        <td class="label-col">Keccak-256 Hash:</td>
+                        <td class="val-col mono" id="step6DeedHash">--</td>
+                      </tr>
+                      <tr>
+                        <td class="label-col">Dấu Thời Gian Khối:</td>
+                        <td class="val-col" id="step6DeedTimestamp">--</td>
+                      </tr>
+                      <tr>
+                        <td class="label-col">Số Khối Bất Biến:</td>
+                        <td class="val-col mono" id="step6DeedBlockNumber">#11882657</td>
+                      </tr>
+                    </tbody>
+                  </table>
+
+                  <div class="deed-footer-row">
+                    <div style="text-align: left;">
+                      <span style="font-size: 11px; color: #64748b; font-family: var(--font-deed);">Quy cách: Khổ A4 Lưu Trữ Học Thuật<br>Hợp đồng Thông minh HCE &bull; Sepolia EVM Verified</span>
+                    </div>
+
+                    <!-- Dấu mộc đỏ kỹ thuật số chính thức của Đại học Kinh tế Huế -->
+                    <div class="deed-seal-stamp" title="Con dấu số bảo chứng On-Chain HCE">
+                      <div class="deed-seal-star">★</div>
+                      <span>ĐẠI HỌC KINH TẾ HUẾ</span>
+                      <span style="font-size: 6.8px; opacity: 0.95;">HỘI ĐỒNG KHOA HỌC</span>
+                      <span style="color: #991b1b; font-size: 6.5px; margin-top: 1px; font-weight: 900;">ON-CHAIN VERIFIED</span>
+                    </div>
+
+                    <!-- Mã QR Code động dẫn trực tiếp tới Sepolia Etherscan -->
+                    <div class="deed-qr-box" title="Quét mã QR để đối soát giao dịch trên Ethereum Etherscan">
+                      <img id="step6DeedQrImg" src="" alt="Mã QR On-Chain" style="width: 100%; height: 100%; object-fit: contain;">
+                      <canvas id="step6DeedQrCanvas" style="display: none;"></canvas>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -3294,101 +3676,205 @@
 
     <div id="certificateMainContent" class="cert-section-wrapper" style="display: none;">
       
-      <!-- Thanh chọn & Đổi hồ sơ Chứng thư linh hoạt -->
-      <div style="background: var(--bg-surface); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 12px 18px; margin-bottom: 20px; box-shadow: var(--shadow-sm); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
-        <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
-          <span style="font-size: 13px; font-weight: 700; color: var(--text-secondary);">📜 Chọn hồ sơ hiển thị Chứng thư:</span>
-          <select id="selDeedRecordPicker" class="f-select" onchange="onSelectDeedFromDropdown()" style="width: auto; min-width: 320px; padding: 7px 12px; font-size: 12.5px;">
-            <!-- Nạp động danh sách các đề tài đã đăng ký trong sổ cái -->
-          </select>
-        </div>
-        <div style="display: flex; gap: 8px;">
-          <button class="btn-deed-action print" onclick="window.print()" style="padding: 7px 16px; font-size: 12.5px;">🖨️ In / Lưu PDF A4</button>
-        </div>
-      </div>
-
-      <!-- Academic Deed Card Khổ A4 -->
-      <div class="academic-deed-card" id="academicDeedPrintArea">
-        <div class="deed-inner">
-          <div class="deed-header">
-            <img src="hce-logo.png" alt="Logo HCE" class="deed-crest-logo">
-            <div class="deed-subhead-nat">CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM &bull; ĐỘC LẬP - TỰ DO - HẠNH PHÚC</div>
-            <div class="deed-subhead-uni">BỘ GIÁO DỤC VÀ ĐÀO TẠO &bull; TRƯỜNG ĐẠI HỌC KINH TẾ - ĐẠI HỌC HUẾ</div>
-            <h2>CHỨNG THƯ BẢO CHỨNG QUYỀN TÁC GIẢ</h2>
-            <p class="deed-dispatch" id="deedDispatchNum">Số: 26/CT-ĐHKT-NCKH &bull; COPYCHAIN ELECTRONIC CERTIFICATE OF AUTHORSHIP</p>
+      <!-- THANH TÌM KIẾM & BỘ LỌC CHỨNG THƯ THÔNG MINH (YÊU CẦU 1) -->
+      <div class="cert-filter-bar">
+        <div class="cert-search-row">
+          <div class="cert-search-box-wrap">
+            <span class="cert-search-icon">🔍</span>
+            <input type="text" id="certSearchInput" class="cert-search-input" 
+                   placeholder="Nhập tên đề tài, mã lưu trữ CC-..., hoặc tên tác giả để tra cứu chứng thư..." 
+                   oninput="onSearchDeedInput(this.value)" 
+                   onfocus="onSearchDeedFocus()"
+                   autocomplete="off">
+            <button type="button" id="certSearchClearBtn" class="cert-search-clear" onclick="clearDeedSearch()">✕</button>
+            
+            <!-- Danh sách kết quả gợi ý thả xuống -->
+            <div id="certSearchResultsDropdown" class="cert-search-dropdown" style="display: none;"></div>
           </div>
 
-          <table class="deed-table">
-            <tbody>
-              <tr>
-                <td class="label-col">Mã Lưu Trữ:</td>
-                <td class="val-col mono" id="deedArchiveCode">HCE-IP-CHỜ-CẤP</td>
-              </tr>
-              <tr>
-                <td class="label-col">Tiêu Đề Đề Tài:</td>
-                <td class="val-col" id="deedTitle">(Vui lòng chọn công trình từ danh sách hoặc đăng ký tác phẩm mới)</td>
-              </tr>
-              <tr>
-                <td class="label-col">Loại Hình:</td>
-                <td class="val-col" id="deedType">Khóa luận tốt nghiệp Cử nhân K57</td>
-              </tr>
-              <tr>
-                <td class="label-col">Khoa Chuyên Môn:</td>
-                <td class="val-col" id="deedDepartment">Khoa Hệ thống Thông tin Kinh tế &bull; Đại học Kinh tế Huế</td>
-              </tr>
-              <tr>
-                <td class="label-col">GV Hướng Dẫn:</td>
-                <td class="val-col" id="deedAdvisor">TS. Hà Ngọc Long</td>
-              </tr>
-              <tr>
-                <td class="label-col">Tác Giả / Nhóm:</td>
-                <td class="val-col" id="deedAuthors">(Chưa có tác giả)</td>
-              </tr>
-              <tr>
-                <td class="label-col">Mã Băm SHA-256:</td>
-                <td class="val-col mono" id="deedSha256">b4c3e8...</td>
-              </tr>
-              <tr>
-                <td class="label-col">Keccak-256 Hash:</td>
-                <td class="val-col mono" id="deedHash">0x8e4da685a41c7ce20441ae4c62629d3d2eacd22c5ceb54b0d0a7208ca76396f1</td>
-              </tr>
-              <tr>
-                <td class="label-col">Dấu Thời Gian Khối:</td>
-                <td class="val-col" id="deedTimestamp">23/03/2026 15:30:19 GMT+7</td>
-              </tr>
-              <tr>
-                <td class="label-col">Số Khối Bất Biến:</td>
-                <td class="val-col mono" id="deedBlockNumber">#6821940</td>
-              </tr>
-            </tbody>
-          </table>
+          <div class="cert-filter-pills">
+            <button type="button" class="cert-pill-btn active" id="btnFilterAllWorks" onclick="setDeedFilter('all')">
+              📚 Tất Cả Tác Phẩm (<span id="certCountAll">0</span>)
+            </button>
+            <button type="button" class="cert-pill-btn" id="btnFilterMyWorks" onclick="setDeedFilter('my')">
+              👤 Tác Phẩm Của Tôi (<span id="certCountMy">0</span>)
+            </button>
+          </div>
 
-          <div class="deed-footer-row">
-            <div style="text-align: left;">
-              <span style="font-size: 11px; color: #64748b; font-family: var(--font-deed);">Quy cách: Khổ A4 Lưu Trữ Học Thuật<br>Hợp đồng Thông minh HCE &bull; Sepolia EVM Verified</span>
-            </div>
-
-            <!-- Dấu mộc đỏ kỹ thuật số chính thức của Đại học Kinh tế Huế -->
-            <div class="deed-seal-stamp" title="Con dấu số bảo chứng On-Chain HCE">
-              <div class="deed-seal-star">★</div>
-              <span>ĐẠI HỌC KINH TẾ HUẾ</span>
-              <span style="font-size: 6.8px; opacity: 0.95;">HỘI ĐỒNG KHOA HỌC</span>
-              <span style="color: #991b1b; font-size: 6.5px; margin-top: 1px; font-weight: 900;">ON-CHAIN VERIFIED</span>
-            </div>
-
-            <!-- Mã QR Code động dẫn trực tiếp tới Sepolia Etherscan -->
-            <div class="deed-qr-box" title="Quét mã QR để đối soát giao dịch trên Ethereum Etherscan">
-              <img id="deedQrImg" src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sepolia.etherscan.io/address/0xa2f53106B3dFdF23b6b158022646d231A21e49Cb" alt="Mã QR On-Chain" style="width: 100%; height: 100%; object-fit: contain;">
-              <canvas id="deedQrCanvas" style="display: none;"></canvas>
-            </div>
+          <div style="display: flex; gap: 8px; margin-left: auto;">
+            <button type="button" class="btn-deed-action print" onclick="printTab5Deed()" style="padding: 9px 18px; font-size: 12.5px;">🖨️ In / Lưu PDF A4</button>
           </div>
         </div>
       </div>
 
-      <!-- Action Buttons -->
-      <div class="deed-actions-row">
-        <button class="btn-deed-action print" onclick="window.print()">🖨️ In / Lưu Chứng thư PDF A4</button>
-        <button class="btn-deed-action copy" onclick="copyDeedHash()">🔗 Sao chép Mã Tra cứu</button>
+      <!-- BỐ CỤC 2 CỘT: SIDEBAR HỒ SƠ & GIẤY CHỨNG THƯ A4 (YÊU CẦU 3) -->
+      <div class="cert-workspace-grid">
+        
+        <!-- CỘT TRÁI: PANEL HỒ SƠ ĐỐI SOÁT ON-CHAIN -->
+        <div class="cert-info-sidebar">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1.5px solid var(--border-color);">
+            <h3 style="margin: 0; font-size: 13.5px; font-weight: 800; color: var(--primary); display: flex; align-items: center; gap: 6px;">
+              <span>🏛️</span> <span>HỒ SƠ ĐỐI SOÁT ON-CHAIN</span>
+            </h3>
+            <span class="cert-status-badge" style="background: rgba(16, 185, 129, 0.1); color: var(--success); font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 20px;">
+              ✓ ON-CHAIN
+            </span>
+          </div>
+
+          <!-- Thông tin đề tài -->
+          <div class="cert-meta-group">
+            <div class="cert-meta-label">MÃ LƯU TRỮ HỌC THUẬT</div>
+            <div class="cert-meta-val mono" id="sideDeedCode">HCE-IP-CHỜ-CẤP</div>
+          </div>
+
+          <div class="cert-meta-group">
+            <div class="cert-meta-label">TÊN CÔNG TRÌNH / ĐỀ TÀI</div>
+            <div class="cert-meta-val" id="sideDeedTitle" style="font-weight: 700; color: var(--text-primary); line-height: 1.35;">--</div>
+          </div>
+
+          <div class="cert-meta-group">
+            <div class="cert-meta-label">KHOA &amp; GIẢNG VIÊN HƯỚNG DẪN</div>
+            <div class="cert-meta-val" id="sideDeedFaculty" style="font-size: 12.5px; color: var(--text-secondary);">--</div>
+            <div class="cert-meta-val" id="sideDeedAdvisor" style="font-size: 12px; color: var(--text-muted); margin-top: 2px;">--</div>
+          </div>
+
+          <!-- Thông tin Tác giả & Ví Web3 -->
+          <div style="background: var(--bg-subtle); border-radius: var(--radius-sm); padding: 12px; margin-bottom: 14px; border: 1px solid var(--border-color);">
+            <div class="cert-meta-label" style="display: flex; justify-content: space-between; align-items: center;">
+              <span>TÁC GIẢ BẢN QUYỀN</span>
+              <span style="font-size: 10px; color: var(--primary); font-weight: 700;">✓ HCE VERIFIED</span>
+            </div>
+            <div class="cert-meta-val" id="sideDeedAuthors" style="font-size: 13.5px; font-weight: 700; color: var(--primary); margin: 3px 0 6px;">--</div>
+            
+            <div class="cert-meta-label">ĐỊA CHỈ VÍ WEB3 KÝ NIÊM PHONG</div>
+            <div class="cert-meta-val mono" id="sideDeedWallet" style="font-size: 11px; word-break: break-all;">--</div>
+          </div>
+
+          <!-- Thông số Kế toán Sổ cái On-Chain -->
+          <div style="border-top: 1px solid var(--border-color); padding-top: 12px; margin-bottom: 16px;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
+              <div>
+                <div class="cert-meta-label">SỐ KHỐI (BLOCK)</div>
+                <div class="cert-meta-val mono" id="sideDeedBlock">#--</div>
+              </div>
+              <div>
+                <div class="cert-meta-label">TRẠNG THÁI SỔ CÁI</div>
+                <div class="cert-meta-val" style="color: var(--success); font-size: 12px; font-weight: 700;">Finalized On-Chain</div>
+              </div>
+            </div>
+
+            <div class="cert-meta-group" style="margin-bottom: 8px;">
+              <div class="cert-meta-label">DẤU THỜI GIAN KHỐI (TIMESTAMP)</div>
+              <div class="cert-meta-val" id="sideDeedTime" style="font-size: 11.5px; color: var(--text-secondary);">--</div>
+            </div>
+
+            <div class="cert-meta-group" style="margin-bottom: 0;">
+              <div class="cert-meta-label">KECCAK-256 HASH</div>
+              <div class="cert-meta-val mono" id="sideDeedHash" style="font-size: 10.5px;">--</div>
+            </div>
+          </div>
+
+          <!-- Nút hành động nhanh ở Sidebar -->
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <a id="sideDeedTxLink" target="_blank" rel="noopener noreferrer" class="btn-cert-side eth" href="#">
+              <span>🌐</span> <span>Xem Giao Dịch Trên Etherscan ↗</span>
+            </a>
+            <button type="button" class="btn-cert-side print" onclick="printTab5Deed()">
+              <span>🖨️</span> <span>In / Tải Chứng Thư PDF A4</span>
+            </button>
+            <button type="button" class="btn-cert-side copy" onclick="copyDeedHash()">
+              <span>📋</span> <span>Sao Chép Mã Tra Cứu</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- CỘT PHẢI: ACADEMIC DEED CARD KHỔ A4 (Main View) -->
+        <div style="min-width: 0;">
+          <div class="academic-deed-card" id="academicDeedPrintArea" style="margin-bottom: 16px;">
+            <div class="deed-inner">
+              <div class="deed-header">
+                <img src="hce-logo.png" alt="Logo HCE" class="deed-crest-logo">
+                <div class="deed-subhead-nat">CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM &bull; ĐỘC LẬP - TỰ DO - HẠNH PHÚC</div>
+                <div class="deed-subhead-uni">BỘ GIÁO DỤC VÀ ĐÀO TẠO &bull; TRƯỜNG ĐẠI HỌC KINH TẾ - ĐẠI HỌC HUẾ</div>
+                <h2>CHỨNG THƯ BẢO CHỨNG QUYỀN TÁC GIẢ</h2>
+                <p class="deed-dispatch" id="deedDispatchNum">Số: 26/CT-ĐHKT-NCKH &bull; COPYCHAIN ELECTRONIC CERTIFICATE OF AUTHORSHIP</p>
+              </div>
+
+              <table class="deed-table">
+                <tbody>
+                  <tr>
+                    <td class="label-col">Mã Lưu Trữ:</td>
+                    <td class="val-col mono" id="deedArchiveCode">HCE-IP-CHỜ-CẤP</td>
+                  </tr>
+                  <tr>
+                    <td class="label-col">Tiêu Đề Đề Tài:</td>
+                    <td class="val-col" id="deedTitle">(Vui lòng chọn công trình từ danh sách hoặc đăng ký tác phẩm mới)</td>
+                  </tr>
+                  <tr>
+                    <td class="label-col">Loại Hình:</td>
+                    <td class="val-col" id="deedType">Khóa luận tốt nghiệp Cử nhân K57</td>
+                  </tr>
+                  <tr>
+                    <td class="label-col">Khoa Chuyên Môn:</td>
+                    <td class="val-col" id="deedDepartment">Khoa Hệ thống Thông tin Kinh tế &bull; Đại học Kinh tế Huế</td>
+                  </tr>
+                  <tr>
+                    <td class="label-col">GV Hướng Dẫn:</td>
+                    <td class="val-col" id="deedAdvisor">TS. Hà Ngọc Long</td>
+                  </tr>
+                  <tr>
+                    <td class="label-col">Tác Giả / Nhóm:</td>
+                    <td class="val-col" id="deedAuthors">(Chưa có tác giả)</td>
+                  </tr>
+                  <tr>
+                    <td class="label-col">Mã Băm SHA-256:</td>
+                    <td class="val-col mono" id="deedSha256">b4c3e8...</td>
+                  </tr>
+                  <tr>
+                    <td class="label-col">Keccak-256 Hash:</td>
+                    <td class="val-col mono" id="deedHash">0x8e4da685a41c7ce20441ae4c62629d3d2eacd22c5ceb54b0d0a7208ca76396f1</td>
+                  </tr>
+                  <tr>
+                    <td class="label-col">Dấu Thời Gian Khối:</td>
+                    <td class="val-col" id="deedTimestamp">23/03/2026 15:30:19 GMT+7</td>
+                  </tr>
+                  <tr>
+                    <td class="label-col">Số Khối Bất Biến:</td>
+                    <td class="val-col mono" id="deedBlockNumber">#6821940</td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <div class="deed-footer-row">
+                <div style="text-align: left;">
+                  <span style="font-size: 11px; color: #64748b; font-family: var(--font-deed);">Quy cách: Khổ A4 Lưu Trữ Học Thuật<br>Hợp đồng Thông minh HCE &bull; Sepolia EVM Verified</span>
+                </div>
+
+                <!-- Dấu mộc đỏ kỹ thuật số chính thức của Đại học Kinh tế Huế -->
+                <div class="deed-seal-stamp" title="Con dấu số bảo chứng On-Chain HCE">
+                  <div class="deed-seal-star">★</div>
+                  <span>ĐẠI HỌC KINH TẾ HUẾ</span>
+                  <span style="font-size: 6.8px; opacity: 0.95;">HỘI ĐỒNG KHOA HỌC</span>
+                  <span style="color: #991b1b; font-size: 6.5px; margin-top: 1px; font-weight: 900;">ON-CHAIN VERIFIED</span>
+                </div>
+
+                <!-- Mã QR Code động dẫn trực tiếp tới Sepolia Etherscan -->
+                <div class="deed-qr-box" title="Quét mã QR để đối soát giao dịch trên Ethereum Etherscan">
+                  <img id="deedQrImg" src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://sepolia.etherscan.io/address/0xa2f53106B3dFdF23b6b158022646d231A21e49Cb" alt="Mã QR On-Chain" style="width: 100%; height: 100%; object-fit: contain;">
+                  <canvas id="deedQrCanvas" style="display: none;"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Action Buttons Dưới Chứng Thư (YÊU CẦU 2: Thay mã sao chép bằng link Etherscan) -->
+          <div class="deed-actions-row">
+            <button type="button" class="btn-deed-action print" onclick="printTab5Deed()">🖨️ In / Lưu Chứng thư PDF A4</button>
+            <a id="btnDeedTxLink" target="_blank" rel="noopener noreferrer" class="btn-deed-action eth-link" href="#">🌐 Xem Giao Dịch On-Chain (Etherscan ↗)</a>
+            <button type="button" class="btn-deed-action copy" onclick="copyDeedHash()">📋 Sao Chép Mã Tra Cứu</button>
+          </div>
+        </div>
+
       </div>
 
     </div>
@@ -5202,6 +5688,7 @@
       document.getElementById("succTxHashLink").textContent = lastRegisteredWork.txHash.substring(0, 20) + "... (Mở trên Sepolia Etherscan ↗)";
       document.getElementById("succTxHashLink").href = "https://sepolia.etherscan.io/tx/" + lastRegisteredWork.txHash;
       document.getElementById("succTimestamp").textContent = dateStr + " (Khối #" + lastRegisteredWork.blockNumber + ")";
+      updateStep6Deed(lastRegisteredWork);
 
       btn.disabled = false;
       btn.style.opacity = "1";
@@ -7118,59 +7605,230 @@
       document.getElementById("popoverBackdrop").style.display = "none";
     }
 
-    // Quản lý Chứng thư Số Động (Dynamic Academic Deed)
-    function populateDeedRecordPicker() {
-      const sel = document.getElementById("selDeedRecordPicker");
-      if (!sel) return;
-      sel.innerHTML = SAMPLE_RECORDS.map((r, i) => `
-        <option value="${i}">[${r.code}] ${r.title} — ${r.authors}</option>
+    // Quản lý Chứng thư Số Động (Dynamic Academic Deed) & Bộ Lọc Thông Minh
+    let currentDeedFilterMode = "all"; // "all" | "my"
+    let currentDeedKeyword = "";
+
+    function updateDeedCounters() {
+      const allCountEl = document.getElementById("certCountAll");
+      const myCountEl = document.getElementById("certCountMy");
+      if (allCountEl) allCountEl.textContent = SAMPLE_RECORDS.length;
+      if (myCountEl) {
+        if (currentAuthUser) {
+          const authName = (currentAuthUser.name || "").toLowerCase().trim();
+          const authWallet = (currentAuthUser.wallet || "").toLowerCase().trim();
+          const myCount = SAMPLE_RECORDS.filter(r => {
+            const rAuthors = (r.authors || "").toLowerCase();
+            const rWallet = (r.wallet || "").toLowerCase();
+            return (authName && rAuthors.includes(authName)) || (authWallet && rWallet === authWallet);
+          }).length;
+          myCountEl.textContent = myCount;
+        } else {
+          myCountEl.textContent = "0";
+        }
+      }
+    }
+
+    function setDeedFilter(mode) {
+      currentDeedFilterMode = mode;
+      const btnAll = document.getElementById("btnFilterAllWorks");
+      const btnMy = document.getElementById("btnFilterMyWorks");
+      if (btnAll) btnAll.classList.toggle("active", mode === "all");
+      if (btnMy) btnMy.classList.toggle("active", mode === "my");
+
+      const filtered = getFilteredDeedRecords(currentDeedKeyword);
+      if (filtered.length > 0) {
+        applyRecordToDeed(filtered[0]);
+        toast(`Đang hiển thị: ${filtered[0].code} (${filtered.length} kết quả)`, "info");
+      } else {
+        toast(mode === "my" ? "Bạn chưa có tác phẩm nào được đăng ký trong sổ cái." : "Không tìm thấy tác phẩm phù hợp.", "warning");
+      }
+      renderDeedDropdownList(filtered);
+    }
+
+    function getFilteredDeedRecords(keyword = "") {
+      let list = SAMPLE_RECORDS.map((r, idx) => ({ ...r, originalIndex: idx }));
+      if (currentDeedFilterMode === "my" && currentAuthUser) {
+        const authName = (currentAuthUser.name || "").toLowerCase().trim();
+        const authWallet = (currentAuthUser.wallet || "").toLowerCase().trim();
+        list = list.filter(r => {
+          const rAuthors = (r.authors || "").toLowerCase();
+          const rWallet = (r.wallet || "").toLowerCase();
+          return (authName && rAuthors.includes(authName)) || (authWallet && rWallet === authWallet);
+        });
+      }
+      if (keyword && keyword.trim()) {
+        const q = keyword.trim().toLowerCase();
+        list = list.filter(r => 
+          (r.title && r.title.toLowerCase().includes(q)) ||
+          (r.code && r.code.toLowerCase().includes(q)) ||
+          (r.authors && r.authors.toLowerCase().includes(q)) ||
+          (r.faculty && r.faculty.toLowerCase().includes(q)) ||
+          (r.hash && r.hash.toLowerCase().includes(q))
+        );
+      }
+      return list;
+    }
+
+    function onSearchDeedInput(val) {
+      currentDeedKeyword = val;
+      const clearBtn = document.getElementById("certSearchClearBtn");
+      if (clearBtn) clearBtn.style.display = val ? "block" : "none";
+
+      const filtered = getFilteredDeedRecords(val);
+      renderDeedDropdownList(filtered);
+      const dd = document.getElementById("certSearchResultsDropdown");
+      if (dd) dd.style.display = "block";
+    }
+
+    function onSearchDeedFocus() {
+      const filtered = getFilteredDeedRecords(currentDeedKeyword);
+      renderDeedDropdownList(filtered);
+      const dd = document.getElementById("certSearchResultsDropdown");
+      if (dd) dd.style.display = "block";
+    }
+
+    function clearDeedSearch() {
+      const inp = document.getElementById("certSearchInput");
+      if (inp) inp.value = "";
+      currentDeedKeyword = "";
+      const clearBtn = document.getElementById("certSearchClearBtn");
+      if (clearBtn) clearBtn.style.display = "none";
+      const dd = document.getElementById("certSearchResultsDropdown");
+      if (dd) dd.style.display = "none";
+      const filtered = getFilteredDeedRecords("");
+      if (filtered.length > 0) applyRecordToDeed(filtered[0]);
+    }
+
+    function renderDeedDropdownList(list) {
+      const dd = document.getElementById("certSearchResultsDropdown");
+      if (!dd) return;
+      if (!list || list.length === 0) {
+        dd.innerHTML = `<div style="padding: 16px; text-align: center; color: var(--text-muted); font-size: 13px;">Không tìm thấy tác phẩm nào khớp với từ khóa tìm kiếm.</div>`;
+        return;
+      }
+      dd.innerHTML = list.map(item => `
+        <div class="cert-dropdown-item" onclick="selectDeedFromDropdownItem(${item.originalIndex})">
+          <div style="flex: 1; text-align: left;">
+            <div class="cert-dropdown-item-title">${item.title}</div>
+            <div class="cert-dropdown-item-sub">👤 ${item.authors} • 🏛️ ${item.faculty} • Khối #${item.block}</div>
+          </div>
+          <span class="cert-dropdown-item-badge">${item.code}</span>
+        </div>
       `).join("");
     }
 
-    function onSelectDeedFromDropdown() {
-      const sel = document.getElementById("selDeedRecordPicker");
-      if (!sel) return;
-      const idx = parseInt(sel.value, 10);
-      if (!isNaN(idx) && SAMPLE_RECORDS[idx]) {
-        applyRecordToDeed(SAMPLE_RECORDS[idx]);
-        toast(`Đã nạp Chứng thư: ${SAMPLE_RECORDS[idx].code}`, "info");
+    function selectDeedFromDropdownItem(originalIndex) {
+      const r = SAMPLE_RECORDS[originalIndex];
+      if (r) {
+        applyRecordToDeed(r);
+        const inp = document.getElementById("certSearchInput");
+        if (inp) inp.value = `[${r.code}] ${r.title}`;
+        const clearBtn = document.getElementById("certSearchClearBtn");
+        if (clearBtn) clearBtn.style.display = "block";
+        const dd = document.getElementById("certSearchResultsDropdown");
+        if (dd) dd.style.display = "none";
+        toast(`Đã nạp Chứng thư: ${r.code}`, "success");
       }
+    }
+
+    // Đóng dropdown khi click ra ngoài
+    document.addEventListener("click", function(e) {
+      const wrap = document.querySelector(".cert-search-box-wrap");
+      const dd = document.getElementById("certSearchResultsDropdown");
+      if (wrap && dd && !wrap.contains(e.target)) {
+        dd.style.display = "none";
+      }
+    });
+
+    function populateDeedRecordPicker() {
+      updateDeedCounters();
+      const filtered = getFilteredDeedRecords(currentDeedKeyword);
+      renderDeedDropdownList(filtered);
+      const codeEl = document.getElementById("deedArchiveCode");
+      if (filtered.length > 0 && (!codeEl || codeEl.textContent.includes("CHỜ-CẤP"))) {
+        applyRecordToDeed(filtered[0]);
+        const inp = document.getElementById("certSearchInput");
+        if (inp && !inp.value) inp.value = `[${filtered[0].code}] ${filtered[0].title}`;
+      }
+    }
+
+    function onSelectDeedFromDropdown() {
+      // Giữ tương thích ngược nếu có phần tử cũ
+      populateDeedRecordPicker();
     }
 
     function viewDeedForRecord(idx) {
       const r = SAMPLE_RECORDS[idx];
       if (!r) return;
       applyRecordToDeed(r);
-      const sel = document.getElementById("selDeedRecordPicker");
-      if (sel) sel.value = idx.toString();
+      const inp = document.getElementById("certSearchInput");
+      if (inp) inp.value = `[${r.code}] ${r.title}`;
       switchNavTab("tab-certificate");
       toast(`Đã hiển thị Chứng thư số cho: ${r.code}!`, "success");
     }
 
     function applyRecordToDeed(r) {
       if (!r) return;
-      document.getElementById("deedTitle").textContent = r.title;
-      document.getElementById("deedArchiveCode").textContent = r.code;
-      document.getElementById("deedDepartment").textContent = `${r.faculty} • Đại học Kinh tế Huế`;
-      document.getElementById("deedAuthors").textContent = r.authors;
-      document.getElementById("deedAdvisor").textContent = r.advisor;
-      document.getElementById("deedType").textContent = r.type;
-      document.getElementById("deedHash").textContent = r.hash;
-      document.getElementById("deedTimestamp").textContent = r.time;
-      document.getElementById("deedBlockNumber").textContent = `#${r.block}`;
+      const el = id => document.getElementById(id);
       
-      const numMatch = r.code.match(/\d+$/);
+      // 1. Tờ Chứng thư A4 trung tâm
+      if (el("deedTitle")) el("deedTitle").textContent = r.title;
+      if (el("deedArchiveCode")) el("deedArchiveCode").textContent = r.code;
+      if (el("deedDepartment")) el("deedDepartment").textContent = `${r.faculty} • Đại học Kinh tế Huế`;
+      if (el("deedAuthors")) el("deedAuthors").textContent = r.authors;
+      if (el("deedAdvisor")) el("deedAdvisor").textContent = r.advisor || "TS. Hà Ngọc Long";
+      if (el("deedType")) el("deedType").textContent = r.type || "Khóa luận tốt nghiệp Cử nhân K57";
+      if (el("deedSha256")) el("deedSha256").textContent = r.sha256 || "--";
+      if (el("deedHash")) el("deedHash").textContent = r.hash;
+      if (el("deedTimestamp")) el("deedTimestamp").textContent = r.time;
+      if (el("deedBlockNumber")) el("deedBlockNumber").textContent = `#${r.block}`;
+      
+      const numMatch = (r.code || "").match(/\d+$/);
       const dispatchNum = numMatch ? numMatch[0] : "26";
-      document.getElementById("deedDispatchNum").textContent = `Số: ${dispatchNum}/CT-ĐHKT-NCKH • HCE ACADEMIC DEED OF SCIENTIFIC PROVENANCE`;
+      if (el("deedDispatchNum")) {
+        el("deedDispatchNum").textContent = `Số: ${dispatchNum}/CT-ĐHKT-NCKH • HCE ACADEMIC DEED OF SCIENTIFIC PROVENANCE`;
+      }
       
       let targetUrl = `https://sepolia.etherscan.io/address/${CONTRACT_ADDRESS}`;
+      let hasRealTx = false;
       if (r.txHash && r.txHash.length === 66 && r.txHash.startsWith("0x")) {
         targetUrl = `https://sepolia.etherscan.io/tx/${r.txHash}`;
+        hasRealTx = true;
       }
       renderDeedQr(targetUrl);
+
+      // 2. Nút Etherscan tại chân chứng thư (YÊU CẦU 2)
+      const txBtn = el("btnDeedTxLink");
+      if (txBtn) {
+        txBtn.href = targetUrl;
+        if (hasRealTx) {
+          txBtn.innerHTML = `🌐 Xem Giao Dịch On-Chain (<code>#${r.txHash.slice(0, 10)}... ↗</code>)`;
+        } else {
+          txBtn.innerHTML = `🌐 Xem Hợp Đồng Sepolia (<code>#${CONTRACT_ADDRESS.slice(0, 10)}... ↗</code>)`;
+        }
+      }
+
+      // 3. Cập nhật Sidebar Bảng Đối Soát On-Chain bên cạnh (YÊU CẦU 3)
+      if (el("sideDeedCode")) el("sideDeedCode").textContent = r.code;
+      if (el("sideDeedTitle")) el("sideDeedTitle").textContent = r.title;
+      if (el("sideDeedFaculty")) el("sideDeedFaculty").textContent = `${r.faculty} • ĐHKT Huế`;
+      if (el("sideDeedAdvisor")) el("sideDeedAdvisor").textContent = `GVHD: ${r.advisor || "TS. Hà Ngọc Long"}`;
+      if (el("sideDeedAuthors")) el("sideDeedAuthors").textContent = r.authors;
+      const displayWallet = r.wallet || (currentAuthUser && currentAuthUser.wallet ? currentAuthUser.wallet : "0x627341f221465d6c8b4b1a409748b6c507cbe687");
+      if (el("sideDeedWallet")) el("sideDeedWallet").textContent = displayWallet;
+      if (el("sideDeedBlock")) el("sideDeedBlock").textContent = `#${r.block}`;
+      if (el("sideDeedTime")) el("sideDeedTime").textContent = r.time;
+      if (el("sideDeedHash")) el("sideDeedHash").textContent = r.hash ? `${r.hash.slice(0, 22)}...` : "--";
+
+      const sideTx = el("sideDeedTxLink");
+      if (sideTx) {
+        sideTx.href = targetUrl;
+        sideTx.innerHTML = hasRealTx ? `🌐 Xem Giao Dịch (${r.txHash.slice(0, 8)}... ↗)` : `🌐 Hợp Đồng Sepolia ↗`;
+      }
     }
 
-    // Vẽ QR trên Chứng thư (tích hợp API trực tiếp + Canvas dự phòng)
+    // Vẽ QR trên Chứng thư Tab 5
     function renderDeedQr(customUrl) {
       const url = customUrl || `https://sepolia.etherscan.io/address/0xa2f53106B3dFdF23b6b158022646d231A21e49Cb`;
       const qrImg = document.getElementById("deedQrImg");
@@ -7189,6 +7847,63 @@
       const h = document.getElementById("deedHash").textContent;
       navigator.clipboard.writeText(h);
       toast("Đã sao chép mã băm tra cứu chứng thư!", "info");
+    }
+
+    // In ấn chứng thư Tab 5 chuẩn A4
+    function printTab5Deed() {
+      document.body.classList.remove("print-mode-ledger", "print-mode-appraisal", "print-mode-step6");
+      document.body.classList.add("print-mode-certificate");
+      window.print();
+      setTimeout(() => document.body.classList.remove("print-mode-certificate"), 1200);
+    }
+
+    // Cập nhật và in chứng thư Bước 6 (YÊU CẦU 4)
+    function updateStep6Deed(work) {
+      if (!work) return;
+      const el = id => document.getElementById(id);
+      if (el("step6DeedArchiveCode")) el("step6DeedArchiveCode").textContent = work.code || "--";
+      if (el("step6DeedTitle")) el("step6DeedTitle").textContent = work.title || "--";
+      if (el("step6DeedType")) el("step6DeedType").textContent = work.type || "Khóa luận tốt nghiệp Cử nhân K57";
+      if (el("step6DeedDepartment")) el("step6DeedDepartment").textContent = `${work.department || "Khoa Hệ thống Thông tin Kinh tế"} • Đại học Kinh tế Huế`;
+      if (el("step6DeedAdvisor")) el("step6DeedAdvisor").textContent = "TS. Hà Ngọc Long";
+      if (el("step6DeedAuthors")) el("step6DeedAuthors").textContent = work.authorsText || (work.authors ? (Array.isArray(work.authors) ? work.authors.join(", ") : work.authors) : "--");
+      if (el("step6DeedSha256")) el("step6DeedSha256").textContent = work.sha256 || "--";
+      if (el("step6DeedHash")) el("step6DeedHash").textContent = work.keccak256 || work.hash || "--";
+      if (el("step6DeedTimestamp")) el("step6DeedTimestamp").textContent = work.dateRegistered || work.time || new Date().toLocaleString("vi-VN");
+      if (el("step6DeedBlockNumber")) el("step6DeedBlockNumber").textContent = `#${work.blockNumber || work.block || "11882657"}`;
+
+      const numMatch = (work.code || "").match(/\d+$/);
+      const dispatchNum = numMatch ? numMatch[0] : "26";
+      if (el("step6DeedDispatchNum")) {
+        el("step6DeedDispatchNum").textContent = `Số: ${dispatchNum}/CT-ĐHKT-NCKH • COPYCHAIN ELECTRONIC CERTIFICATE OF AUTHORSHIP`;
+      }
+
+      let txUrl = `https://sepolia.etherscan.io/address/${CONTRACT_ADDRESS}`;
+      if (work.txHash && work.txHash.length === 66 && work.txHash.startsWith("0x")) {
+        txUrl = `https://sepolia.etherscan.io/tx/${work.txHash}`;
+      }
+      const txLink = el("step6DeedTxLink");
+      if (txLink) {
+        txLink.href = txUrl;
+        txLink.innerHTML = work.txHash ? `🌐 Xem Giao Dịch (${work.txHash.slice(0, 10)}... ↗)` : `🌐 Sepolia Etherscan ↗`;
+      }
+
+      // Sinh mã QR sống cho Bước 6
+      const qrImg = el("step6DeedQrImg");
+      if (qrImg) qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=${encodeURIComponent(txUrl)}`;
+      const canvas = el("step6DeedQrCanvas");
+      if (canvas && typeof QRCode !== "undefined" && QRCode.toCanvas) {
+        QRCode.toCanvas(canvas, txUrl, { width: 76, margin: 1 }, function (error) {
+          if (error) console.warn("Lỗi QR Canvas Step6:", error);
+        });
+      }
+    }
+
+    function printStep6Deed() {
+      document.body.classList.remove("print-mode-ledger", "print-mode-appraisal", "print-mode-certificate");
+      document.body.classList.add("print-mode-step6");
+      window.print();
+      setTimeout(() => document.body.classList.remove("print-mode-step6"), 1200);
     }
 
     // Khởi tạo mặc định ban đầu
