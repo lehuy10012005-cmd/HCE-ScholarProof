@@ -1393,6 +1393,74 @@
       color: var(--text-muted);
     }
 
+        /* Sub-Navigation Chuyển đổi Sổ cái Công trình / Tra cứu Người đăng */
+    .ledger-subnav-bar {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      border-bottom: 2px solid var(--border-color);
+      padding-bottom: 12px;
+    }
+    .ledger-subnav-btn {
+      padding: 9px 18px;
+      border-radius: var(--radius-sm);
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.2s ease;
+      border: 1px solid transparent;
+    }
+    .ledger-subnav-btn.active {
+      background: var(--primary);
+      color: #ffffff;
+      border-color: var(--primary);
+      box-shadow: 0 2px 8px rgba(27, 85, 226, 0.25);
+    }
+    .ledger-subnav-btn:not(.active) {
+      background: var(--bg-surface);
+      color: var(--text-secondary);
+      border-color: var(--border-color);
+    }
+    .ledger-subnav-btn:not(.active):hover {
+      background: var(--bg-subtle);
+      color: var(--text-primary);
+    }
+    .ledger-subnav-badge {
+      padding: 1px 7px;
+      border-radius: 10px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .ledger-subnav-btn.active .ledger-subnav-badge {
+      background: rgba(255, 255, 255, 0.25);
+      color: #ffffff;
+    }
+    .ledger-subnav-btn:not(.active) .ledger-subnav-badge {
+      background: var(--primary-subtle);
+      color: var(--primary);
+    }
+
+    /* Thẻ hiển thị Danh bạ Người đăng (Author Card) */
+    .author-dir-card {
+      background: var(--bg-surface);
+      border: 1.5px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 18px;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: all 0.2s ease;
+    }
+    .author-dir-card:hover {
+      border-color: var(--primary);
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
     .ledger-table-wrap {
       background: var(--bg-surface);
       border: 1px solid var(--border-color);
@@ -3084,8 +3152,8 @@
       <div class="panel-card" style="margin-bottom: 20px;">
         <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
           <div>
-            <h3>Sổ Cái Đối Soát Bản Quyền On-Chain (Recent Registrations)</h3>
-            <p class="sub" style="margin-bottom: 0;">Lịch sử các công trình nghiên cứu đã được khắc dấu thời gian khối bất biến</p>
+            <h3 id="lblLedgerHeaderTitle">Sổ Cái Đối Soát Bản Quyền On-Chain (Recent Registrations)</h3>
+            <p class="sub" id="lblLedgerHeaderSub" style="margin-bottom: 0;">Lịch sử các công trình nghiên cứu đã được khắc dấu thời gian khối bất biến</p>
           </div>
           <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
             <button class="btn-cta-secondary" onclick="exportLedgerToCSV()" style="padding: 7px 14px; font-size: 12px; font-weight: 700; gap: 6px; display: inline-flex; align-items: center;" title="Tải xuống toàn bộ dữ liệu Sổ cái định dạng Excel/CSV phục vụ lưu trữ">
@@ -3094,48 +3162,88 @@
             <button class="btn-cta-secondary" onclick="printLedgerSummaryReport()" style="padding: 7px 14px; font-size: 12px; font-weight: 700; gap: 6px; display: inline-flex; align-items: center;" title="In Danh Mục Báo Cáo Tổng Hợp cho Phòng Quản lý Khoa học">
               <span>🖨️</span> <span>In Danh Mục Tổng Hợp</span>
             </button>
-            <span class="badge-pill-auth" id="lblLedgerCountBadge">Sepolia Verified: 3 Records</span>
+            <span class="badge-pill-auth" id="lblLedgerCountBadge">Sepolia Verified: 2 Records</span>
           </div>
         </div>
       </div>
 
-      <!-- THANH ĐIỀU KHIỂN & BỘ LỌC KHOA -->
-      <div class="ledger-controls-row">
-        <div class="ledger-filter-group">
-          <label style="font-size: 12px; font-weight: 700; color: var(--text-secondary);">Lọc theo Khoa:</label>
-          <select id="selLedgerFacultyFilter" class="f-select" style="width: auto; padding: 6px 12px;" onchange="filterLedgerByFaculty()">
-            <option value="ALL">Tất cả các Khoa</option>
-            <option value="Khoa HTTT Kinh tế">Khoa HTTT Kinh tế</option>
-            <option value="Khoa Tài chính - Ngân hàng">Khoa Tài chính - Ngân hàng</option>
-            <option value="Khoa Quản trị Kinh doanh">Khoa Quản trị Kinh doanh</option>
-            <option value="Khoa Kế toán - Kiểm toán">Khoa Kế toán - Kiểm toán</option>
-            <option value="Khoa Kinh tế và Phát triển">Khoa Kinh tế và Phát triển</option>
-          </select>
+      <!-- BỘ CHUYỂN ĐỔI CHẾ ĐỘ XEM: SỔ CÁI CÔNG TRÌNH VS TRA CỨU HỒ SƠ TÁC GIẢ -->
+      <div class="ledger-subnav-bar">
+        <button type="button" id="btnSubNavWorks" class="ledger-subnav-btn active" onclick="switchLedgerSubView('works')">
+          <span>📚 Sổ Cái Công Trình</span>
+          <span class="ledger-subnav-badge" id="badgeSubNavWorksCount">0</span>
+        </button>
+        <button type="button" id="btnSubNavAuthors" class="ledger-subnav-btn" onclick="switchLedgerSubView('authors')">
+          <span>👥 Tra Cứu Thông Tin Người Đăng</span>
+          <span class="ledger-subnav-badge" id="badgeSubNavAuthorsCount">0</span>
+        </button>
+      </div>
+
+      <!-- PHÂN ĐOẠN 1: SỔ CÁI CÔNG TRÌNH (ledgerWorksSubView) -->
+      <div id="ledgerWorksSubView">
+        <div class="ledger-controls-row">
+          <div class="ledger-filter-group">
+            <label style="font-size: 12px; font-weight: 700; color: var(--text-secondary);">Lọc theo Khoa / Lĩnh vực:</label>
+            <select id="selLedgerFacultyFilter" class="f-select" style="width: auto; padding: 6px 12px;" onchange="filterLedgerByFaculty()">
+              <option value="ALL">Tất cả các Khoa &amp; Đơn vị</option>
+              <option value="Khoa HTTT Kinh tế">Khoa HTTT Kinh tế</option>
+              <option value="Khoa Tài chính - Ngân hàng">Khoa Tài chính - Ngân hàng</option>
+              <option value="Khoa Quản trị Kinh doanh">Khoa Quản trị Kinh doanh</option>
+              <option value="Khoa Kế toán - Kiểm toán">Khoa Kế toán - Kiểm toán</option>
+              <option value="Khoa Kinh tế và Phát triển">Khoa Kinh tế và Phát triển</option>
+            </select>
+          </div>
+
+          <div class="search-box-ledger">
+            <span>🔍</span>
+            <input type="text" id="txtLedgerSearch" placeholder="Tìm theo Tên người đăng, Tiêu đề, Mã hồ sơ, Địa chỉ ví..." oninput="searchLedger()">
+          </div>
         </div>
 
-        <div class="search-box-ledger">
-          <span>🔍</span>
-          <input type="text" id="txtLedgerSearch" placeholder="Tìm theo Mã hồ sơ, Tiêu đề hoặc MSSV..." oninput="searchLedger()">
+        <div class="ledger-table-wrap">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Mã Lưu Trữ HCE</th>
+                <th>Ngày xác lập</th>
+                <th>Tiêu đề Công trình &amp; GVHD</th>
+                <th>Khối Sepolia</th>
+                <th>Mốc On-chain</th>
+                <th>Trạng thái</th>
+                <th>Thao tác</th>
+              </tr>
+            </thead>
+            <tbody id="tblLedgerBody">
+              <!-- Nạp động bằng JavaScript -->
+            </tbody>
+          </table>
         </div>
       </div>
 
-      <div class="ledger-table-wrap">
-        <table class="data-table">
-          <thead>
-            <tr>
-              <th>Mã Lưu Trữ HCE</th>
-              <th>Ngày xác lập</th>
-              <th>Tiêu đề Công trình & GVHD</th>
-              <th>Khối Sepolia</th>
-              <th>Mốc On-chain</th>
-              <th>Trạng thái</th>
-              <th>Thao tác</th>
-            </tr>
-          </thead>
-          <tbody id="tblLedgerBody">
-            <!-- Nạp động bằng JavaScript -->
-          </tbody>
-        </table>
+      <!-- PHÂN ĐOẠN 2: TRA CỨU THÔNG TIN NGƯỜI ĐĂNG (ledgerAuthorsSubView) -->
+      <div id="ledgerAuthorsSubView" style="display: none;">
+        <div class="ledger-controls-row">
+          <div class="ledger-filter-group">
+            <label style="font-size: 12px; font-weight: 700; color: var(--text-secondary);">Lọc theo Đơn vị / Khoa:</label>
+            <select id="selAuthorsFacultyFilter" class="f-select" style="width: auto; padding: 6px 12px;" onchange="filterAuthorsDirectory()">
+              <option value="ALL">Tất cả các Khoa &amp; Đơn vị</option>
+              <option value="Khoa HTTT Kinh tế">Khoa HTTT Kinh tế</option>
+              <option value="Khoa Tài chính - Ngân hàng">Khoa Tài chính - Ngân hàng</option>
+              <option value="Khoa Quản trị Kinh doanh">Khoa Quản trị Kinh doanh</option>
+              <option value="Khoa Kế toán - Kiểm toán">Khoa Kế toán - Kiểm toán</option>
+              <option value="Khoa Kinh tế và Phát triển">Khoa Kinh tế và Phát triển</option>
+            </select>
+          </div>
+
+          <div class="search-box-ledger">
+            <span>🔍</span>
+            <input type="text" id="txtAuthorsSearch" placeholder="Tìm người đăng theo Họ tên, Email, Số điện thoại, Địa chỉ ví..." oninput="filterAuthorsDirectory()">
+          </div>
+        </div>
+
+        <div id="authorsDirectoryGrid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; margin-top: 14px;">
+          <!-- Nạp động thẻ tác giả bằng JavaScript -->
+        </div>
       </div>
     </div>
 
@@ -6578,14 +6686,16 @@
 
       if (view === "works") {
         if (btnWorks) {
+          btnWorks.classList.add("active");
           btnWorks.style.background = "var(--primary)";
           btnWorks.style.color = "#ffffff";
-          btnWorks.style.border = "none";
+          btnWorks.style.borderColor = "var(--primary)";
         }
         if (btnAuthors) {
-          btnAuthors.style.background = "var(--bg-subtle)";
+          btnAuthors.classList.remove("active");
+          btnAuthors.style.background = "var(--bg-surface)";
           btnAuthors.style.color = "var(--text-secondary)";
-          btnAuthors.style.border = "1px solid var(--border-color)";
+          btnAuthors.style.borderColor = "var(--border-color)";
         }
         if (viewWorks) viewWorks.style.display = "block";
         if (viewAuthors) viewAuthors.style.display = "none";
@@ -6593,19 +6703,21 @@
         if (headerSub) headerSub.textContent = "Lịch sử các công trình nghiên cứu đã được khắc dấu thời gian khối bất biến";
       } else {
         if (btnAuthors) {
+          btnAuthors.classList.add("active");
           btnAuthors.style.background = "var(--primary)";
           btnAuthors.style.color = "#ffffff";
-          btnAuthors.style.border = "none";
+          btnAuthors.style.borderColor = "var(--primary)";
         }
         if (btnWorks) {
-          btnWorks.style.background = "var(--bg-subtle)";
+          btnWorks.classList.remove("active");
+          btnWorks.style.background = "var(--bg-surface)";
           btnWorks.style.color = "var(--text-secondary)";
-          btnWorks.style.border = "1px solid var(--border-color)";
+          btnWorks.style.borderColor = "var(--border-color)";
         }
         if (viewWorks) viewWorks.style.display = "none";
         if (viewAuthors) viewAuthors.style.display = "block";
-        if (headerTitle) headerTitle.textContent = "Danh Bạ Tra Cứu Hồ Sơ Tác GiẢ & Nhà Nghiên Cứu";
-        if (headerSub) headerSub.textContent = "Tra cứu thông tin định danh học thuật và toàn bộ công trình bảo hộ của các tác giả";
+        if (headerTitle) headerTitle.textContent = "Danh Bạ Tra Cứu Thông Tin Người Đăng & Tác Giả";
+        if (headerSub) headerSub.textContent = "Tra cứu thông tin tác giả, đơn vị, địa chỉ ví Sepolia và các công trình đã đăng ký";
         renderAuthorsDirectory();
       }
     }
@@ -6628,7 +6740,8 @@
           (a.name && a.name.toLowerCase().includes(searchVal)) ||
           (a.fullName && a.fullName.toLowerCase().includes(searchVal)) ||
           (a.email && a.email.toLowerCase().includes(searchVal)) ||
-          (a.mssv && a.mssv.toLowerCase().includes(searchVal)) ||
+          (a.phone && a.phone.toLowerCase().includes(searchVal)) ||
+          (a.faculty && a.faculty.toLowerCase().includes(searchVal)) ||
           (a.wallet && a.wallet.toLowerCase().includes(searchVal));
         return matchFac && matchSearch;
       });
@@ -6637,20 +6750,30 @@
         grid.innerHTML = `
           <div style="grid-column: 1 / -1; background: var(--bg-surface); border: 1px dashed var(--border-color); border-radius: var(--radius-md); padding: 36px 20px; text-align: center; color: var(--text-muted);">
             <div style="font-size: 32px; margin-bottom: 8px;">👥</div>
-            <strong style="color: var(--text-primary); font-size: 14px;">Không tìm thấy tác giả nào phù hợp</strong><br>
-            <span style="font-size: 12px;">Hãy thử điều chỉnh từ khóa tìm kiếm hoặc bộ lọc Khoa.</span>
+            <strong style="color: var(--text-primary); font-size: 14px;">Không tìm thấy người đăng nào phù hợp</strong><br>
+            <span style="font-size: 12px;">Hãy thử điều chỉnh từ khóa tìm kiếm (Họ tên, Email, Số điện thoại, Địa chỉ ví) hoặc bộ lọc Khoa.</span>
           </div>
         `;
         return;
       }
 
+      // Tổng hợp tất cả công trình từ cả COPYCHAIN_WORKS và SAMPLE_RECORDS (khử trùng lặp theo mã)
+      const allWorks = [...COPYCHAIN_WORKS, ...SAMPLE_RECORDS];
+      const uniqueWorksMap = new Map();
+      allWorks.forEach(w => {
+        const k = w.code || w.id;
+        if (k && !uniqueWorksMap.has(k)) uniqueWorksMap.set(k, w);
+      });
+      const uniqueWorks = Array.from(uniqueWorksMap.values());
+
       grid.innerHTML = filtered.map(a => {
-        // Tính số lượng tác phẩm của tác giả này từ COPYCHAIN_WORKS
-        const authorWorks = COPYCHAIN_WORKS.filter(w => 
+        const authorWorks = uniqueWorks.filter(w => 
           (w.authorEmail && a.email && w.authorEmail.toLowerCase() === a.email.toLowerCase()) ||
           (w.authorsText && a.name && w.authorsText.toLowerCase().includes(a.name.toLowerCase())) ||
+          (w.authors && a.name && w.authors.toLowerCase().includes(a.name.toLowerCase())) ||
           (w.authorsText && a.fullName && w.authorsText.toLowerCase().includes(a.fullName.toLowerCase())) ||
-          (w.authorWallet && a.wallet && a.wallet.startsWith("0x") && w.authorWallet.toLowerCase() === a.wallet.toLowerCase())
+          (w.authors && a.fullName && w.authors.toLowerCase().includes(a.fullName.toLowerCase())) ||
+          ((w.authorWallet || w.wallet) && a.wallet && a.wallet.startsWith("0x") && (w.authorWallet || w.wallet).toLowerCase() === a.wallet.toLowerCase())
         );
 
         const avatarLetters = a.avatar || (a.name ? a.name.split(" ").slice(-1)[0].substring(0, 2).toUpperCase() : "TG");
@@ -6659,24 +6782,25 @@
           : "Chưa kết nối ví";
 
         return `
-          <div style="background: var(--bg-surface); border: 1.5px solid var(--border-color); border-radius: var(--radius-md); padding: 18px; box-shadow: var(--shadow-sm); display: flex; flex-direction: column; justify-content: space-between; transition: all 0.2s;">
+          <div class="author-dir-card">
             <div>
               <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
-                <div style="width: 46px; height: 46px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), #0284c7); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 15px; flex-shrink: 0;">
+                <div style="width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), #0284c7); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 15px; flex-shrink: 0; box-shadow: 0 4px 10px rgba(27, 85, 226, 0.25);">
                   ${avatarLetters}
                 </div>
                 <div style="min-width: 0; flex: 1;">
-                  <h4 style="margin: 0; font-size: 14.5px; font-weight: 800; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${a.fullName || a.name}</h4>
-                  <span style="font-size: 11.5px; color: var(--text-muted); display: block;">${a.faculty || 'ĐH Kinh tế Huế'} &bull; ${a.class || a.roleName || 'Tác giả'}</span>
+                  <h4 style="margin: 0; font-size: 15px; font-weight: 800; color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${a.fullName || a.name}</h4>
+                  <span style="font-size: 11.5px; color: var(--text-muted); display: block;">${a.faculty || 'Đại học Kinh tế Huế'} &bull; ${a.class || a.roleName || 'Tác giả / Nhà nghiên cứu'}</span>
                 </div>
               </div>
               <div style="font-size: 12px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 14px; background: var(--bg-subtle); padding: 10px 12px; border-radius: 6px;">
-                <div><strong>Email:</strong> <span style="font-family: var(--font-mono); color: var(--primary);">${a.email || '--'}</span></div>
-                <div><strong>Ví Sepolia:</strong> <span style="font-family: var(--font-mono); font-size: 11px;">${walletDisplay}</span></div>
-                <div><strong>Số tác phẩm đã bảo hộ:</strong> <strong style="color: var(--success); font-size: 13px;">${authorWorks.length} tác phẩm</strong></div>
+                <div style="margin-bottom: 3px;"><strong>Email:</strong> <span style="font-family: var(--font-mono); color: var(--primary);">${a.email || '--'}</span></div>
+                ${a.phone ? `<div style="margin-bottom: 3px;"><strong>Điện thoại:</strong> <span>${a.phone}</span></div>` : ''}
+                <div style="margin-bottom: 3px;"><strong>Ví Sepolia:</strong> <span style="font-family: var(--font-mono); font-size: 11px; color: #0284c7;">${walletDisplay}</span></div>
+                <div><strong>Công trình đã niêm phong:</strong> <strong style="color: var(--success); font-size: 13px;">${authorWorks.length} công trình</strong></div>
               </div>
             </div>
-            <button type="button" class="btn-cta-secondary" onclick="openAuthorPassportForAuthorId('${a.id || a.email}')" style="width: 100%; padding: 8px 12px; font-size: 12.5px; font-weight: 700; justify-content: center; display: flex; align-items: center; gap: 6px;" title="Xem Thẻ Hồ sơ Căn cước Học thuật của tác giả">
+            <button type="button" class="btn-cta-secondary" onclick="openAuthorPassportForAuthorId('${a.id || a.email}')" style="width: 100%; padding: 8px 12px; font-size: 12.5px; font-weight: 700; justify-content: center; display: flex; align-items: center; gap: 6px;" title="Xem Thẻ Căn cước Học thuật & Danh mục công trình của tác giả">
               <span>👤</span> <span>Xem Hồ Sơ &amp; Công Trình Chi Tiết</span>
             </button>
           </div>
@@ -6989,13 +7113,23 @@
 
     // Tìm kiếm trong Sổ Cái
     function searchLedger() {
-      const q = document.getElementById("txtLedgerSearch").value.toLowerCase();
-      const filtered = SAMPLE_RECORDS.filter(r => 
-        r.code.toLowerCase().includes(q) ||
-        r.title.toLowerCase().includes(q) ||
-        r.authors.toLowerCase().includes(q) ||
-        r.hash.toLowerCase().includes(q)
-      );
+      const q = document.getElementById("txtLedgerSearch").value.toLowerCase().trim();
+      const facSel = document.getElementById("selLedgerFacultyFilter") ? document.getElementById("selLedgerFacultyFilter").value : "ALL";
+      
+      const filtered = SAMPLE_RECORDS.filter(r => {
+        const matchFac = (facSel === "ALL") || (r.faculty === facSel);
+        const matchQ = !q || (
+          (r.code && r.code.toLowerCase().includes(q)) ||
+          (r.title && r.title.toLowerCase().includes(q)) ||
+          (r.authors && r.authors.toLowerCase().includes(q)) ||
+          (r.authorEmail && r.authorEmail.toLowerCase().includes(q)) ||
+          (r.authorPhone && r.authorPhone.toLowerCase().includes(q)) ||
+          (r.wallet && r.wallet.toLowerCase().includes(q)) ||
+          (r.hash && r.hash.toLowerCase().includes(q)) ||
+          (r.txHash && r.txHash.toLowerCase().includes(q))
+        );
+        return matchFac && matchQ;
+      });
       renderLedgerTable(filtered);
     }
 
