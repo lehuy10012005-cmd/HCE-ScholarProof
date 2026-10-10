@@ -34,6 +34,11 @@ Quan điểm chỉ đạo xuyên suốt của nhóm sinh viên:
 | **08** | Cấu trúc DOM & Bố cục CSS | Lệch thẻ `</div>`, nút xóa tệp & khối mã băm tràn sang Bước 1 và 2 | Vỡ bố cục học thuật, giao diện hiển thị lộn xộn | Cân bằng lại toàn bộ cây DOM (diff = 0), đưa bảng mã băm về đúng bên dưới Dropzone Bước 3 | **ĐÃ XONG** |
 | **09** | Nút "Làm mới form trống" | Nút bấm bị liệt sự kiện (không phản hồi) | Tác giả không thể xóa nhanh thông tin nhạy cảm đã nhập | Viết lại logic dọn sạch bộ đệm form và đưa wizard quay lại Bước 1 an toàn | **ĐÃ XONG** |
 | **10** | Auth Guard & Kiểm soát truy cập | Đăng xuất xong vẫn nhìn thấy và điền được form Bước 1 | Lỗ hổng kiểm soát truy cập, khách vãng lai xâm nhập biểu mẫu | Dựng **Tấm chắn khóa tại chỗ (In-Page Auth Gate)** ẩn toàn bộ form, tự động đá về Trang chủ khi đăng xuất | **ĐÃ XONG** |
+| **11** | Giao dịch On-Chain Sepolia thật | Lỗi Checksum địa chỉ hợp đồng khiến MetaMask báo lỗi 'invalid address', AI lúng túng | Thất bại ghi nhận dữ liệu on-chain, người dùng mất niềm tin | Chuẩn hóa địa chỉ EIP-55 Checksum, kích hoạt popup MetaMask thật ký và khai thác TxHash `#0x0bf105...` (Block #11882657) | **ĐÃ XONG** |
+| **12** | Tính toàn vẹn Sổ cái & Chống bịa đặt | AI tự ý bịa thêm tác giả giả lập (Bùi Xuân Huấn, An,...) không liên kết | Ô nhiễm sổ cái, làm sai lệch hồ sơ kế toán on-chain thực tế | Sinh viên chấn chỉnh AI: Xóa sạch toàn bộ mock data, chỉ lưu trữ tài khoản và tác phẩm thật có liên kết mắt xích | **ĐÃ XONG** |
+| **13** | Phân hệ Tra cứu Hồ sơ & Sổ cái | Tab Tra cứu chỉ xem được bài viết, thiếu tra cứu thông tin tác giả | Không đối soát được nhân thân nhà nghiên cứu và địa chỉ ví sở hữu | Xây dựng thanh điều hướng phụ 2 chế độ: Sổ cái công trình & Tra cứu hồ sơ người đăng, liên kết dữ liệu thật | **ĐÃ XONG** |
+| **14** | Chứng nhận A4 & Bước 6 Đăng ký | Dropdown dài hàng trăm bài khó tìm; nút copy không dẫn tới Etherscan; thiếu thông tin bên cạnh giấy; Bước 6 không thấy giấy | Trải nghiệm người dùng kém; không đối soát tức thời được giao dịch; độ trễ xác thực pháp lý | Thay dropdown bằng Smart Search & Quick Filter; thay nút copy bằng Link Etherscan trực tiếp; bố cục 2 cột (Sidebar + Deed); nhúng Deed trực tiếp tại Bước 6 | **ĐÃ XONG** |
+| **15** | Định chuẩn Thương hiệu Website | Tên trang web hiển thị không thống nhất ("HCE LEDGER" vs "HCE-SCHOLARPROOF") | Nhầm lẫn nhận diện thương hiệu sản phẩm của đồ án Capstone | Đổi toàn bộ nhận diện từ Header, Title, Modal, Thông báo sang **HCE-SCHOLARPROOF** chuẩn xác | **ĐÃ XONG** |
 
 ---
 
@@ -206,6 +211,76 @@ graph TD
 6. **Lab 13:** Tích hợp giao tiếp Web3 — Kết nối ví MetaMask theo chuẩn Just-in-Time, ký số và phát sinh giao dịch on-chain thật.
 7. **Lab 14:** Kiểm toán bảo mật và đo lường chi phí Gas giao dịch thực tế trên mạng Sepolia Testnet.
 8. **Lab 15:** Hoàn thiện nghiệm thu sản phẩm cuối kỳ — Xuất bản trang web chạy trực tuyến công khai trên GitHub Pages.
+
+---
+
+### 📍 CHẶNG 11: THỰC CHIẾN GIAO DỊCH ON-CHAIN TRÊN SEPOLIA TESTNET & SỬA LỖI EIP-55 CHECKSUM
+* **Bối cảnh & Chỉ đạo của Sinh viên:** Sau khi hoàn thiện giao diện, sinh viên tiến hành kiểm thử thực chiến bằng việc kết nối ví MetaMask thật và gửi giao dịch đăng ký quyền tác giả lên mạng Ethereum Sepolia Testnet.
+* **Lỗi phát hiện ở mã của AI:** 
+  - Địa chỉ Smart Contract trong code ban đầu bị lỗi chữ hoa/chữ thường (Checksum), khiến thư viện Ethers.js v6 và MetaMask từ chối giao dịch với lỗi `invalid address checksum`.
+  - Sinh viên chất vấn: *"bị lỗi gì rồi"*, *"rồi kiểm tra giao dịch trên ether kiểu j"*.
+* **Cách xử lý & Giám sát của Sinh viên:**
+  - Chuẩn hóa chính xác địa chỉ hợp đồng thông minh theo chuẩn EIP-55: `0xa2f53106B3dFdF23b6b158022646d231A21e49Cb`.
+  - Sinh viên trực tiếp dùng ví MetaMask cá nhân ký thành công giao dịch On-Chain thật với bằng chứng bất biến:
+    - **Transaction Hash:** `0x0bf105c4c2f3b5d2c0353c5b1c2cd45264af922bcee28ce36d662cd68db3be7f`
+    - **Block xác nhận:** `#11882657`
+    - **Chi phí Gas thực tế:** 29,592 Gas (Status: Success).
+  - Tích hợp liên kết Etherscan trực tiếp vào thông báo kết quả tại Bước 6 để người dùng bấm kiểm tra ngay lập tức.
+* **Bằng chứng:** Giao dịch có thể tra cứu công khai 24/7 trên [Sepolia Etherscan Tx](https://sepolia.etherscan.io/tx/0x0bf105c4c2f3b5d2c0353c5b1c2cd45264af922bcee28ce36d662cd68db3be7f).
+
+---
+
+### 📍 CHẶNG 12: CHẤN CHỈNH AI VỀ TÍNH TOÀN VẸN DỮ LIỆU SỔ CÁI (TRIỆT TIÊU MOCK USERS ẢO)
+* **Bối cảnh & Chỉ đạo gay gắt của Sinh viên:**
+  > *"haiz đã nói rồi đừng có bịa thêm người , khi nào tôi nói bịa thêm người rồi làm, chứ tự nhiên mới có tôi đăng 2 bài trên hệ thống thôi mà tự nhiên bên kia có 5 người rồi, đã vậy còn mấy tác phẩm nũa, bịa thì bịa cho dúng chứ, nó phải có liên kết với nhau chứ cha. Bây giờ cứ làm cái tính năng tra cứu tên người và bỏ hồ sơ tôi vô thôi, sau này khi tôi đưa wed cho người ta test , thì hệ thống mới bắt đầu cập nhật. Nói vậy hiểu không, cái gì cũng phải có mắt xích chứ."*
+* **Phân tích rủi ro Kế toán & Kiểm toán On-chain:**
+  - AI thường có xu hướng "hallucination" tự chèn thêm dữ liệu giả lập (mock data) như Bùi Xuân Huấn, Nguyễn Văn An,... để làm đẹp giao diện.
+  - Tuy nhiên, dưới góc nhìn Kế toán Sổ cái Web3 (On-chain Ledger Reconciliation), việc tự ý sinh dữ liệu ảo phá vỡ hoàn toàn tính trung thực và đối soát của sổ cái: người dùng nhìn thấy tên người đăng nhưng tra cứu trên blockchain lại không có giao dịch tương ứng.
+* **Hành động chấn chỉnh:**
+  - Xóa sạch toàn bộ mảng dữ liệu giả lập trong code và dọn sạch `localStorage`.
+  - Khởi tạo hệ thống chỉ với đúng **1 tác giả duy nhất** là sinh viên (`Lê văn quang huy` - USR-6) và đúng **2 tác phẩm thực tế** đã được đăng ký và đối soát.
+  - Thiết lập cơ chế "mắt xích liên kết" (Linked Audit Chain): Chỉ khi người dùng thực hiện đăng ký thật thì hệ thống mới cập nhật hồ sơ và tăng số lượng bài trên Sổ cái.
+
+---
+
+### 📍 CHẶNG 13: XÂY DỰNG PHÂN HỆ TRA CỨU SỔ CÁI KÉP (CÔNG TRÌNH & HỒ SƠ TÁC GIẢ)
+* **Yêu cầu của Sinh viên:**
+  > *"bây giờ qua phần tra cứu , thì hiện tại việc tra cứu các bài đã đăng ok rồi, nhưng mà thêm cái tính năng tra cứu, tìm kiếm thông tin người đăng nữa đươc không, đầu tiên hãy báo cáo những việc bạn sẽ làm trước khi triển khai"*
+  > *"cũng đúng rồi nhưng mà cái nà đâu chỉ dành cho sinh viên mà tất cả mọi người mà, với lại hình như trong phần đăng kí làm gì có mục MSSV nhỉ, nên đâu cần tra theo mssv đâu. chỉ cấn chỗ đó thôi, bây giờ làm đi"*
+* **Giải pháp thực hiện:**
+  - Tích hợp thanh điều hướng con (Sub-nav) ngay trong Tab Tra cứu:
+    - `[ 📚 Sổ Cái Công Trình (2) ]`: Tra cứu danh mục đề tài, mã lưu trữ, mã băm, số khối.
+    - `[ 👥 Tra Cứu Thông Tin Người Đăng (1) ]`: Tra cứu hồ sơ tác giả, vai trò, số lượng công trình và địa chỉ ví Web3 xác thực.
+  - Loại bỏ các trường định danh cứng (như MSSV) để mở rộng hệ thống cho mọi đối tượng học thuật (Sinh viên, Giảng viên, Nghiên cứu sinh tự do).
+
+---
+
+### 📍 CHẶNG 14: BỐ CỤC 2 CỘT CHỨNG THƯ A4, TÌM KIẾM THÔNG MINH & NHÚNG TRỰC TIẾP TẠI BƯỚC 6
+* **Yêu cầu & Góp ý thiết kế mang tính đột phá của Sinh viên:**
+  > *"ồ tôi thấy nên:
+  > 1. thay đổi cơ chế ở thanh chọn lọc: ví dụ đi, bây giờ lỡ có hàng trăm tác phẩm được đăng kí thì lướt tìm đến bao giờ, nen tôi nghĩ bạn nên thay đổi cơ chê.
+  > 2. Tôi nghĩ nên thay thế mã sao chép thành đưởng link dẫn tới các giao dịch đó trên ether, giống như lúc mới đăng kí tác phẩm xong thì có đưởng link hoặc mã dẫn tới nơi luôn á.
+  > 3. Tôi nghĩ bên cạnh đó sẽ hiện mục thông tin tác phẩm, tác giả bên cạnh cái giấy đó luôn.
+  > 4. Cũng vì thế mà tôi nghĩ khi đăng kí xong tác phẩm ở mục 'đăng kí tác phẩm' thì cũng nên hiện luôn cái giấy đó.
+  > Nói vậy bạn hiểu không , trình bày trước khi triển khai"*
+* **Giải pháp kiến trúc & Triển khai thực tế:**
+  1. **Thanh tìm kiếm thông minh (Smart Filter):** Thay dropdown `<select>` bằng ô tìm kiếm từ khóa tức thời kết hợp bộ lọc nhanh `[ Tất Cả Tác Phẩm ]` / `[ Tác Phẩm Của Tôi ]` và dropdown kết quả trực quan.
+  2. **Thay nút sao chép bằng Link Sepolia Etherscan:** Nút `[ 🌐 Xem Giao Dịch On-Chain (#0x... ↗) ]` mở trực tiếp giao dịch trên Sepolia Etherscan.
+  3. **Bố cục 2 cột (Side-by-side Layout):**
+     - Cột trái: Panel "🏛️ HỒ SƠ ĐỐI SOÁT ON-CHAIN" hiển thị chi tiết thông tin công trình, tác giả kèm badge `✓ HCE VERIFIED` và thông số khối.
+     - Cột phải: Bản in Chứng thư A4 học thuật với con dấu đỏ và mã QR sống.
+  4. **Nhúng trực tiếp Chứng thư A4 tại Bước 6:** Sau khi ký ví thành công ở Bước 5, Bước 6 hiển thị ngay lập tức tờ Chứng thư A4 điền đầy đủ dữ liệu vừa tạo, có sẵn nút in PDF A4 và xem Etherscan tại chỗ.
+* **Bằng chứng:** Commit Git `a5ebd77` trên nhánh `main` và xuất bản lên `gh-pages`.
+
+---
+
+### 📍 CHẶNG 15: ĐỊNH CHUẨN THƯƠNG HIỆU HỌC THUẬT: ĐỒNG BỘ TOÀN DIỆN "HCE-SCHOLARPROOF"
+* **Yêu cầu của Sinh viên:**
+  > *"chắc ổn rồi á, bây giờ đổi tên wed của tôi thành 'HCE-SCHOLARPROOF' đi :))))"*
+* **Giải pháp thực hiện:**
+  - Đồng bộ toàn bộ nhận diện thương hiệu từ tiêu đề trang (`<title>`), biểu trưng Header, thẻ giới thiệu Hero, các cổng Auth Gate, cửa sổ Đăng nhập/Đăng ký và tên file xuất CSV thành **HCE-SCHOLARPROOF**.
+  - Nhất quán hoàn toàn với tên đồ án Capstone chính thức và kho lưu trữ GitHub `HCE-ScholarProof`.
+* **Bằng chứng:** Commit Git `86f2a4f` trên nhánh `main` và triển khai lên `gh-pages`.
 
 ---
 

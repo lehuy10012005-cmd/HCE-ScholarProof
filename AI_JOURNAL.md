@@ -258,59 +258,63 @@ Nếu chỉ mô tả chung chung "viết tool phân tích ví", AI thường b�
 
 **Ai phát hiện:** Sinh viên phát hiện và trực tiếp chỉ đạo chuẩn hóa bộ kiểm thử tự động.
 
-## Lần 13 (Lab 13: Tích hợp Sepolia Testnet & Kiểm thử Luồng Ký Ví On-chain)
+
+
+
+
+## Lần 13 (Tích hợp MetaMask, Bắn Giao dịch On-Chain thật và Khắc phục lỗi Checksum Địa chỉ Hợp đồng)
 
 **Prompt:**
-> "Bạn là kỹ sư Web3 tích hợp. Hãy hướng dẫn chi tiết quy trình triển khai ScholarProof.sol v2 lên Sepolia Testnet qua Remix IDE, xác thực mã nguồn trên Etherscan, cập nhật địa chỉ hợp đồng vào web/index.html và thiết kế 3 ca kiểm thử on-chain thực tế theo chuẩn AGENTS.md (tối thiểu 1 ca gian lận)."
+> "địa chỉ hợp đồng 0xa2f53106B3dFdF23b6b158022646d231A21e49Cb, kiểm tra giao dịch trên ether kiểu gì và ký ví thật trên Sepolia Testnet"
 
 **AI trả về:**
-- Quy trình deploy 4 bước: Chuẩn bị Remix → Biên dịch với optimization 200 runs → Kết nối MetaMask Sepolia → Deploy và ghi nhận địa chỉ hợp đồng.
-- Hướng dẫn Source Code Verification trên Sepolia Etherscan: Chọn compiler đúng version, enable optimization, dán mã nguồn và xác nhận.
-- Giải thích ABI (Application Binary Interface) đầy đủ cho `ScholarProof.sol` v2 gồm 4 hàm và 2 sự kiện, sẵn sàng tích hợp vào `web/index.html`.
-- 3 ca kiểm thử on-chain: Happy Path (TC-1), Anti-Scooping gian lận nộp đè mã băm (TC-2), Unauthorized mạo danh chiếm quyền (TC-3).
-- Hướng dẫn đọc Event Log trên Etherscan — tra cứu Topics[0,1,2] để đối soát `IdeaRegistered`.
+- Sửa lỗi Checksum EIP-55 trong tệp cấu hình hợp đồng Web3 DApp.
+- Hướng dẫn kết nối ví MetaMask với mạng Sepolia Testnet và thực thi gọi hàm giao dịch On-Chain thật.
+- Khai thác thành công giao dịch mã băm `0x0bf105c4c2f3b5d2c0353c5b1c2cd45264af922bcee28ce36d662cd68db3be7f` tại khối `#11882657` (tiêu tốn 29,592 Gas).
 
-**Đánh giá:** Dùng được (sau khi sinh viên chấn chỉnh 2 điểm kỹ thuật quan trọng).
+**Đánh giá:** Dùng được.
 
-**Chỗ sai & Phản biện sắc bén của sinh viên:**
-1. **Lỗi 1 (Nhầm Keccak-256 với SHA-256):** Trong hướng dẫn ban đầu, AI đề xuất dùng `crypto.subtle.digest("SHA-256", buffer)` của Web Crypto API để băm file trong trình duyệt với lập luận rằng "SHA-256 là tiêu chuẩn W3C và an toàn". Sinh viên chỉ ra lỗi nghiêm trọng: EVM sử dụng **Keccak-256** (tiêu chuẩn của Ethereum, khác hoàn toàn với SHA-256 trong FIPS 202). Nếu client băm bằng SHA-256 nhưng hợp đồng xử lý `bytes32` theo quy ước Keccak-256, giá trị `docHash` sẽ **không bao giờ khớp** khi thẩm định on-chain — hệ thống bảo vệ bản quyền sẽ sai hoàn toàn. Giải pháp chuẩn xác: Dùng `ethers.keccak256(new Uint8Array(arrayBuffer))` của thư viện Ethers.js v6 đã tích hợp sẵn trong DApp.
-2. **Lỗi 2 (Bỏ sót kiểm tra chain ID trước khi gửi giao dịch):** AI ban đầu không đề cập đến việc kiểm tra mạng trước khi gọi `registerIdea`. Sinh viên chấn chỉnh: Nếu người dùng quên chuyển sang Sepolia và đang ở Ethereum Mainnet, họ sẽ gửi giao dịch tốn hàng chục USD phí gas vào một hợp đồng không tồn tại. Giao diện DApp chuẩn mực Web3 bắt buộc phải kiểm tra `network.chainId === 11155111` (Sepolia) và cảnh báo người dùng chuyển mạng trước khi cho phép gửi giao dịch.
+**Chỗ sai & Phản biện của sinh viên:**
+Ban đầu mã nguồn của AI bị lệch ký tự hoa thường ở địa chỉ hợp đồng khiến Ethers.js v6 báo lỗi `invalid address checksum` và không kích hoạt được popup MetaMask. Sinh viên phát hiện và yêu cầu AI chuẩn hóa mã Checksum, đồng thời gắn link tra cứu trực tiếp giao dịch trên Etherscan.
 
-**Ai phát hiện:** Sinh viên phát hiện cả hai lỗi và yêu cầu AI giải thích sâu về sự khác biệt giữa Keccak-256 và SHA-256 trong hệ sinh thái Ethereum.
+**Ai phát hiện:** Sinh viên phát hiện khi thử nghiệm nộp bài thực tế.
 
-## Lần 14 (Lab 14: Kiểm toán An toàn & Đo lường Chi phí Gas Thực nghiệm Layer 2 vs Sepolia)
+---
+
+## Lần 14 (Thanh lọc Dữ liệu Giả mạo - Chấn chỉnh AI về Nguyên tắc Mắt xích Sổ cái)
 
 **Prompt:**
-> "Bạn là chuyên gia kiểm toán bảo mật Web3 và kỹ sư hạ tầng Layer 2. Hãy đánh giá an toàn của ScholarProof.sol v2 theo chuẩn SWC/OWASP, so sánh chi phí gas thực nghiệm khi chạy trên Ethereum L1 so với các giải pháp Optimistic Rollup (Base, Arbitrum One) sau nâng cấp EIP-4844, và phân tích bài toán kinh tế khi áp dụng tại trường đại học."
+> "haiz đã nói rồi đừng có bịa thêm người , khi nào tôi nói bịa thêm người rồi làm, chứ tự nhiên mới có tôi đăng 2 bài trên hệ thống thôi mà tự nhiên bên kia có 5 người rồi, đã vậy còn mấy tác phẩm nũa, bịa thì bịa cho dúng chứ, nó phải có liên kết với nhau chứ cha. Bây giờ cứ làm cái tính năng tra cứu tên người và bỏ hồ sơ tôi vô thôi, sau này khi tôi đưa wed cho người ta test , thì hệ thống mới bắt đầu cập nhật. Nói vậy hiểu không, cái gì cũng phải có mắt xích chứ."
 
 **AI trả về:**
-- Báo cáo kiểm toán 10 hạng mục theo danh mục SWC.
-- Công thức tính phí gas trên Layer 2 chỉ lấy `GasUsed * L2_GasPrice`.
-- Đề xuất loại bỏ giới hạn độ dài `MAX_TITLE_LENGTH` trên Layer 2 với lập luận rằng "Phí gas trên L2 rẻ gấp hàng trăm lần nên không cần bận tâm về Storage Bloat nữa".
-- Bảng so sánh chi phí đăng ký đề tài.
+- Xóa sạch toàn bộ dữ liệu mẫu giả định (Bùi Xuân Huấn, Nguyễn Văn An,...) trong mã nguồn và làm sạch `localStorage`.
+- Thiết lập hệ thống Sổ cái chuẩn chỉ lưu đúng 1 tác giả thật (`Lê văn quang huy`) và 2 tác phẩm thật đã được đối soát on-chain.
+- Tích hợp thanh điều hướng kép tại Tab Tra cứu: Sổ Cái Công Trình và Tra Cứu Hồ Sơ Người Đăng.
 
-**Đánh giá:** Dùng được khung báo cáo kiểm toán, nhưng tính toán kinh tế Layer 2 và quan điểm bảo mật có 2 sai sót nghiêm trọng.
+**Đánh giá:** Dùng được (sau khi sinh viên chấn chỉnh nghiêm khắc).
 
-**Chỗ sai & Phản biện sắc bén của sinh viên:**
-1. **Lỗi 1 (Bỏ quên L1 Data Availability Fee trong cấu trúc phí Rollup):** AI chỉ nhân đơn thuần `GasUsed * L2_GasPrice` và tuyên bố phí trên L2 là "siêu rẻ chỉ 0.000001 USD". Sinh viên phản biện sắc bén: Trong kiến trúc Optimistic Rollup (cả Arbitrum Nitro lẫn OP Stack của Base), một giao dịch luôn có 2 cấu phần chi phí: **L2 Execution Fee** và **L1 Data Availability (DA) Fee** (chi phí nén calldata và xuất bản blob xuống Ethereum L1). Dù EIP-4844 đã giảm mạnh phí blob, nhưng nếu bỏ qua phí L1 DA thì mô hình dự toán chi phí sẽ bị sai lệch nghiêm trọng khi mạng Ethereum L1 bị nghẽn. Sinh viên yêu cầu đưa công thức chuẩn hóa gồm cả `L1_Data_Scalar` vào kịch bản đo lường `scripts/gas_benchmark.py`.
-2. **Lỗi 2 (Tư duy buông lỏng bảo mật vì lý do "L2 phí rẻ"):** AI gợi ý bỏ kiểm tra giới hạn độ dài chuỗi ký tự tiêu đề và chuyên ngành khi chuyển sang L2. Sinh viên chấn chỉnh gay gắt: Khái niệm "phí rẻ" không bao giờ là cái cớ để hủy hoại nguyên tắc bất biến của lập trình an toàn. Trạng thái của Rollup vẫn phải được lưu trữ trong State Trie của các nút mạng Sequencer và Full Nodes. Nếu không có chặn trên (`MAX_TITLE_LENGTH = 200`), kẻ xấu có thể spam các xâu dữ liệu khổng lồ nhằm làm phình dữ liệu lưu trữ (State Bloat Attack) và làm suy giảm hiệu năng xác thực của mạng lưới. Giới hạn phòng vệ này phải được duy trì vĩnh viễn trên bất kỳ chuỗi EVM nào theo đúng tôn chỉ của `AGENTS.md`.
+**Chỗ sai & Phản biện của sinh viên:**
+AI mắc lỗi kinh điển của mô hình sinh ngôn ngữ là tự tạo dữ liệu giả lập (hallucination) để lấp đầy giao diện. Sinh viên chỉ rõ tác hại: Việc tạo dữ liệu giả làm hỏng nguyên tắc đối soát sổ cái kế toán on-chain (Reconciliation), khiến người dùng không thể kiểm chứng tính liên kết giữa địa chỉ ví, tác giả và khối giao dịch. Sinh viên yêu cầu giữ nguyên tắc "mắt xích dữ liệu thật".
 
-**Ai phát hiện:** Sinh viên phát hiện cả 2 lỗ hổng tư duy của AI và trực tiếp thiết lập công thức tính toán L1 DA Fee chuẩn xác trong chương trình đo lường.
+**Ai phát hiện:** Sinh viên phát hiện và trực tiếp chỉ đạo thanh lọc dữ liệu.
 
-## Lần 15 (Lab 15: Nghiệm thu Đồ án Capstone & Bảo vệ Sản phẩm Trước Hội đồng)
+---
+
+## Lần 15 (Tái cấu trúc Trải nghiệm Chứng nhận A4, Nâng cấp Tra cứu & Thống nhất Nhận diện HCE-SCHOLARPROOF)
 
 **Prompt:**
-> "Bạn là chuyên gia tư vấn pháp lý Web3 và kỹ sư giải pháp blockchain. Hãy chuẩn bị kịch bản nghiệm thu đồ án HCE-ScholarProof trước Hội đồng khoa học của TS. Hà Ngọc Long. Phân tích giá trị chứng cứ của Proof of Existence theo Luật Sở hữu Trí tuệ Việt Nam 2022 và hướng dẫn cách trả lời các câu hỏi phản biện khó của Hội đồng."
+> "ồ tôi thấy nên 1. thay đổi cơ chế ở thanh chọn lọc... 2. thay thế mã sao chép thành đường link dẫn tới giao dịch trên ether... 3. hiện mục thông tin tác phẩm, tác giả bên cạnh cái giấy đó luôn... 4. khi đăng ký xong ở mục đăng ký tác phẩm thì hiện luôn cái giấy đó... đổi tên web của tôi thành HCE-SCHOLARPROOF đi :))))"
 
 **AI trả về:**
-- Kịch bản bảo vệ 12 slide tóm tắt toàn bộ 8 lab.
-- Nhận định pháp lý: AI cho rằng "Chứng thư blockchain thay thế hoàn toàn Giấy chứng nhận đăng ký quyền tác giả của Cục Bản quyền tác giả Bộ VHTTDL và có giá trị pháp lý tuyệt đối trước tòa án Việt Nam".
-- Đề xuất câu trả lời cho câu hỏi phản biện về việc nếu hai người cùng nộp một tệp nhưng một người nộp trước trên blockchain thì người đó nghiễm nhiên là tác giả thực sự.
+- Thay thế dropdown `<select>` bằng Thanh tìm kiếm thông minh (Live Search) và bộ nút lọc nhanh (`Tất cả` / `Của tôi`).
+- Thay nút sao chép bằng nút liên kết trực tiếp mở giao dịch trên Sepolia Etherscan.
+- Tái cấu trúc giao diện Tab Chứng nhận thành Bố cục 2 cột: Cột trái là Sidebar Hồ sơ đối soát On-Chain, Cột phải là Chứng thư A4.
+- Nhúng trực tiếp bản xem trước Chứng thư A4 tại Bước 6 của Form Đăng ký tác phẩm kèm nút in PDF A4 tại chỗ.
+- Đổi toàn bộ nhận diện thương hiệu website thành **HCE-SCHOLARPROOF**.
 
-**Đánh giá:** Khung thuyết trình tốt, nhưng luận điểm pháp lý và triết lý công nghệ có 2 sai lầm nghiêm trọng về mặt bản chất khoa học.
+**Đánh giá:** Rất tốt (được sinh viên phê duyệt kế hoạch trước khi triển khai).
 
-**Chỗ sai & Phản biện sắc bén của sinh viên:**
-1. **Lỗi 1 (Hiểu sai bản chất pháp lý của Blockchain so với Luật Quốc gia):** AI khẳng định một cách ngây thơ rằng chứng thư số blockchain "thay thế hoàn toàn Cục Bản quyền tác giả". Sinh viên chấn chỉnh kiến thức pháp lý: Theo Luật Sở hữu trí tuệ Việt Nam (sửa đổi 2022), quyền tác giả phát sinh **ngay khi tác phẩm được sáng tạo và thể hiện dưới một hình thức vật chất nhất định**, không bắt buộc phải đăng ký. Blockchain không phải là cơ quan nhà nước cấp quyền, mà đóng vai trò là **Nguồn chứng cứ kỹ thuật số độc lập, bất biến (Digital Evidentiary Source)** chứng minh tác phẩm đã tồn tại tại thời điểm $T_0$ với tác giả gắn liền với chữ ký số của ví đó (Proof of Existence). Trong tố tụng, đây là bằng chứng phản bác đanh thép đối với hành vi ăn cắp ý tưởng (Prior-art Defense), chứ không phải là văn bản hành chính thay thế cơ quan nhà nước.
-2. **Lỗi 2 (Nhầm lẫn giữa Bằng chứng ưu tiên và Thẩm định nội dung gốc):** AI cho rằng ai băm file lên trước thì người đó đương nhiên là chủ sở hữu trí tuệ duy nhất. Sinh viên phản biện: Hợp đồng chỉ chứng minh được tính ưu tiên thời gian (Timestamping) và tính toàn vẹn (Integrity). Nếu kẻ gian đánh cắp bản thảo của người khác rồi băm lên trước, blockchain chỉ ghi nhận kẻ gian nộp trước tại thời điểm đó, nhưng nếu tác giả thực sự đưa ra các bằng chứng lịch sử commit git, email trao đổi với giảng viên hướng dẫn có mốc thời gian sớm hơn thì quyền tác giả vẫn thuộc về người sáng tạo ban đầu. Tính năng của HCE-ScholarProof là công cụ hỗ trợ phòng chống tranh chấp và thẩm định đạo văn sơ bộ, không phải thẩm phán tự động.
+**Chỗ sai & Phản biện của sinh viên:**
+Sinh viên nhận thấy giao diện cũ của AI có nhiều điểm nghẽn trải nghiệm: (1) Nếu có hàng trăm bài thì dropdown cuộn rất bất tiện; (2) Nút copy chỉ lưu hash chứ không giúp người dùng xem ngay bằng chứng on-chain; (3) Tờ chứng thư đơn độc thiếu bảng đối soát nhân thân tác giả; (4) Người dùng phải chuyển trang mới xem được chứng thư sau khi đăng ký thành công. Sinh viên đã đưa ra 4 giải pháp nâng cấp toàn diện và yêu cầu AI trình bày trước khi viết mã.
 
-**Ai phát hiện:** Sinh viên phát hiện cả 2 lỗ hổng nhận thức pháp lý của AI và trực tiếp hoàn thiện phần cơ sở lý luận trong slide bảo vệ đồ án `SLIDES.md`.
+**Ai phát hiện:** Sinh viên đề xuất và chỉ đạo thiết kế kiến trúc hoàn thiện.
